@@ -17,7 +17,7 @@ If you are reading this on GitHub, then you shouldn't be suprised that `git` is 
 Emacs is my editor of choice.  I should probably get more familiar with [`vi`](http://ex-vi.cvs.sourceforge.net/ex-vi/ex-vi/), as it's on just about every system by default, but I like the power of Emacs.
 
 ### [`tmux`](https://github.com/tmux/tmux)
-Similar to [`screen`](https://git.savannah.gnu.org/git/screen.git), `tmux` is a way to manage multiple terminal sessions without having to create new tabs.  It is detachable, so is very convenient when working on many projects (which I do a lot).  Even if your terminal crashes, `tmux` will keep your sessions alive, so is terminal-independent.
+Similar to [`screen`](https://git.savannah.gnu.org/git/screen.git), `tmux` is a way to manage multiple terminal sessions without having to create new tabs.  It is detachable, so is very convenient when working on many projects (which I do a lot).  Even if your terminal crashes, `tmux` will keep your sessions alive, so is terminal-independent.  Another alternative to this, which is written in Rust, is [`zellij`](https://github.com/zellij-org/zellij).
 
 ## Quality-of-Life
 

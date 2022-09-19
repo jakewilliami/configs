@@ -92,7 +92,7 @@
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
  '(custom-enabled-themes '(tsdh-dark))
  '(package-selected-packages
-   '(hl-todo yasnippet company lsp-ui lsp-mode rustic use-package multiple-cursors yaml-mode go-mode nim-mode move-text haskell-mode nlinum ess)))
+   '(magit lua-mode csv-mode hl-todo yasnippet company lsp-ui lsp-mode rustic use-package multiple-cursors yaml-mode go-mode nim-mode move-text haskell-mode nlinum ess)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -374,4 +374,19 @@
 
 ;;; Inline type hints
 (setq lsp-rust-analyzer-server-display-inlay-hints t)
+
+;;; Properly indent CSV mode
+(add-hook 'csv-mode-hook
+          (lambda ()
+            (define-key csv-mode-map (kbd "C-c C-M-a")
+              (defun csv-align-visible (&optional arg)
+                "Align visible fields"
+                (interactive "P")
+                (csv-align-fields nil (window-start) (window-end))
+                )
+              )
+            )
+          )
+
+;;; Indent in Python mode
 

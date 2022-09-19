@@ -107,7 +107,7 @@ alias ls.rs="$HOME/projects/scripts/rust/pere/pere"
 alias огдшф="julia"
 
 # Redefine ls
-if ! command -v exa > /dev/null 2>&1
+if ! command -v exa > /dev/null 2>&1; then
 	alias l1="ls -1"
 	alias ll="ls -l"
 	alias lll="ls -la"

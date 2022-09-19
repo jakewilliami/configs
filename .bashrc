@@ -107,10 +107,17 @@ alias ls.rs="$HOME/projects/scripts/rust/pere/pere"
 alias огдшф="julia"
 
 # Redefine ls
-alias ls="exa"
-alias ll="exa -la"
-alias el="exa -la"
-alias exag="exa -l --git"
+if ! command -v exa > /dev/null 2>&1
+	alias l1="ls -1"
+	alias ll="ls -l"
+	alias lll="ls -la"
+else
+    alias ls="exa"
+    alias l1="exa -1"
+    alias ll="exa -l"
+    alias lll="exa -la"
+    alias lsg="exa -l --git"
+fi
 
 function Words.jl() {
 	echo 'Words.find_anagrams("word", Words.WORDLIST)'

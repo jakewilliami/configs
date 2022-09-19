@@ -18,6 +18,15 @@
 # This helper script was written by Jake Ireland
 # (jakewilliami@icloud.com) in Winter, 2022.
 
+USAGE="
+USAGE:
+    ./sync-dotfiles.sh [remote|local]
+
+ARGS:
+    remote: pull dotfiles locally and update them in the repo
+    local:  pull dotfiles from the repo and sync them locally
+"
+
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )"
 declare -a DOTFILES=(
 	"$HOME/.bash_profile"
@@ -35,7 +44,8 @@ for fsrc in "${DOTFILES[@]}"; do
 		case "$1" in
 			(remote) cp -vi "$fsrc" "$SCRIPT_DIR";;
 			(local)  cp -vi "$fdst" "$fsrc";;
-			(*)      cp -vi "$fsrc" "$SCRIPT_DIR";;
+            (-h)     echo "$USAGE";;
+			(*)      echo "$USAGE";;
 		esac
 	fi
 done

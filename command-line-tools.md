@@ -2,6 +2,8 @@
 
 This is a file to explain commonly-used command-line tools within my workflow.
 
+See also: [Modern UNIX](https://github.com/ibraheemdev/modern-unix).
+
 ## Essential
 
 ### [iTerm 2](https://github.com/gnachman/iTerm2)

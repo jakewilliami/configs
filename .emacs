@@ -92,7 +92,7 @@
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
  '(custom-enabled-themes '(tsdh-dark))
  '(package-selected-packages
-   '(magit lua-mode csv-mode hl-todo yasnippet company lsp-ui lsp-mode rustic use-package multiple-cursors yaml-mode go-mode nim-mode move-text haskell-mode nlinum ess)))
+   '(git-commit-insert-issue typescript-mode magit lua-mode csv-mode hl-todo yasnippet company lsp-ui lsp-mode rustic use-package multiple-cursors yaml-mode go-mode nim-mode move-text haskell-mode nlinum ess)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -389,4 +389,12 @@
           )
 
 ;;; Indent in Python mode
+;; TODO
 
+;;; Git Commit Mode
+;;;; Emacs Wiki: Git Commit Mode: https://www.emacswiki.org/emacs/GitCommitMode
+;;;; git-commit-mode isn’t used when committing from the command-line: https://magit.vc/manual/magit/git_002dcommit_002dmode-isn_0027t-used-when-committing-from-the-command_002dline.html
+(require 'git-commit)
+;; (server-mode)
+(use-package server
+  :config (or (server-running-p) (server-mode)))

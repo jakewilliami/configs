@@ -37,6 +37,24 @@
 (setq locale-coding-system 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
 
+;;; Emacs lisp
+(add-hook 'emacs-lisp-mode-hook
+          '(lambda ()
+             (local-set-key (kbd "C-c C-j")
+                            (quote eval-print-last-sexp))))
+(add-to-list 'auto-mode-alist '("Cask" . emacs-lisp-mode))
+
+;;; Paredit
+(require 'paredit)
+
+(defun rc/turn-on-paredit ()
+  (interactive)
+  (paredit-mode 1))
+
+(add-hook 'emacs-lisp-mode-hook  'rc/turn-on-paredit)
+(add-hook 'lisp-mode-hook        'rc/turn-on-paredit)
+(add-hook 'common-lisp-mode-hook 'rc/turn-on-paredit)
+
 ;;;; Disable arrow keys to force yourself to use default Emacs keybindings for navigation
 (global-unset-key (kbd "<left>"))
 (global-unset-key (kbd "<right>"))
@@ -398,3 +416,6 @@
 ;; (server-mode)
 (use-package server
   :config (or (server-running-p) (server-mode)))
+
+
+

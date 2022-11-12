@@ -56,7 +56,7 @@ then
 	export PATH=$PATH:/usr/local/lib/node_modules/
 	export PATH=$PATH:${HOME}/Desktop/Study/Victoria\ University/2019/Trimester\ 3/SCIE306b/306/Alia-Laura-research/curse-of-knowing
 	export PATH=$PATH:/usr/local/opt/openjdk/bin
-	export PATH=$PATH:${HOME}/.gem/ruby/**/bin
+	# export PATH=$PATH:${HOME}/.gem/ruby/**/bin
 	export PATH=$PATH:${HOME}/projects/macOS-config/mconfig.d/
 	export PATH=/usr/local/sbin:$PATH
 	export PATH=$PATH:${HOME}/projects/scripts/julia/
@@ -76,8 +76,6 @@ then
 	# Based on `brew --prefix ruby`, so that it uses the correct version of ruby
 	export PATH=/usr/local/opt/ruby/bin:$PATH
 	export PATH=$HOME/.gem/ruby/3.0.0/bin:$PATH
-	# load rvm (ruby version manager) into session
-	[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
 fi
 
 # add line numbers to nano
@@ -94,15 +92,7 @@ fi;
 export CLICOLOR=YES
 export LSCOLORS=Exfxcxdxbxegedabagacad
 
-# make ruby look for correct version
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-
-
-
 echo "( .-.)"
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -122,3 +112,4 @@ unset __conda_setup
 . "$HOME/.cargo/env"
 
 source /Users/jakeireland/.config/broot/launcher/bash/br
+export PATH="/usr/local/opt/ruby/bin:$PATH"

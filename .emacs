@@ -418,16 +418,21 @@
   :config (or (server-running-p) (server-mode)))
 
 ;;; Whitespace mode
+;; https://www.emacswiki.org/emacs/WhiteSpace
 ;; (rc/require-theme 'gruber-darker)
 
+(require 'whitespace)
 (defun rc/set-up-whitespace-handling ()
   (interactive)
   (whitespace-mode 1)
   (add-to-list 'write-file-functions 'delete-trailing-whitespace))
 
+;; (set-face-attribute 'whitespace-space nil :background nil :foreground "gray30")
+
+(add-hook 'julia-mode-hook 'rc/set-up-whitespace-handling)
+(add-hook 'rust-mode-hook 'rc/set-up-whitespace-handling)
 (add-hook 'c-mode-hook 'rc/set-up-whitespace-handling)
 (add-hook 'emacs-lisp-mode 'rc/set-up-whitespace-handling)
-(add-hook 'rust-mode-hook 'rc/set-up-whitespace-handling)
 (add-hook 'markdown-mode-hook 'rc/set-up-whitespace-handling)
 (add-hook 'haskell-mode-hook 'rc/set-up-whitespace-handling)
 (add-hook 'python-mode-hook 'rc/set-up-whitespace-handling)

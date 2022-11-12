@@ -46,6 +46,7 @@ then
 	echo 'include /usr/local/Cellar/nano/**/share/nano/*.nanorc' > ${HOME}/.nanorc
 	#make scripts executable from PATH (which are stored in bin)
 	export PATH=$PATH:/usr/local/bin
+	export PATH=$PATH:/opt/local/bin
 	export PATH=$PATH:${HOME}/projects/scripts/bash
 	export PATH=$PATH:${HOME}/projects/scripts/pdfsearches
 	export PATH=$PATH:${HOME}/projects/tex-macros
@@ -119,3 +120,5 @@ unset __conda_setup
 # <<< conda initialize <<<
 
 . "$HOME/.cargo/env"
+
+source /Users/jakeireland/.config/broot/launcher/bash/br

@@ -97,8 +97,7 @@ alias ssh-converter="ssh jakeireland@192.168.1.203 -p 24"
 alias ssh-plex="ssh jakeireland@192.168.1.202 -p 24"
 alias ssh-server="ssh jakeireland@192.168.1.100"
 alias aoc="cd $HOME/projects/scripts/julia/Other/advent_of_code/2020"
-alias gl="$HOME/projects/scripts/rust/gl/gl"
-alias gl.rs="$HOME/projects/scripts/rust/gl/gl"
+# alias gl="$HOME/projects/scripts/rust/gl/gl"  # The release versions of these are stored in /opt/local/bin
 alias filmls="$HOME/projects/scripts/rust/filmls/filmls"
 alias shuffle="sort -R"
 alias pythong="python"
@@ -183,3 +182,5 @@ function compile.rs() {
 export PATH="$PATH:$HOME/.rvm/bin"
 export PATH="$PATH:$HOME/.julia/bin"
 . "$HOME/.cargo/env"
+
+source /Users/jakeireland/.config/broot/launcher/bash/br

@@ -303,6 +303,7 @@
 ;; $ git clone https://github.com/rust-analyzer/rust-analyzer.git
 ;; $ cd rust-analyzer && cargo xtask install --server # will install rust-analyzer into $HOME/.cargo/bin
 ;; $ # The remaining packages should be installed via use-package
+;; $ # For some reason I also had to install zsh for this to work
 
 ;;; Rustic requires `rustic` and `use-package`
 (use-package rustic

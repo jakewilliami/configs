@@ -45,7 +45,7 @@
 (add-to-list 'auto-mode-alist '("Cask" . emacs-lisp-mode))
 
 ;;; Paredit
-(require 'paredit)
+(use-package paredit)
 
 (defun rc/turn-on-paredit ()
   (interactive)
@@ -91,9 +91,7 @@
 (setq backup-directory-alist `(("." . "~/.saves")))
 
 ;;;; do something with #file-being-edited#
-;; requires `cd ~/.emacs.d/; git clone https://github.com/emacscollective/no-littering.git`
-(add-to-list 'load-path "~/.emacs.d/no-littering/")
-(require 'no-littering)
+(use-package no-littering)
 
 ;; M-x package-refresh-contents ENTER
 ;; run M-x package-install ENTER ess ENTER
@@ -147,20 +145,29 @@
 
 ;;;; add julia support
 ;; https://github.com/JuliaEditorSupport/julia-emacs
-(add-to-list 'load-path "~/.emacs.d/julia-emacs")
-(require 'julia-mode)
+(use-package julia-mode)
+;; Change default compilation for Julia
+(add-hook 'julia-mode-hook
+          (lambda ()
+            (set (make-local-variable 'compile-command)
+                 (format "julia --project %s" 
+					(file-name-nondirectory buffer-file-name)))))
 
 ;;;; add rust support
-;; use MELPA
-;; (require 'package)
-;; (add-to-list 'package-archives
-             ;; '("melpa" . "https://melpa.org/packages/") t)
-;; (package-initialize)
-;; (package-refresh-contents)
-;; M-x package-install rust-mode
-;; OR https://github.com/rust-lang/rust-mode
-(add-to-list 'load-path "~/.emacs.d/rust-mode/")
-(require 'rust-mode)
+;; https://github.com/rust-lang/rust-mode
+(use-package rust-mode)
+;; Change default compilation for Rust
+(require 'compile)
+(add-hook 'rust-mode-hook
+          (lambda ()
+            (set (make-local-variable 'compile-command)
+                 (format "rustc %s && ./%s" 
+					(file-name-nondirectory buffer-file-name)
+					(file-name-base buffer-file-name)))))
+
+
+
+
 
 ;;;; add zig support
 (unless (version< emacs-version "24")
@@ -199,8 +206,7 @@
   (scroll-bar-mode -1))
 
 ;;;; add powerline
-(add-to-list 'load-path "~/.emacs.d/powerline/")
-(require 'powerline)
+(use-package powerline)
 ;; load powerline if we are not using terminal
 (when (display-graphic-p)
 	(powerline-default-theme))
@@ -225,19 +231,18 @@
 ;;;; TODO: highlighting
 ;; https://github.com/tarsius/hl-todo
 ;; https://www.reddit.com/r/emacs/comments/f8tox6/
-(add-to-list 'load-path "~/.emacs.d/hl-todo/")
-(require 'hl-todo)
-;; (use-package! hl-todo
-  ;; :hook (prog-mode . hl-todo-mode)
-  ;; :config
-  ;; (setq hl-todo-highlight-punctuation ":"
-        ;; hl-todo-keyword-faces
-        ;; '(("TODO"       warning bold)
-          ;; ("FIXME"      error bold)
-          ;; ("HACK"       font-lock-constant-face bold)
-          ;; ("REVIEW"     font-lock-keyword-face bold)
-          ;; ("NOTE"       success bold)
-          ;; ("DEPRECATED" font-lock-doc-face bold))))
+;; (use-package hl-todo)
+(use-package hl-todo
+  :hook (prog-mode . hl-todo-mode)
+  :config
+  (setq hl-todo-highlight-punctuation ":"
+        hl-todo-keyword-faces
+        '(("TODO"       warning bold)
+          ("FIXME"      error bold)
+          ("HACK"       font-lock-constant-face bold)
+          ("REVIEW"     font-lock-keyword-face bold)
+          ("NOTE"       success bold)
+          ("DEPRECATED" font-lock-doc-face bold))))
 		;; '(("TODO"		 . "#FF0000")
 		   ;; ("FIXME"		 . "#FF0000")
 		   ;; ("HACK"		 . "#A020F0")
@@ -261,30 +266,14 @@
 
 ;; Moves lines of text
 ;; by default uses M-up and M-down
-(require 'move-text)
+(use-package move-text)
 (move-text-default-bindings)
 
 ;; nim mode
-(require 'move-text)
-
-;; Change default compilation for Julia
-(add-hook 'julia-mode-hook
-          (lambda ()
-            (set (make-local-variable 'compile-command)
-                 (format "julia --project %s" 
-					(file-name-nondirectory buffer-file-name)))))
-
-;; Change default compilation for Rust
-(require 'compile)
-(add-hook 'rust-mode-hook
-          (lambda ()
-            (set (make-local-variable 'compile-command)
-                 (format "rustc %s && ./%s" 
-					(file-name-nondirectory buffer-file-name)
-					(file-name-base buffer-file-name)))))
+(use-package move-text)
 
 ;; Making regex a little bit easier
-(require 're-builder)
+(use-package re-builder)
 ;; (setq reb-re-syntax 'string) ;; switch to `string`; there's little reason tu use `read`
 
 ;; Relative line numbers
@@ -293,7 +282,7 @@
 (setq display-line-numbers-type 'relative)
 
 ;;;; Multiple cursors
-(require 'multiple-cursors)
+(use-package multiple-cursors)
 (global-set-key (kbd "C->")         'mc/mark-next-like-this)
 (global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<")     'mc/mark-all-like-this)
@@ -420,7 +409,7 @@
 ;;; Git Commit Mode
 ;;;; Emacs Wiki: Git Commit Mode: https://www.emacswiki.org/emacs/GitCommitMode
 ;;;; git-commit-mode isn’t used when committing from the command-line: https://magit.vc/manual/magit/git_002dcommit_002dmode-isn_0027t-used-when-committing-from-the-command_002dline.html
-(require 'git-commit)
+(use-package git-commit)
 ;; (server-mode)
 (use-package server
   :config (or (server-running-p) (server-mode)))
@@ -429,7 +418,7 @@
 ;; https://www.emacswiki.org/emacs/WhiteSpace
 ;; (rc/require-theme 'gruber-darker)
 
-(require 'whitespace)
+(use-package whitespace)
 (defun rc/set-up-whitespace-handling ()
   (interactive)
   (whitespace-mode 1)

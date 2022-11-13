@@ -7,4 +7,5 @@ These dotfiles were initially just [`.bashrc`](.bashrc) and [`.bash_profile`](.b
 I may have some miscellaneous notes on these configuration files below.
 
 ## Emacs
-I recently put my `.emacs` file on a Linux box I had, and realised just how annoying it is to set up.  You need to install all packages you find in the Emacs file.
+
+You will need to ensure you have downloaded the Emacs package `use-package`.  I use this throughout my emacs config file in order to download packages automatically, if they are not already installed..  Before this, I had to download all of the packages I use manually, and it was painful.  To ensure `use-package` is downloaded, you can run `M-x package-refresh-contents` to ensure you have the latest package index, and then run `M-x package-install RET use-package RET` to install `use-package`.  Now, when you open emacs, it will load the config file, and on your first load it will download a bunch of packages used throughout the config file.

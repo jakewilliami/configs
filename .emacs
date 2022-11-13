@@ -110,7 +110,7 @@
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
  '(custom-enabled-themes '(tsdh-dark))
  '(package-selected-packages
-   '(git-commit-insert-issue typescript-mode magit lua-mode csv-mode hl-todo yasnippet company lsp-ui lsp-mode rustic use-package multiple-cursors yaml-mode go-mode nim-mode move-text haskell-mode nlinum ess)))
+   '(flycheck-rust git-commit-insert-issue typescript-mode magit lua-mode csv-mode hl-todo yasnippet company lsp-ui lsp-mode rustic use-package multiple-cursors yaml-mode go-mode nim-mode move-text haskell-mode nlinum ess)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -304,10 +304,16 @@
 (global-set-key (kbd "C-\"")        'mc/skip-to-next-like-this)
 (global-set-key (kbd "C-:")         'mc/skip-to-previous-like-this)
 
+;;;; BEGIN RUST IDE
 ;;;; Rust IDE-like development environment
 ;; https://robert.kra.hn/posts/rust-emacs-setup/
 ;; https://emacs-lsp.github.io/lsp-mode/page/lsp-rust-analyzer/
 ;; https://github.com/brotzeit/rustic
+;;
+;; $ rustup component add rust-src
+;; $ git clone https://github.com/rust-analyzer/rust-analyzer.git
+;; $ cd rust-analyzer && cargo xtask install --server # will install rust-analyzer into $HOME/.cargo/bin
+;; $ # The remaining packages should be installed via use-package
 
 ;;; Rustic requires `rustic` and `use-package`
 (use-package rustic
@@ -392,6 +398,8 @@
 
 ;;; Inline type hints
 (setq lsp-rust-analyzer-server-display-inlay-hints t)
+
+;;;; END RUST IDE
 
 ;;; Properly indent CSV mode
 (add-hook 'csv-mode-hook

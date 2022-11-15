@@ -205,12 +205,10 @@
 (when (boundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
 
-;;;; add powerline
-(use-package powerline)
-;; load powerline if we are not using terminal
-(when (display-graphic-p)
-	(powerline-default-theme))
-;; (powerline-center-evil-theme))
+;;;; add powerline to bottom
+(use-package smart-mode-line)
+;; (sml/setup)
+(setq sml/theme 'dark)
 
 ;; Highlight matching parenthesis!
 (show-paren-mode 1)
@@ -220,13 +218,6 @@
 ;; (setq-default left-fringe-width nil)
 ;; (setq-default indicate-empty-lines t)
 ;; (setq-default indent-tabs-mode nil)
-
-
-;;;; keep cursor on same line when scrolling
-;; https://emacs.stackexchange.com/questions/54710/
-;; https://superuser.com/questions/527356/
-;; (when (not (display-graphic-p))
-	;; (powerline-default-theme))
 
 ;;;; TODO: highlighting
 ;; https://github.com/tarsius/hl-todo

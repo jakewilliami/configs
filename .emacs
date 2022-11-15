@@ -9,10 +9,6 @@
 ;;; Remapping ctrl to caps lock
 ; https://www.emacswiki.org/emacs/MovingTheCtrlKey
 ; https://deskthority.net/wiki/Category:Keyboards_with_Unix_layout
-; 
-;;; use dracula theme
-; `brew install emacs-dracula`
-;;
 
 
 ;;;; Code:
@@ -64,6 +60,69 @@
   (require 'use-package))
 (require 'bind-key)
 (setq use-package-always-ensure t)
+
+;;;;; Emacs Theme
+
+;;; Dracula Theme
+;; (use-package dracula-theme
+;;   :init
+;;   (load-theme 'dracula t))
+
+;;; Atom One Dark Theme
+(use-package atom-one-dark-theme
+  :ensure t
+  :defer t
+  
+  :init
+  (load-theme 'atom-one-dark t))
+
+;; Power line
+(use-package smart-mode-line-atom-one-dark-theme)
+(use-package smart-mode-line
+  :ensure t
+  :defer t
+  
+  :init
+  (setq sml/no-confirm-load-theme t)
+  (setq sml/theme 'atom-one-dark)
+  
+  :config
+  (sml/setup)
+  (sml/apply-theme 'atom-one-dark))
+
+;;;; Represent whitespace as dots
+(setq whitespace-style '(space-mark))
+(setq whitespace-display-mappings '((space-mark 32 [183] [46])))
+
+;;;; suppress startup screen
+(setq inhibit-startup-screen t
+	inhibit-splash-screen t
+	inhibit-startup-echo-area-message t)
+
+;;;; hide tool-bar
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+
+;;;; make window fullscreen (-fs | --fullscreen)
+;; must be after the hide toolbar section
+;; https://superuser.com/questions/1076443/
+(toggle-frame-maximized)
+;; https://stackoverflow.com/questions/2151449/
+;; (x-display-pixel-width)
+;; (x-display-pixel-height)
+
+;;;; adjust scroll mode
+;; scroll one line at a time (less "jumpy" than defaults)    
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+(setq scroll-step 1) ;; keyboard scroll one line at a time
+(when (boundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
+
+;; Highlight matching parenthesis!
+(show-paren-mode 1)
+(setq show-paren-delay 0)
 
 ;;; Paredit
 (use-package paredit)
@@ -118,26 +177,6 @@
 ;;; ESS
 ;; namely for R syntax highlighting
 (use-package ess)
-;; The following 12 lines are machine-generated
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
- '(custom-enabled-themes '(tsdh-dark))
- '(package-selected-packages
-   '(smart-mode-line julia-mode flycheck-rust git-commit-insert-issue typescript-mode magit lua-mode csv-mode hl-todo yasnippet company lsp-ui lsp-mode rustic use-package multiple-cursors yaml-mode go-mode nim-mode move-text haskell-mode nlinum ess)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(comint-highlight-prompt ((t (:foreground "cyan"))))
- '(minibuffer-prompt ((t (:foreground "cyan")))))
 
 ;;;; find matching parenthesis
 (global-set-key "%" 'match-paren)
@@ -192,45 +231,6 @@
   (add-to-list 'load-path "~/.emacs.d/zig-mode/")
   (autoload 'zig-mode "zig-mode" nil t)
   (add-to-list 'auto-mode-alist '("\\.zig\\'" . zig-mode)))
-
-;;;; Represent whitespace as dots
-(setq whitespace-style '(space-mark))
-(setq whitespace-display-mappings '((space-mark 32 [183] [46])))
-
-;;;; suppress startup screen
-(setq inhibit-startup-screen t
-	inhibit-splash-screen t
-	inhibit-startup-echo-area-message t)
-
-;;;; hide tool-bar
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-
-;;;; make window fullscreen (-fs | --fullscreen)
-;; must be after the hide toolbar section
-;; https://superuser.com/questions/1076443/
-(toggle-frame-maximized)
-;; https://stackoverflow.com/questions/2151449/
-;; (x-display-pixel-width)
-;; (x-display-pixel-height)
-
-;;;; adjust scroll mode
-;; scroll one line at a time (less "jumpy" than defaults)    
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
-(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-(setq scroll-step 1) ;; keyboard scroll one line at a time
-(when (boundp 'scroll-bar-mode)
-  (scroll-bar-mode -1))
-
-;;;; add powerline to bottom
-(use-package smart-mode-line)
-;; (sml/setup)
-(setq sml/theme 'dark)
-
-;; Highlight matching parenthesis!
-(show-paren-mode 1)
-(setq show-paren-delay 0)
 
 ;; (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
 ;; (setq-default left-fringe-width nil)

@@ -51,6 +51,10 @@
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 (setq compilation-max-output-line-length nil)
 
+;;;; set shell to bash
+(setenv "SHELL" "/usr/local/bin/bash")
+(setq explicit-shell-file-name "/usr/local/bin/bash")
+
 ;;; Use Package
 ;; https://emacs.stackexchange.com/a/50603/25429
 (unless (package-installed-p 'use-package)
@@ -134,10 +138,6 @@
  ;; If there is more than one, they won't work right.
  '(comint-highlight-prompt ((t (:foreground "cyan"))))
  '(minibuffer-prompt ((t (:foreground "cyan")))))
-
-;;;; set shell to bash
-(setenv "SHELL" "/usr/local/bin/bash")
-(setq explicit-shell-file-name "/usr/local/bin/bash")
 
 ;;;; find matching parenthesis
 (global-set-key "%" 'match-paren)

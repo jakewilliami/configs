@@ -44,6 +44,13 @@
                             (quote eval-print-last-sexp))))
 (add-to-list 'auto-mode-alist '("Cask" . emacs-lisp-mode))
 
+;;; Colours in compilation mode
+;; https://emacs.stackexchange.com/a/72580/25429
+;; https://emacs.stackexchange.com/a/73552/25429
+;; (setq compilation-environment '("TERM=ansi-color-apply"))
+(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+(setq compilation-max-output-line-length nil)
+
 ;;; Use Package
 ;; https://emacs.stackexchange.com/a/50603/25429
 (unless (package-installed-p 'use-package)
@@ -438,9 +445,3 @@
 (add-hook 'python-mode-hook 'rc/set-up-whitespace-handling)
 (add-hook 'yaml-mode-hook 'rc/set-up-whitespace-handling)
 
-;;; Colours in compilation mode
-;; https://emacs.stackexchange.com/a/72580/25429
-;; https://emacs.stackexchange.com/a/73552/25429
-;; (setq compilation-environment '("TERM=ansi-color-apply"))
-(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
-(setq compilation-max-output-line-length nil)

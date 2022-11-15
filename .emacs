@@ -111,9 +111,9 @@
 (use-package no-littering)
 ;; (require 'no-littering)
 
-;; M-x package-refresh-contents ENTER
-;; run M-x package-install ENTER ess ENTER
+;;; ESS
 ;; namely for R syntax highlighting
+(use-package ess)
 ;; The following 12 lines are machine-generated
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

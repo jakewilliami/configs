@@ -44,6 +44,16 @@
                             (quote eval-print-last-sexp))))
 (add-to-list 'auto-mode-alist '("Cask" . emacs-lisp-mode))
 
+;;; Use Package
+;; https://emacs.stackexchange.com/a/50603/25429
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(eval-when-compile
+  (require 'use-package))
+(require 'bind-key)
+(setq use-package-always-ensure t)
+
 ;;; Paredit
 (use-package paredit)
 
@@ -92,6 +102,7 @@
 
 ;;;; do something with #file-being-edited#
 (use-package no-littering)
+;; (require 'no-littering)
 
 ;; M-x package-refresh-contents ENTER
 ;; run M-x package-install ENTER ess ENTER
@@ -108,7 +119,7 @@
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
  '(custom-enabled-themes '(tsdh-dark))
  '(package-selected-packages
-   '(flycheck-rust git-commit-insert-issue typescript-mode magit lua-mode csv-mode hl-todo yasnippet company lsp-ui lsp-mode rustic use-package multiple-cursors yaml-mode go-mode nim-mode move-text haskell-mode nlinum ess)))
+   '(smart-mode-line julia-mode flycheck-rust git-commit-insert-issue typescript-mode magit lua-mode csv-mode hl-todo yasnippet company lsp-ui lsp-mode rustic use-package multiple-cursors yaml-mode go-mode nim-mode move-text haskell-mode nlinum ess)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

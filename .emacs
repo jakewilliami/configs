@@ -91,6 +91,7 @@
   (sml/apply-theme 'atom-one-dark))
 
 ;;;; Represent whitespace as dots
+;; (set-face-attribute 'whitespace-space nil :background nil :foreground "gray30")
 (setq whitespace-style '(space-mark))
 (setq whitespace-display-mappings '((space-mark 32 [183] [46])))
 
@@ -302,17 +303,47 @@
 (global-set-key (kbd "C-\"")        'mc/skip-to-next-like-this)
 (global-set-key (kbd "C-:")         'mc/skip-to-previous-like-this)
 
-;;;; BEGIN RUST IDE
+;;;; BEGIN JULIA LSP MODE
+;; 
+;; See resources:
+;;   - Language server: https://github.com/julia-vscode/LanguageServer.jl
+;;   - Emacs package/installation instructions: https://github.com/gdkrmr/lsp-julia
+;; 
+;; Set Up:
+;; $ mkdir ~/.julia/languageserver
+;; $ julia --project=~/.julia/languageserver -e '
+;;     using Pkg;
+;;     Pkg.add.(("LanguageServer", "PackageCompiler"));
+;;     using PackageCompiler;
+;;     create_sysimage(:LanguageServer, sysimage_path="$(homedir())/.julia/languageserver/languageserver.so");
+;;  '
+
+(setq lsp-julia-package-dir nil)
+(setq lsp-julia-flags `(("." . "~/.julia/languageserver/languageserver.so")))  ;; "-J/path/to/languageserver.so"
+;; TODO: fix error message when running M-x lsp on Julia files
+
+(use-package lsp-julia
+  :config
+  (setq lsp-julia-default-environment "~/.julia/environments/v1.8")
+  (add-hook 'julia-mode-hook #'lsp-mode))
+
+;;;; END JULIA LSP MODE
+
+;;;; BEGIN RUST LSP MODE
 ;;;; Rust IDE-like development environment
-;; https://robert.kra.hn/posts/rust-emacs-setup/
-;; https://emacs-lsp.github.io/lsp-mode/page/lsp-rust-analyzer/
-;; https://github.com/brotzeit/rustic
 ;;
+;; Resources:
+;;   - https://robert.kra.hn/posts/rust-emacs-setup/
+;;   - https://emacs-lsp.github.io/lsp-mode/page/lsp-rust-analyzer/
+;;   - https://github.com/brotzeit/rustic
+;;
+;; Set Up:
 ;; $ rustup component add rust-src
-;; $ git clone https://github.com/rust-analyzer/rust-analyzer.git
-;; $ cd rust-analyzer && cargo xtask install --server # will install rust-analyzer into $HOME/.cargo/bin
-;; $ # The remaining packages should be installed via use-package
-;; $ # For some reason I also had to install zsh for this to work
+;; $ cd /tmp && git clone https://github.com/rust-analyzer/rust-analyzer.git && \
+;;     cd rust-analyzer && cargo xtask install --server # will install rust-analyzer into $HOME/.cargo/bin
+;; 
+;; The remaining packages should be installed via use-package
+;; For some reason I also had to install zsh for this to work
 
 ;;; Rustic requires `rustic` and `use-package`
 (use-package rustic
@@ -398,7 +429,16 @@
 ;;; Inline type hints
 (setq lsp-rust-analyzer-server-display-inlay-hints t)
 
-;;;; END RUST IDE
+;;;; END RUST LSP MODE
+
+;;;; BEGIN DOCKER LSP MODE
+(use-package lsp-docker)
+
+(defvar lsp-docker-client-packages 
+  '(lsp-rust lsp-julia))
+
+
+;;;; END DOCKER LSP MODE
 
 ;;; Properly indent CSV mode
 (add-hook 'csv-mode-hook
@@ -445,3 +485,24 @@
 (add-hook 'python-mode-hook 'rc/set-up-whitespace-handling)
 (add-hook 'yaml-mode-hook 'rc/set-up-whitespace-handling)
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(impatient-mode lsp-julia yasnippet yaml-mode use-package typescript-mode smart-mode-line-atom-one-dark-theme rustic paredit no-littering nlinum nim-mode multiple-cursors move-text magit lua-mode lsp-ui julia-mode hl-todo haskell-mode go-mode git-commit-insert-issue ess dracula-theme csv-mode company atom-one-dark-theme)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+;; Enable Markdown conversion
+;;; https://stackoverflow.com/a/36189456/12069968
+(use-package impatient-mode)
+(defun markdown-html (buffer)
+  (princ (with-current-buffer buffer
+    (format "<!DOCTYPE html><html><title>Impatient Markdown</title><xmp theme=\"united\" style=\"display:none;\"> %s  </xmp><script src=\"http://ndossougbe.github.io/strapdown/dist/strapdown.js\"></script></html>" (buffer-substring-no-properties (point-min) (point-max))))
+    (current-buffer)))

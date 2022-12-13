@@ -203,7 +203,17 @@
 
 ;;;; add julia support
 ;; https://github.com/JuliaEditorSupport/julia-emacs
-(use-package julia-mode)
+(use-package julia-mode
+  :ensure t
+  :interpreter ("julia" . julia-mode))
+
+;;;; Formatting advise for Julia code
+;; https://codeberg.org/FelipeLema/julia-formatter.el
+(use-package julia-formatter)
+(add-hook 'julia-mode-hook #'julia-formatter-mode)
+;; Load Julia Formatter server in the background after startup
+(add-hook 'after-init-hook #'julia-formatter--ensure-server)
+
 ;; Change default compilation for Julia
 (add-hook 'julia-mode-hook
           (lambda ()
@@ -222,10 +232,6 @@
                  (format "rustc %s && ./%s" 
 					(file-name-nondirectory buffer-file-name)
 					(file-name-base buffer-file-name)))))
-
-
-
-
 
 ;;;; add zig support
 (unless (version< emacs-version "24")
@@ -310,6 +316,8 @@
 ;;   - Emacs package/installation instructions: https://github.com/gdkrmr/lsp-julia
 ;; 
 ;; Set Up:
+;; $ cd ~/.emacs.d && git clone https://github.com/gdkrmr/lsp-julia && cd -
+;; The following set-up is no longer needed as we are now cloning the directory:
 ;; $ mkdir ~/.julia/languageserver
 ;; $ julia --project=~/.julia/languageserver -e '
 ;;     using Pkg;
@@ -318,14 +326,18 @@
 ;;     create_sysimage(:LanguageServer, sysimage_path="$(homedir())/.julia/languageserver/languageserver.so");
 ;;  '
 
-(setq lsp-julia-package-dir nil)
-(setq lsp-julia-flags `(("." . "~/.julia/languageserver/languageserver.so")))  ;; "-J/path/to/languageserver.so"
-;; TODO: fix error message when running M-x lsp on Julia files
-
 (use-package lsp-julia
+  ;; Manually clone the lsp-julia package from https://github.com/gdkrmr/lsp-julia
+  :load-path "~/.emacs.d/lsp-julia"
+  :ensure t
+  
   :config
   (setq lsp-julia-default-environment "~/.julia/environments/v1.8")
-  (add-hook 'julia-mode-hook #'lsp-mode))
+  (add-hook 'julia-mode-hook #'lsp))
+
+(setenv "JULIA_NUM_THREADS" "auto")
+(setq lsp-julia-package-dir nil)
+;; (setq lsp-julia-flags `(("-J" . "~/.julia/languageserver/languageserver.so")))
 
 ;;;; END JULIA LSP MODE
 
@@ -378,6 +390,11 @@
 ;;; lsp-mode and lsp-ui-mode
 (use-package lsp-mode
   :ensure
+
+  :init
+  ;; Use flycheck instead of flymake (better lsp-ui integration)
+  (setq lsp-prefer-flymake nil)
+  
   :commands lsp
   :custom
   ;; what to use when checking on-save. "check" is default, I prefer clippy
@@ -393,11 +410,34 @@
   (lsp-rust-analyzer-display-parameter-hints nil)
   (lsp-rust-analyzer-display-reborrow-hints nil)
   :config
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+  ;; Prevent long documentation showing up in the echo area from messing up the
+  ;; window configuration -> only show the first line
+  (defun ff/lsp-eldoc-advice (orig-fun &rest args)
+    (let ((msg (car args)))
+      (if msg
+          (funcall orig-fun (->> msg (s-trim-left)
+                                     (s-split "\n")
+                                     (first))))))
+  (advice-add 'lsp--eldoc-message :around #'ff/lsp-eldoc-advice)
+
+  ;; Avoid questions about restarting the LSP server when quitting emacs
+  (defun ff/lsp-disable-server-autorestart ()
+    (setq lsp-restart nil))
+  (add-hook 'kill-emacs-hook #'ff/lsp-disable-server-autorestart))
 
 (use-package lsp-ui
-  :ensure
+  :ensure t
+  
+  :init
+  (setq lsp-ui-doc-enable nil)
+  
   :commands lsp-ui-mode
+
+  :config
+  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+  (define-key lsp-ui-mode-map [remap xref-find-references]  #'lsp-ui-peek-find-references)
+  
   :custom
   (lsp-ui-peek-always-show t)
   (lsp-ui-sideline-show-hover t)
@@ -491,7 +531,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(impatient-mode lsp-julia yasnippet yaml-mode use-package typescript-mode smart-mode-line-atom-one-dark-theme rustic paredit no-littering nlinum nim-mode multiple-cursors move-text magit lua-mode lsp-ui julia-mode hl-todo haskell-mode go-mode git-commit-insert-issue ess dracula-theme csv-mode company atom-one-dark-theme)))
+   '(eglot-jl julia-repl impatient-mode lsp-julia yasnippet yaml-mode use-package typescript-mode smart-mode-line-atom-one-dark-theme rustic paredit no-littering nlinum nim-mode multiple-cursors move-text magit lua-mode lsp-ui julia-mode hl-todo haskell-mode go-mode git-commit-insert-issue ess dracula-theme csv-mode company atom-one-dark-theme)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -233,6 +233,12 @@
 					(file-name-nondirectory buffer-file-name)
 					(file-name-base buffer-file-name)))))
 
+;;;; add python compilation
+(add-hook 'python-mode-hook
+          (lambda ()
+            (set (make-local-variable 'compile-command)
+                 (format "python3 %s" (file-name-nondirectory buffer-file-name)))))
+
 ;;;; add zig support
 (unless (version< emacs-version "24")
   (add-to-list 'load-path "~/.emacs.d/zig-mode/")

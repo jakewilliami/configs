@@ -118,6 +118,13 @@ else
     alias lsg="exa -l --git"
 fi
 
+# Add alias for open command
+if command -v open > /dev/null 2>&1; then
+	alias o="open"
+else
+	alias o="xdg-open"
+fi
+
 function Words.jl() {
 	echo 'Words.find_anagrams("word", Words.WORDLIST)'
 	julia --project="~/projects/scripts/julia/Other/Words.jl/" -e 'include(joinpath(homedir(), "projects", "scripts", "julia", "Other", "Words.jl", "src", "Words.jl")); using .Words' -i

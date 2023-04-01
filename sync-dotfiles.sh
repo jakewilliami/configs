@@ -18,7 +18,7 @@
 # This helper script was written by Jake Ireland
 # (jakewilliami@icloud.com) in Winter, 2022.
 
-USAGE="
+USAGE="\
 USAGE:
     ./sync-dotfiles.sh [remote|local]
 
@@ -27,26 +27,40 @@ ARGS:
     local:  pull dotfiles from the repo and sync them locally
 "
 
+case "$1" in
+    (remote) mode="remote";;
+    (local)  mode="local";;
+    (-h)     echo "$USAGE" && exit 0;;
+    (*)      echo "$USAGE" && exit 1;;
+esac
+
+if [ -z "$mode" ]; then
+    echo "ERROR: Mode not set"
+    echo "$USAGE"
+    exit 1
+fi
+
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )"
 declare -a DOTFILES=(
-	"$HOME/.bash_profile"
-	"$HOME/.bashrc"
-	"$HOME/.emacs"
-	"$HOME/.vimrc"
-	"$HOME/.tmux.conf"
-	"$HOME/.alacritty.yml"
-	"$HOME/.config/fish/config.fish"
+    "$HOME/.bash_profile"
+    "$HOME/.bashrc"
+    "$HOME/.emacs"
+    "$HOME/.vimrc"
+    "$HOME/.tmux.conf"
+    "$HOME/.alacritty.yml"
+    "$HOME/.config/fish/config.fish"
 )
 
 for fsrc in "${DOTFILES[@]}"; do
-	fdst="$SCRIPT_DIR/$(basename "$fsrc")"
-	if [ ! -f "$fdst" ] || ! cmp -s "$fsrc" "$fdst"; then
-		case "$1" in
-			(remote) cp -vi "$fsrc" "$SCRIPT_DIR";;
-			(local)  cp -vi "$fdst" "$fsrc";;
-            (-h)     echo "$USAGE";;
-			(*)      echo "$USAGE";;
-		esac
-	fi
+    fdst="$SCRIPT_DIR/$(basename "$fsrc")"
+    if [ ! -f "$fdst" ] || ! cmp -s "$fsrc" "$fdst"; then
+		if [ "$mode" = "remote" ]; then
+			cp -vi "$fsrc" "$SCRIPT_DIR"
+		elif [ "$mode" = "local" ]; then
+			cp -vi "$fdst" "$fsrc"
+        else
+			echo "Unknown '$MODE'" && exit 1
+		fi
+    fi
 done
 

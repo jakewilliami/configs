@@ -535,8 +535,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ignored-local-variable-values '((buffer-file-coding-system . utf-8-unix)))
  '(package-selected-packages
-   '(spell-fu ebib writeroom-mode writeroom olivetti eglot-jl julia-repl impatient-mode lsp-julia yasnippet yaml-mode use-package typescript-mode smart-mode-line-atom-one-dark-theme rustic paredit no-littering nlinum nim-mode multiple-cursors move-text magit lua-mode lsp-ui julia-mode hl-todo haskell-mode go-mode git-commit-insert-issue ess dracula-theme csv-mode company atom-one-dark-theme)))
+   '(gdscript-mode spell-fu ebib writeroom-mode writeroom olivetti eglot-jl julia-repl impatient-mode lsp-julia yasnippet yaml-mode use-package typescript-mode smart-mode-line-atom-one-dark-theme rustic paredit no-littering nlinum nim-mode multiple-cursors move-text magit lua-mode lsp-ui julia-mode hl-todo haskell-mode go-mode git-commit-insert-issue ess dracula-theme csv-mode company atom-one-dark-theme)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -47,6 +47,9 @@ A fast and modern alternative to `du`, written in Rust.
 ### [`duf`](https://github.com/muesli/duf)
 A fast and modern alternative to `df`, written in Rust.
 
+### [`as-tree`](https://github.com/jez/as-tree)
+Convert a list of paths (e.g., the output of `ls`) to a tree-like structure (written in Rust).  Nice for visiualising things.  (See also `exa --tree`.)
+
 ## Promising
 
 The following are some tools or applications which I have not yet adopted but look promising
@@ -64,5 +67,3 @@ A tiling window manager written in Rust.  A non-Rust alternative I've heard good
 
 ### [`polybar`](https://github.com/jaagr/polybar)
 A customisable menu bar.
-
-### 

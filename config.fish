@@ -1,5 +1,11 @@
 # Alias for editor
-abbr -a e emacs
+function e
+	if test (count $argv) -eq 0
+		emacs . &
+	else
+		emacs $argv
+	end
+end
 
 # Open tmux session
 if status --is-interactive

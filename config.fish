@@ -28,6 +28,12 @@ else
 	abbr -a lll 'ls -la'
 end
 
+# Use dutree over du if available (https://github.com/nachoparker/dutree)
+if command -v dutree > /dev/null
+	abbr -a du 'dutree'
+	abbr -a du1 'dutree -d1'
+end
+
 # Fish git prompt
 set __fish_git_prompt_showuntrackedfiles 'yes'
 set __fish_git_prompt_showdirtystate 'yes'

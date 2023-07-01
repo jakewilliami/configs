@@ -134,6 +134,12 @@ function e() {
 	fi
 }
 
+# Refine du
+if command -v dutree > /dev/null 2>&1; then
+	alias du="dutree"
+	alias du1="dutree -d1"
+fi
+
 function Words.jl() {
 	echo 'Words.find_anagrams("word", Words.WORDLIST)'
 	julia --project="~/projects/scripts/julia/Other/Words.jl/" -e 'include(joinpath(homedir(), "projects", "scripts", "julia", "Other", "Words.jl", "src", "Words.jl")); using .Words' -i

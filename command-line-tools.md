@@ -44,6 +44,9 @@ An alternate version of `cat` with nice syntax highlighting, &c.  It is especial
 ### [`dutree`](https://github.com/nachoparker/dutree)
 A fast and modern alternative to `du`, written in Rust.
 
+### [`duf`](https://github.com/muesli/duf)
+A fast and modern alternative to `df`, written in Rust.
+
 ## Promising
 
 The following are some tools or applications which I have not yet adopted but look promising

@@ -50,6 +50,9 @@ A fast and modern alternative to `df`, written in Rust.
 ### [`as-tree`](https://github.com/jez/as-tree)
 Convert a list of paths (e.g., the output of `ls`) to a tree-like structure (written in Rust).  Nice for visiualising things.  (See also `exa --tree`.)
 
+### [`ebib`](https://joostkremers.github.io/ebib/ebib-manual.html)
+An Emacs plugin for working with BibTeX.
+
 ## Promising
 
 The following are some tools or applications which I have not yet adopted but look promising

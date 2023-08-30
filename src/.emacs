@@ -154,7 +154,9 @@
 (global-set-key (kbd "TAB") 'self-insert-command)
 
 ;;;; Set tab key to four spaces
-(setq-default indent-tabs-mode t)
+;;; https://stackoverflow.com/a/9383214/12069968
+;; (setq-default indent-tabs-mode t)
+(setq-default indent-tabs-mode nil)
 (setq-default tab-width 4) ;; Assuming you want your tabs to be four spaces wide
 (defvaralias 'c-basic-offset 'tab-width)
 
@@ -499,7 +501,12 @@
           )
 
 ;;; Indent in Python mode
-;; TODO
+;;;; https://stackoverflow.com/a/3685541/12069968
+(add-hook 'python-mode-hook
+      (lambda ()
+        (setq-default indent-tabs-mode t)
+        (setq tab-width 4)
+        (setq python-indent-offset 4)))
 
 ;;; Git Commit Mode
 ;;;; Emacs Wiki: Git Commit Mode: https://www.emacswiki.org/emacs/GitCommitMode

@@ -163,6 +163,17 @@
 ;;;; Disable automatic indentations
 (when (fboundp 'electric-indent-mode) (electric-indent-mode -1))
 
+;;;; Function to untabify whole file
+;; Useful for modes like Python and Rust which I can't seem to get to play
+;; nice with using spaces instead of tabs
+(defun untabify-file ()
+  "Convert all tabs to spaces in the current buffer."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "\t" nil t)
+      (replace-match "    ")))) ; Replace each tab with four spaces
+
 ;;;; Allow commenting/uncommenting code
 (defun toggle-comment-on-line ()
   "comment or uncomment current line"

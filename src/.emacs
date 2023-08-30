@@ -164,15 +164,14 @@
 (when (fboundp 'electric-indent-mode) (electric-indent-mode -1))
 
 ;;;; Function to untabify whole file
-;; Useful for modes like Python and Rust which I can't seem to get to play
-;; nice with using spaces instead of tabs
+;; https://www.emacswiki.org/emacs/UntabifyUponSave
 (defun untabify-file ()
   "Convert all tabs to spaces in the current buffer."
   (interactive)
   (save-excursion
     (goto-char (point-min))
-    (while (re-search-forward "\t" nil t)
-      (replace-match "    ")))) ; Replace each tab with four spaces
+    (when (search-forward "\t" nil t)
+        (untabify (1- (point)) (point-max)))))
 
 ;;;; Allow commenting/uncommenting code
 (defun toggle-comment-on-line ()
@@ -518,6 +517,16 @@
         (setq-default indent-tabs-mode t)
         (setq tab-width 4)
         (setq python-indent-offset 4)))
+
+;;; In some modes, untabify file before saving the file
+;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Standard-Hooks.html
+;; https://www.emacswiki.org/emacs/UntabifyUponSave
+(defun untabify-file-hook ()
+  "Custom hook for untabifying the whole file."
+  (add-hook 'before-save-hook 'untabify-file nil 'local))
+
+(add-hook 'rust-mode-hook 'untabify-file-hook)
+(add-hook 'python-mode-hook 'untabify-file-hook)
 
 ;;; Git Commit Mode
 ;;;; Emacs Wiki: Git Commit Mode: https://www.emacswiki.org/emacs/GitCommitMode

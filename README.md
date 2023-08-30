@@ -1,8 +1,8 @@
 <h1 align="center">Dotfiles</h1>
 
-This subdirectory contains all of my configuration files.
+The [`src`](./src/) subdirectory contains all of my configuration files.
 
-These dotfiles were initially just [`.bashrc`](.bashrc) and [`.bash_profile`](.bash_profile), hence why it is under this [`bash`](..) subdirectory.  However, over time it has grown, and I should consider migrating this to a separate repository in the future.
+These dotfiles were initially just [`.bashrc`](./src/.bashrc) and [`.bash_profile`](./src/.bash_profile).  However, over time it has grown, and I should consider migrating this to a separate repository in the future.
 
 I may have some miscellaneous notes on these configuration files below.
 

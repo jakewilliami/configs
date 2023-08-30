@@ -52,7 +52,7 @@ declare -a DOTFILES=(
 )
 
 for fsrc in "${DOTFILES[@]}"; do
-    fdst="$SCRIPT_DIR/$(basename "$fsrc")"
+    fdst="$SCRIPT_DIR/src/$(basename "$fsrc")"
     if [ ! -f "$fdst" ] || ! cmp -s "$fsrc" "$fdst"; then
 		if [ "$mode" = "remote" ]; then
 			cp -vi "$fsrc" "$SCRIPT_DIR"

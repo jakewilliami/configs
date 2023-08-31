@@ -257,6 +257,14 @@
   (autoload 'zig-mode "zig-mode" nil t)
   (add-to-list 'auto-mode-alist '("\\.zig\\'" . zig-mode)))
 
+;;;; add forth compilation
+(use-package forth-mode)
+(add-hook 'forth-mode-hook
+          (lambda ()
+            (set (make-local-variable 'compile-command)
+                 (format "gforth %s -e bye"
+					(file-name-nondirectory buffer-file-name)))))
+
 ;; (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
 ;; (setq-default left-fringe-width nil)
 ;; (setq-default indicate-empty-lines t)
@@ -564,7 +572,7 @@
  ;; If there is more than one, they won't work right.
  '(ignored-local-variable-values '((buffer-file-coding-system . utf-8-unix)))
  '(package-selected-packages
-   '(gdscript-mode spell-fu ebib writeroom-mode writeroom olivetti eglot-jl julia-repl impatient-mode lsp-julia yasnippet yaml-mode use-package typescript-mode smart-mode-line-atom-one-dark-theme rustic paredit no-littering nlinum nim-mode multiple-cursors move-text magit lua-mode lsp-ui julia-mode hl-todo haskell-mode go-mode git-commit-insert-issue ess dracula-theme csv-mode company atom-one-dark-theme)))
+   '(forth-mode gdscript-mode spell-fu ebib writeroom-mode writeroom olivetti eglot-jl julia-repl impatient-mode lsp-julia yasnippet yaml-mode use-package typescript-mode smart-mode-line-atom-one-dark-theme rustic paredit no-littering nlinum nim-mode multiple-cursors move-text magit lua-mode lsp-ui julia-mode hl-todo haskell-mode go-mode git-commit-insert-issue ess dracula-theme csv-mode company atom-one-dark-theme)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -55,7 +55,7 @@ for fsrc in "${DOTFILES[@]}"; do
     fdst="$SCRIPT_DIR/src/$(basename "$fsrc")"
     if [ ! -f "$fdst" ] || ! cmp -s "$fsrc" "$fdst"; then
 		if [ "$mode" = "remote" ]; then
-			cp -vi "$fsrc" "$SCRIPT_DIR"
+			cp -vi "$fsrc" "$(dirname "$fdst")"
 		elif [ "$mode" = "local" ]; then
 			cp -vi "$fdst" "$fsrc"
         else

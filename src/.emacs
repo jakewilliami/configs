@@ -76,6 +76,23 @@
   :init
   (load-theme 'atom-one-dark t))
 
+;;; Enable accented character input system
+;; https://emacs.stackexchange.com/a/30697/25429
+;; https://emacs.stackexchange.com/a/419/25429
+(setq default-input-method "latin-postfix")
+(defvar use-default-input-method t)
+(make-variable-buffer-local 'use-default-input-method)
+(defun activate-default-input-method ()
+  (interactive)
+  (if use-default-input-method
+      (activate-input-method default-input-method)
+    (inactivate-input-method)))
+(add-hook 'after-change-major-mode-hook 'activate-default-input-method)
+(add-hook 'minibuffer-setup-hook 'activate-default-input-method)
+(defun inactivate-default-input-method ()
+  (setq use-default-input-method nil))
+(add-hook 'c-mode-hook 'inactivate-default-input-method)
+
 ;; Power line
 (use-package smart-mode-line-atom-one-dark-theme)
 (use-package smart-mode-line

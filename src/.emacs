@@ -562,15 +562,80 @@
 ;;; Whitespace mode
 ;; https://www.emacswiki.org/emacs/WhiteSpace
 ;; (rc/require-theme 'gruber-darker)
-
 (use-package whitespace)
 (defun rc/set-up-whitespace-handling ()
   (interactive)
   (whitespace-mode 1)
   (add-to-list 'write-file-functions 'delete-trailing-whitespace))
-
 ;; (set-face-attribute 'whitespace-space nil :background nil :foreground "gray30")
 
+;;; Prefer horizontal split
+;; References:
+;;   - https://emacs.stackexchange.com/a/40517/25429
+;;   - https://www.gnu.org/software/emacs/manual/html_node/elisp/Choosing-Window-Options.html
+;;   - https://emacs.stackexchange.com/a/17877/25429
+(defun split-window-sensibly-prefer-horizontal (&optional window)
+  "Based on split-window-sensibly, but designed to prefer a horizontal split,
+   i.e. windows tiled side-by-side."
+  (let ((window (or window (selected-window))))
+    (or (and (window-splittable-p window t)
+         ;; Split window horizontally
+         (with-selected-window window
+           (split-window-right)))
+    (and (window-splittable-p window)
+         ;; Split window vertically
+         (with-selected-window window
+           (split-window-below)))
+    (and
+         ;; If window is the only usable window on its frame (it is
+         ;; the only one or, not being the only one, all the other
+         ;; ones are dedicated) and is not the minibuffer window, try
+         ;; to split it horizontally disregarding the value of
+         ;; `split-height-threshold'.
+         (let ((frame (window-frame window)))
+           (or
+            (eq window (frame-root-window frame))
+            (catch 'done
+              (walk-window-tree (lambda (w)
+                                  (unless (or (eq w window)
+                                              (window-dedicated-p w))
+                                    (throw 'done nil)))
+                                frame)
+              t)))
+     (not (window-minibuffer-p window))
+     (let ((split-width-threshold 0))
+       (when (window-splittable-p window t)
+         (with-selected-window window
+               (split-window-right))))))))
+
+(defun split-window-really-sensibly (&optional window)
+  (let ((window (or window (selected-window))))
+    (if (> (window-total-width window) (* 2 (window-total-height window)))
+        (with-selected-window window (split-window-sensibly-prefer-horizontal window))
+      (with-selected-window window (split-window-sensibly window)))))
+
+(setq
+   split-height-threshold 4
+   split-width-threshold 40 
+   split-window-preferred-function 'split-window-really-sensibly)
+
+;; Enable Markdown conversion
+;;; https://stackoverflow.com/a/36189456/12069968
+(use-package impatient-mode)
+(defun markdown-html (buffer)
+  (princ (with-current-buffer buffer
+    (format "<!DOCTYPE html><html><title>Impatient Markdown</title><xmp theme=\"united\" style=\"display:none;\"> %s  </xmp><script src=\"http://ndossougbe.github.io/strapdown/dist/strapdown.js\"></script></html>" (buffer-substring-no-properties (point-min) (point-max))))
+    (current-buffer)))
+
+;; Writing!
+;;; Writing modes
+(use-package olivetti)
+(use-package writeroom-mode)
+
+;;; Research tools
+(use-package ebib)
+
+;;; Hooks
 (add-hook 'julia-mode-hook 'rc/set-up-whitespace-handling)
 (add-hook 'rust-mode-hook 'rc/set-up-whitespace-handling)
 (add-hook 'c-mode-hook 'rc/set-up-whitespace-handling)
@@ -594,19 +659,3 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
-;; Enable Markdown conversion
-;;; https://stackoverflow.com/a/36189456/12069968
-(use-package impatient-mode)
-(defun markdown-html (buffer)
-  (princ (with-current-buffer buffer
-    (format "<!DOCTYPE html><html><title>Impatient Markdown</title><xmp theme=\"united\" style=\"display:none;\"> %s  </xmp><script src=\"http://ndossougbe.github.io/strapdown/dist/strapdown.js\"></script></html>" (buffer-substring-no-properties (point-min) (point-max))))
-    (current-buffer)))
-
-;; Writing!
-;;; Writing modes
-(use-package olivetti)
-(use-package writeroom-mode)
-
-;;; Research tools
-(use-package ebib)

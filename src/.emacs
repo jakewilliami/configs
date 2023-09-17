@@ -78,20 +78,18 @@
 
 ;;; Enable accented character input system
 ;; https://emacs.stackexchange.com/a/30697/25429
-;; https://emacs.stackexchange.com/a/419/25429
+;;
+;; For latin-postfix as default, see:
+;;   https://emacs.stackexchange.com/a/419/25429
+;;   https://github.com/jakewilliami/configs/commit/f11cd4e
 (setq default-input-method "latin-postfix")
-(defvar use-default-input-method t)
-(make-variable-buffer-local 'use-default-input-method)
-(defun activate-default-input-method ()
-  (interactive)
-  (if use-default-input-method
-      (activate-input-method default-input-method)
-    (inactivate-input-method)))
-(add-hook 'after-change-major-mode-hook 'activate-default-input-method)
-(add-hook 'minibuffer-setup-hook 'activate-default-input-method)
-(defun inactivate-default-input-method ()
-  (setq use-default-input-method nil))
-(add-hook 'c-mode-hook 'inactivate-default-input-method)
+;; Also note that C-x 8 " e will insert ë;
+;; As I use ë and ā most commonly, I have bound them for convenience
+;; https://emacs.stackexchange.com/a/7294/25429
+;;   - C-x 8 e   => ë
+;;   - C-x 8 M-a => ā
+(define-key 'iso-transl-ctl-x-8-map "e" [?ë])
+(define-key 'iso-transl-ctl-x-8-map (kbd "M-a") [?ā])
 
 ;; Power line
 (use-package smart-mode-line-atom-one-dark-theme)

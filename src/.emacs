@@ -91,6 +91,27 @@
 (define-key 'iso-transl-ctl-x-8-map "e" [?ë])
 (define-key 'iso-transl-ctl-x-8-map (kbd "M-a") [?ā])
 
+;; Shorten a string (e.g. hash) to eight characters
+(defun shorten-hash ()
+  "Shorten string (forward or backwards) to eight characters;
+   particularly for shortening hashes"
+  (interactive)
+  (let* ((bounds (bounds-of-thing-at-point 'word))
+         (word (if bounds
+                   (buffer-substring (car bounds) (cdr bounds))
+                 nil))
+         (substring (if (and word (>= (- (cdr bounds) (car bounds)) 7))
+                        (substring word 0 8)
+                      nil)))
+    (if substring
+        (progn
+          (delete-region (car bounds) (cdr bounds))
+          (insert substring))
+      (message "Cannot shorten word to eight characters"))))
+(global-set-key (kbd "C-c M-f") 'shorten-hash)
+(global-set-key (kbd "C-c M-b") 'shorten-hash)
+
+
 ;;; Pages
 ;;   - https://github.com/purcell/page-break-lines
 ;;   - https://www.emacswiki.org/emacs/PageBreaks

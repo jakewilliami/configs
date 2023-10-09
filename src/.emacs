@@ -91,6 +91,13 @@
 (define-key 'iso-transl-ctl-x-8-map "e" [?ë])
 (define-key 'iso-transl-ctl-x-8-map (kbd "M-a") [?ā])
 
+;;; Pages
+;;   - https://github.com/purcell/page-break-lines
+;;   - https://www.emacswiki.org/emacs/PageBreaks
+;;   - https://www.gnu.org/software/emacs/manual/html_node/emacs/Pages.html
+(use-package page-break-lines)
+(global-page-break-lines-mode)
+
 ;; Power line
 (use-package smart-mode-line-atom-one-dark-theme)
 (use-package smart-mode-line
@@ -652,7 +659,7 @@
  ;; If there is more than one, they won't work right.
  '(ignored-local-variable-values '((buffer-file-coding-system . utf-8-unix)))
  '(package-selected-packages
-   '(forth-mode gdscript-mode spell-fu ebib writeroom-mode writeroom olivetti eglot-jl julia-repl impatient-mode lsp-julia yasnippet yaml-mode use-package typescript-mode smart-mode-line-atom-one-dark-theme rustic paredit no-littering nlinum nim-mode multiple-cursors move-text magit lua-mode lsp-ui julia-mode hl-todo haskell-mode go-mode git-commit-insert-issue ess dracula-theme csv-mode company atom-one-dark-theme)))
+   '(osx-location xr forth-mode gdscript-mode spell-fu ebib writeroom-mode writeroom olivetti eglot-jl julia-repl impatient-mode lsp-julia yasnippet yaml-mode use-package typescript-mode smart-mode-line-atom-one-dark-theme rustic paredit no-littering nlinum nim-mode multiple-cursors move-text magit lua-mode lsp-ui julia-mode hl-todo haskell-mode go-mode git-commit-insert-issue ess dracula-theme csv-mode company atom-one-dark-theme)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

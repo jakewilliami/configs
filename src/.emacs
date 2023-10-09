@@ -15,7 +15,7 @@
 
 ;;;; Configure MEPLA:
 ;;     - https://melpa.org/#/getting-started
-;;     - https://emacs.stackexchange.com/a/10501/25429; 
+;;     - https://emacs.stackexchange.com/a/10501;
 (package-initialize)
 (when (>= emacs-major-version 24)
   (require 'package)
@@ -41,8 +41,8 @@
 (add-to-list 'auto-mode-alist '("Cask" . emacs-lisp-mode))
 
 ;;; Colours in compilation mode
-;; https://emacs.stackexchange.com/a/72580/25429
-;; https://emacs.stackexchange.com/a/73552/25429
+;; https://emacs.stackexchange.com/a/72580
+;; https://emacs.stackexchange.com/a/73552
 ;; (setq compilation-environment '("TERM=ansi-color-apply"))
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 (setq compilation-max-output-line-length nil)
@@ -52,7 +52,7 @@
 (setq explicit-shell-file-name "/usr/local/bin/bash")
 
 ;;; Use Package
-;; https://emacs.stackexchange.com/a/50603/25429
+;; https://emacs.stackexchange.com/a/50603
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -77,39 +77,61 @@
   (load-theme 'atom-one-dark t))
 
 ;;; Enable accented character input system
-;; https://emacs.stackexchange.com/a/30697/25429
+;; https://emacs.stackexchange.com/a/30697
 ;;
 ;; For latin-postfix as default, see:
-;;   https://emacs.stackexchange.com/a/419/25429
+;;   https://emacs.stackexchange.com/a/419
 ;;   https://github.com/jakewilliami/configs/commit/f11cd4e
 (setq default-input-method "latin-postfix")
 ;; Also note that C-x 8 " e will insert ë;
 ;; As I use ë and ā most commonly, I have bound them for convenience
-;; https://emacs.stackexchange.com/a/7294/25429
+;; https://emacs.stackexchange.com/a/7294
 ;;   - C-x 8 e   => ë
 ;;   - C-x 8 M-a => ā
 (define-key 'iso-transl-ctl-x-8-map "e" [?ë])
 (define-key 'iso-transl-ctl-x-8-map (kbd "M-a") [?ā])
 
-;; Shorten a string (e.g. hash) to eight characters
-(defun shorten-hash ()
-  "Shorten string (forward or backwards) to eight characters;
-   particularly for shortening hashes"
+;;; Shorten a string to eight characters
+;; This is particularly usful for shortening commit hashes
+;;
+;; I provide the following keybindings:
+;;   - C-x M-f => Shorten hash foward
+;;   - C-x M-b => Shorten hash backward
+;;   - C-x M-w => Shorten hash at word
+;;
+;; See references:
+;;   - https://emacs.stackexchange.com/q/79118
+;;   - https://emacs.stackexchange.com/q/79120
+(defun shorten-hash (word-motion-func)
+  "Shorten string (forward or backwards) to eight characters.  
+Particularly useful for shortening hashes"
+  (let* ((point-start (point))
+         (point-stop (progn (funcall word-motion-func) (point)))
+         (word (buffer-substring  point-start point-stop)))
+    (if (> (length word) 8)
+        (progn (delete-region point-start point-stop)
+               (insert (substring word 0 8)))
+      (message "Cannot shorten word to eight characters"))))
+(defun shorten-hash-forward ()
+  (interactive)
+  (shorten-hash 'forward-word))
+(defun shorten-hash-backward ()
+  (interactive)
+  (shorten-hash 'backward-word))
+(defun shorten-hash-at-word ()
+  "Shorten word to eight characters"
   (interactive)
   (let* ((bounds (bounds-of-thing-at-point 'word))
-         (word (if bounds
-                   (buffer-substring (car bounds) (cdr bounds))
-                 nil))
-         (substring (if (and word (>= (- (cdr bounds) (car bounds)) 7))
-                        (substring word 0 8)
-                      nil)))
-    (if substring
-        (progn
-          (delete-region (car bounds) (cdr bounds))
-          (insert substring))
+         (point-start (car bounds))
+         (point-stop (cdr bounds))
+         (word (buffer-substring point-start point-stop)))
+    (if (> (length word) 8)
+        (progn (delete-region point-start point-stop)
+               (insert (substring word 0 8)))
       (message "Cannot shorten word to eight characters"))))
-(global-set-key (kbd "C-c M-f") 'shorten-hash)
-(global-set-key (kbd "C-c M-b") 'shorten-hash)
+(global-set-key (kbd "C-x M-f") 'shorten-hash-forward)
+(global-set-key (kbd "C-x M-b") 'shorten-hash-backward)
+(global-set-key (kbd "C-x M-w") 'shorten-hash-at-word)
 
 
 ;;; Pages
@@ -197,7 +219,7 @@
 (global-set-key (kbd "TAB") 'self-insert-command)
 
 ;;;; Set tab key to four spaces
-;;; https://stackoverflow.com/a/9383214/12069968
+;;; https://stackoverflow.com/a/9383214
 ;; (setq-default indent-tabs-mode t)
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4) ;; Assuming you want your tabs to be four spaces wide
@@ -562,7 +584,7 @@
           )
 
 ;;; Indent in Python mode
-;;;; https://stackoverflow.com/a/3685541/12069968
+;;;; https://stackoverflow.com/a/3685541
 (add-hook 'python-mode-hook
       (lambda ()
         (setq-default indent-tabs-mode t)
@@ -599,9 +621,9 @@
 
 ;;; Prefer horizontal split
 ;; References:
-;;   - https://emacs.stackexchange.com/a/40517/25429
+;;   - https://emacs.stackexchange.com/a/40517
 ;;   - https://www.gnu.org/software/emacs/manual/html_node/elisp/Choosing-Window-Options.html
-;;   - https://emacs.stackexchange.com/a/17877/25429
+;;   - https://emacs.stackexchange.com/a/17877
 (defun split-window-sensibly-prefer-horizontal (&optional window)
   "Based on split-window-sensibly, but designed to prefer a horizontal split,
    i.e. windows tiled side-by-side."
@@ -648,7 +670,7 @@
    split-window-preferred-function 'split-window-really-sensibly)
 
 ;; Enable Markdown conversion
-;;; https://stackoverflow.com/a/36189456/12069968
+;;; https://stackoverflow.com/a/36189456
 (use-package impatient-mode)
 (defun markdown-html (buffer)
   (princ (with-current-buffer buffer

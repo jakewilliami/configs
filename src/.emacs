@@ -2,57 +2,48 @@
 ;-*-Emacs-Lisp-*-
 
 ;;;; Commentary:
-;;
-; This is my Emacs confiration file.
-; Any non-code config. pieces will be explained in this commentary.
-; 
-;;; Remapping ctrl to caps lock
-; https://www.emacswiki.org/emacs/MovingTheCtrlKey
-; https://deskthority.net/wiki/Category:Keyboards_with_Unix_layout
 
+;; This is my Emacs confiration file.
+;; Any non-code config. pieces will be explained in this commentary.
+;;
+;; For verbose config file (pre mid-October, 2023), see:
+;;   https://github.com/jakewilliami/configs/blob/7f75f095/src/.emacs
+;;
+;; Remapping Caps Lock to Control:
+;;   https://www.emacswiki.org/emacs/MovingTheCtrlKey
+;;   https://deskthority.net/wiki/Category:Keyboards_with_Unix_layout
 
 ;;;; Code:
 
-;;;; Configure MEPLA:
-;;     - https://melpa.org/#/getting-started
-;;     - https://emacs.stackexchange.com/a/10501;
+
+
+;;;; High-Level Configurations:
+;;
+;; This is the most basic, high-level configuration that needs to be
+;; instantiated before all else; e.g. specification of package repositories,
+;; encoding, shell, etc.
+
+;;; Configure MEPLA
+;;    https://melpa.org/#/getting-started
+;;    https://emacs.stackexchange.com/a/10501
 (package-initialize)
 (when (>= emacs-major-version 24)
   (require 'package)
   (add-to-list 'package-archives
-           '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+               '("melpa-stable" . "http://stable.melpa.org/packages/") t)
   (add-to-list 'package-archives
-           '("melpa" . "https://melpa.org/packages/") t)
+               '("melpa" . "https://melpa.org/packages/") t)
   (add-to-list 'package-archives 
-           '("gnu" . "http://elpa.gnu.org/packages/") t)
-  ;; (package-refresh-contents)
-)
+               '("gnu" . "http://elpa.gnu.org/packages/") t))
 
+;;; Encoding
 (setq-default buffer-file-coding-system 'utf-8-unix)
 (set-default-coding-systems 'utf-8-unix)
 (setq locale-coding-system 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
 
-;;; Emacs lisp
-(add-hook 'emacs-lisp-mode-hook
-          '(lambda ()
-             (local-set-key (kbd "C-c C-j")
-                            (quote eval-print-last-sexp))))
-(add-to-list 'auto-mode-alist '("Cask" . emacs-lisp-mode))
-
-;;; Colours in compilation mode
-;; https://emacs.stackexchange.com/a/72580
-;; https://emacs.stackexchange.com/a/73552
-;; (setq compilation-environment '("TERM=ansi-color-apply"))
-(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
-(setq compilation-max-output-line-length nil)
-
-;;;; set shell to bash
-(setenv "SHELL" "/usr/local/bin/bash")
-(setq explicit-shell-file-name "/usr/local/bin/bash")
-
 ;;; Use Package
-;; https://emacs.stackexchange.com/a/50603
+;;   https://emacs.stackexchange.com/a/50603
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -61,284 +52,163 @@
 (require 'bind-key)
 (setq use-package-always-ensure t)
 
-;;;;; Emacs Theme
+;;; Set shell to Bash
+(setenv "SHELL" "/usr/local/bin/bash")
+(setq explicit-shell-file-name "/usr/local/bin/bash")
 
-;;; Dracula Theme
+
+
+;;;; Aesthetics:
+;;
+;; Thematic/aesthetic/stylistic configurations.
+;;
+;; This section also contains code on how Emacs is opened;
+;; i.e., in full-screen, with no startup screen.
+
+;;; Theme
 ;; (use-package dracula-theme
 ;;   :init
 ;;   (load-theme 'dracula t))
-
-;;; Atom One Dark Theme
 (use-package atom-one-dark-theme
   :ensure t
   :defer t
-  
   :init
   (load-theme 'atom-one-dark t))
-
-;;; Enable accented character input system
-;; https://emacs.stackexchange.com/a/30697
-;;
-;; For latin-postfix as default, see:
-;;   https://emacs.stackexchange.com/a/419
-;;   https://github.com/jakewilliami/configs/commit/f11cd4e
-(setq default-input-method "latin-postfix")
-;; Also note that C-x 8 " e will insert ë;
-;; As I use ë and ā most commonly, I have bound them for convenience
-;; https://emacs.stackexchange.com/a/7294
-;;   - C-x 8 e   => ë
-;;   - C-x 8 M-a => ā
-(define-key 'iso-transl-ctl-x-8-map "e" [?ë])
-(define-key 'iso-transl-ctl-x-8-map (kbd "M-a") [?ā])
-
-;;; Shorten a string to eight characters
-;; This is particularly usful for shortening commit hashes
-;;
-;; I provide the following keybindings:
-;;   - C-x M-f => Shorten hash foward
-;;   - C-x M-b => Shorten hash backward
-;;   - C-x M-w => Shorten hash at word
-;;
-;; See references:
-;;   - https://emacs.stackexchange.com/q/79118
-;;   - https://emacs.stackexchange.com/q/79120
-(defun shorten-hash (word-motion-func)
-  "Shorten string (forward or backwards) to eight characters.  
-Particularly useful for shortening hashes"
-  (let* ((point-start (point))
-         (point-stop (progn (funcall word-motion-func) (point)))
-         (word (buffer-substring  point-start point-stop)))
-    (if (> (length word) 8)
-        (progn (delete-region point-start point-stop)
-               (insert (substring word 0 8)))
-      (message "Cannot shorten word to eight characters"))))
-(defun shorten-hash-forward ()
-  (interactive)
-  (shorten-hash 'forward-word))
-(defun shorten-hash-backward ()
-  (interactive)
-  (shorten-hash 'backward-word))
-(defun shorten-hash-at-word ()
-  "Shorten word to eight characters"
-  (interactive)
-  (let* ((bounds (bounds-of-thing-at-point 'word))
-         (point-start (car bounds))
-         (point-stop (cdr bounds))
-         (word (buffer-substring point-start point-stop)))
-    (if (> (length word) 8)
-        (progn (delete-region point-start point-stop)
-               (insert (substring word 0 8)))
-      (message "Cannot shorten word to eight characters"))))
-(global-set-key (kbd "C-x M-f") 'shorten-hash-forward)
-(global-set-key (kbd "C-x M-b") 'shorten-hash-backward)
-(global-set-key (kbd "C-x M-w") 'shorten-hash-at-word)
-
-
-;;; Pages
-;;   - https://github.com/purcell/page-break-lines
-;;   - https://www.emacswiki.org/emacs/PageBreaks
-;;   - https://www.gnu.org/software/emacs/manual/html_node/emacs/Pages.html
-(use-package page-break-lines)
-(global-page-break-lines-mode)
 
 ;; Power line
 (use-package smart-mode-line-atom-one-dark-theme)
 (use-package smart-mode-line
   :ensure t
   :defer t
-  
+
   :init
   (setq sml/no-confirm-load-theme t)
   (setq sml/theme 'atom-one-dark)
-  
+
   :config
   (sml/setup)
   (sml/apply-theme 'atom-one-dark))
 
+;;; Pages
+;;   https://github.com/purcell/page-break-lines
+;;   https://www.emacswiki.org/emacs/PageBreaks
+;;   https://www.gnu.org/software/emacs/manual/html_node/emacs/Pages.html
+(use-package page-break-lines)
+(global-page-break-lines-mode)
+
 ;;;; Represent whitespace as dots
-;; (set-face-attribute 'whitespace-space nil :background nil :foreground "gray30")
 (setq whitespace-style '(space-mark))
 (setq whitespace-display-mappings '((space-mark 32 [183] [46])))
 
-;;;; suppress startup screen
-(setq inhibit-startup-screen t
-	inhibit-splash-screen t
-	inhibit-startup-echo-area-message t)
+;;; Whitespace mode
+;;   https://www.emacswiki.org/emacs/WhiteSpace
+;; (rc/require-theme 'gruber-darker)
+(use-package whitespace)
+(defun rc/set-up-whitespace-handling ()
+  (interactive)
+  (whitespace-mode 1)
+  (add-to-list 'write-file-functions 'delete-trailing-whitespace))
 
-;;;; hide tool-bar
+;;; Suppress startup buffers
+(setq inhibit-startup-screen t
+	  inhibit-splash-screen t
+	  inhibit-startup-echo-area-message t)
+
+;;; Hide tool-bar
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 
-;;;; make window fullscreen (-fs | --fullscreen)
-;; must be after the hide toolbar section
-;; https://superuser.com/questions/1076443/
-(toggle-frame-maximized)
-;; https://stackoverflow.com/questions/2151449/
-;; (x-display-pixel-width)
-;; (x-display-pixel-height)
+;;; Line numbers
+;; Show line numbers
+(global-display-line-numbers-mode)
 
-;;;; adjust scroll mode
-;; scroll one line at a time (less "jumpy" than defaults)    
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
-(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-(setq scroll-step 1) ;; keyboard scroll one line at a time
+;; Use relative line numbers
+(display-line-numbers-mode)
+(setq display-line-numbers-type 'relative)
+
+;;; Colours in compilation mode
+;;   https://emacs.stackexchange.com/a/72580
+;;   https://emacs.stackexchange.com/a/73552
+(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+(setq compilation-max-output-line-length nil)
+
+;;; Make window fullscreen
+;; Alternatively, you can use the -fs/--fullscreen flag
+;;
+;; NOTE: must be after the hide toolbar section
+;;   https://superuser.com/questions/1076443/
+;;
+;; NOTE: `x-display-pixel-*' does not work for me
+;;   https://stackoverflow.com/questions/2151449/
+(toggle-frame-maximized)
+
+
+
+;;;; User Experience:
+;;
+;; This section contains configuration related to user experience.
+;; For example, scrolling, parentheses matchng, tabs, electric modes, etc.
+
+;;; Adjust scroll settings
+;; Scroll one line at a time (less "jumpy" than defaults)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+
+;; Don't accelerate scrolling
+(setq mouse-wheel-progressive-speed nil)
+
+;; Scroll window under mouse
+(setq mouse-wheel-follow-mouse 't)
+
+;; Keyboard scroll one line at a time
+(setq scroll-step 1)
 (when (boundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
 
-;; Highlight matching parenthesis!
+;; enable continuous scrolling
+(setq doc-view-continuous t)
+
+;;; Highlight matching parenthesis!
 (show-paren-mode 1)
 (setq show-paren-delay 0)
 
-;;; Paredit
-(use-package paredit)
+;;; Tabs
+;; Allow tab key
+(global-set-key (kbd "TAB") 'self-insert-command)
 
+;; Set tab key to four spaces
+;;   https://stackoverflow.com/a/9383214
+(setq-default indent-tabs-mode nil)
+
+;; Tabs are four spaces wide
+(setq-default tab-width 4)
+(defvaralias 'c-basic-offset 'tab-width)
+;; (setq-default indent-tabs-mode t)
+
+;;; Paredit
+;;   https://www.emacswiki.org/emacs/ParEdit
+(use-package paredit)
 (defun rc/turn-on-paredit ()
   (interactive)
   (paredit-mode 1))
 
-(add-hook 'emacs-lisp-mode-hook  'rc/turn-on-paredit)
-(add-hook 'lisp-mode-hook        'rc/turn-on-paredit)
-(add-hook 'common-lisp-mode-hook 'rc/turn-on-paredit)
-
-;;;; Disable arrow keys to force yourself to use default Emacs keybindings for navigation
-(global-unset-key (kbd "<left>"))
-(global-unset-key (kbd "<right>"))
-(global-unset-key (kbd "<up>"))
-(global-unset-key (kbd "<down>"))
-(global-unset-key (kbd "<C-left>"))
-(global-unset-key (kbd "<C-right>"))
-(global-unset-key (kbd "<C-up>"))
-(global-unset-key (kbd "<C-down>"))
-(global-unset-key (kbd "<M-left>"))
-(global-unset-key (kbd "<M-right>"))
-(global-unset-key (kbd "<M-up>"))
-(global-unset-key (kbd "<M-down>"))
-
-;;;; allow tab key
-(global-set-key (kbd "TAB") 'self-insert-command)
-
-;;;; Set tab key to four spaces
-;;; https://stackoverflow.com/a/9383214
-;; (setq-default indent-tabs-mode t)
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 4) ;; Assuming you want your tabs to be four spaces wide
-(defvaralias 'c-basic-offset 'tab-width)
-
-;;;; Disable automatic indentations
-(when (fboundp 'electric-indent-mode) (electric-indent-mode -1))
-
-;;;; Function to untabify whole file
-;; https://www.emacswiki.org/emacs/UntabifyUponSave
-(defun untabify-file ()
-  "Convert all tabs to spaces in the current buffer."
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (when (search-forward "\t" nil t)
-        (untabify (1- (point)) (point-max)))))
-
-;;;; Allow commenting/uncommenting code
+;;; Allow commenting/uncommenting code
 (defun toggle-comment-on-line ()
   "comment or uncomment current line"
   (interactive)
   (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
 (global-set-key (kbd "M-/") 'toggle-comment-on-line)
 
-;;;; instead of emacs creating a *~ file in the current directory, create backup file elsewhere
+;;; No littering
+;; Instead of Emacs creatiing a *~ file in the current dir,
+;; create backup files elsewhere
 (setq backup-directory-alist `(("." . "~/.saves")))
 
-;;;; do something with #file-being-edited#
+;; Also, do something with #file-being-edited#
 (use-package no-littering)
-;; (require 'no-littering)
 
-;;; ESS
-;; namely for R syntax highlighting
-(use-package ess)
-
-;;;; find matching parenthesis
-(global-set-key "%" 'match-paren)
-          
-          (defun match-paren (arg)
-            "Go to the matching paren if on a paren; otherwise insert %."
-            (interactive "p")
-            (cond ((looking-at "\\s(") (forward-list 1) (backward-char 1))
-                  ((looking-at "\\s)") (forward-char 1) (backward-list 1))
-                  (t (self-insert-command (or arg 1)))))
-
-;;;; Add line numbers
-(global-display-line-numbers-mode)
-;; Preset `nlinum-format' for minimum width.
-;; (defun my-nlinum-mode-hook ()
-  ;; (when nlinum-mode
-    ;; (setq-local nlinum-format
-                ;; (concat "%" (number-to-string
-                             ;; Guesstimate number of buffer lines.
-                             ;; (ceiling (log (max 1 (/ (buffer-size) 80)) 10)))
-                        ;; "d"))))
-;; (add-hook 'nlinum-mode-hook #'my-nlinum-mode-hook)
-
-;;;; add julia support
-;; https://github.com/JuliaEditorSupport/julia-emacs
-(use-package julia-mode
-  :ensure t
-  :interpreter ("julia" . julia-mode))
-
-;;;; Formatting advise for Julia code
-;; https://codeberg.org/FelipeLema/julia-formatter.el
-(use-package julia-formatter)
-(add-hook 'julia-mode-hook #'julia-formatter-mode)
-;; Load Julia Formatter server in the background after startup
-(add-hook 'after-init-hook #'julia-formatter--ensure-server)
-
-;; Change default compilation for Julia
-(add-hook 'julia-mode-hook
-          (lambda ()
-            (set (make-local-variable 'compile-command)
-                 (format "julia --project %s" 
-					(file-name-nondirectory buffer-file-name)))))
-
-;;;; add rust support
-;; https://github.com/rust-lang/rust-mode
-(use-package rust-mode)
-;; Change default compilation for Rust
-(require 'compile)
-(add-hook 'rust-mode-hook
-          (lambda ()
-            (set (make-local-variable 'compile-command)
-                 (format "rustc %s && ./%s" 
-					(file-name-nondirectory buffer-file-name)
-					(file-name-base buffer-file-name)))))
-
-;;;; add python compilation
-(add-hook 'python-mode-hook
-          (lambda ()
-            (set (make-local-variable 'compile-command)
-                 (format "python3 %s" (file-name-nondirectory buffer-file-name)))))
-
-;;;; add zig support
-(unless (version< emacs-version "24")
-  (add-to-list 'load-path "~/.emacs.d/zig-mode/")
-  (autoload 'zig-mode "zig-mode" nil t)
-  (add-to-list 'auto-mode-alist '("\\.zig\\'" . zig-mode)))
-
-;;;; add forth compilation
-(use-package forth-mode)
-(add-hook 'forth-mode-hook
-          (lambda ()
-            (set (make-local-variable 'compile-command)
-                 (format "gforth %s -e bye"
-					(file-name-nondirectory buffer-file-name)))))
-
-;; (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
-;; (setq-default left-fringe-width nil)
-;; (setq-default indicate-empty-lines t)
-;; (setq-default indent-tabs-mode nil)
-
-;;;; TODO: highlighting
-;; https://github.com/tarsius/hl-todo
-;; https://www.reddit.com/r/emacs/comments/f8tox6/
-;; (use-package hl-todo)
+;;; Note highlighting
+;;   https://github.com/tarsius/hl-todo
+;;   https://www.reddit.com/r/emacs/comments/f8tox6/
 (use-package hl-todo
   :hook (prog-mode . hl-todo-mode)
   :config
@@ -350,45 +220,13 @@ Particularly useful for shortening hashes"
           ("REVIEW"     font-lock-keyword-face bold)
           ("NOTE"       success bold)
           ("DEPRECATED" font-lock-doc-face bold))))
-		;; '(("TODO"		 . "#FF0000")
-		   ;; ("FIXME"		 . "#FF0000")
-		   ;; ("HACK"		 . "#A020F0")
-		   ;; ("REVIEW"	 . "#FF4500")
-		   ;; ("NOTE"		 . "#1E90FF")
-		   ;; ("DEPRECATED" . "#FF0000")));;)
-;; (setq hl-todo-keyword-faces
-      ;; '(("TODO"   . "#FF0000")
-        ;; ("FIXME"  . "#FF0000")
-        ;; ("DEBUG"  . "#A020F0")
-        ;; ("GOTCHA" . "#FF4500")
-        ;; ("STUB"   . "#1E90FF")))
 
-
-;; enable continuous scrolling
-(setq doc-view-continuous t)
-
-;; coloured dots for whitespace
-(setq whitespace-style '(space-mark))
-(setq whitespace-display-mappings '((space-mark 32 [183] [46])))
-
-;; Moves lines of text
-;; by default uses M-up and M-down
+;;; Moves lines of text
+;; By default uses M-up and M-down
 (use-package move-text)
 (move-text-default-bindings)
 
-;; nim mode
-(use-package move-text)
-
-;; Making regex a little bit easier
-(use-package re-builder)
-;; (setq reb-re-syntax 'string) ;; switch to `string`; there's little reason tu use `read`
-
-;; Relative line numbers
-(display-line-numbers-mode)
-;; (setq display-line-numbers 'relative)
-(setq display-line-numbers-type 'relative)
-
-;;;; Multiple cursors
+;;; Multiple cursors
 (use-package multiple-cursors)
 (global-set-key (kbd "C->")         'mc/mark-next-like-this)
 (global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
@@ -400,54 +238,320 @@ Particularly useful for shortening hashes"
 (global-set-key (kbd "C-\"")        'mc/skip-to-next-like-this)
 (global-set-key (kbd "C-:")         'mc/skip-to-previous-like-this)
 
-;;;; BEGIN JULIA LSP MODE
-;; 
-;; See resources:
-;;   - Language server: https://github.com/julia-vscode/LanguageServer.jl
-;;   - Emacs package/installation instructions: https://github.com/gdkrmr/lsp-julia
-;; 
-;; Set Up:
-;; $ cd ~/.emacs.d && git clone https://github.com/gdkrmr/lsp-julia && cd -
-;; The following set-up is no longer needed as we are now cloning the directory:
-;; $ mkdir ~/.julia/languageserver
-;; $ julia --project=~/.julia/languageserver -e '
-;;     using Pkg;
-;;     Pkg.add.(("LanguageServer", "PackageCompiler"));
-;;     using PackageCompiler;
-;;     create_sysimage(:LanguageServer, sysimage_path="$(homedir())/.julia/languageserver/languageserver.so");
-;;  '
+;;; Prefer horizontal split
+;; Ref:
+;;  https://emacs.stackexchange.com/a/40517
+;;  https://www.gnu.org/software/emacs/manual/html_node/elisp/Choosing-Window-Options.html
+;;  https://emacs.stackexchange.com/a/17877
+(defun split-window-sensibly-prefer-horizontal (&optional window)
+  "Based on split-window-sensibly, but designed to prefer a horizontal split,
+   i.e. windows tiled side-by-side."
+  (let ((window (or window (selected-window))))
+    (or (and (window-splittable-p window t)
+             ;; Split window horizontally
+             (with-selected-window window
+               (split-window-right)))
+        (and (window-splittable-p window)
+             ;; Split window vertically
+             (with-selected-window window
+               (split-window-below)))
+        (and
+         ;; If window is the only usable window on its frame (it is
+         ;; the only one or, not being the only one, all the other
+         ;; ones are dedicated) and is not the minibuffer window, try
+         ;; to split it horizontally disregarding the value of
+         ;; `split-height-threshold'.
+         (let ((frame (window-frame window)))
+           (or
+            (eq window (frame-root-window frame))
+            (catch 'done
+              (walk-window-tree (lambda (w)
+                                  (unless (or (eq w window)
+                                              (window-dedicated-p w))
+                                    (throw 'done nil)))
+                                frame)
+              t)))
+         (not (window-minibuffer-p window))
+         (let ((split-width-threshold 0))
+           (when (window-splittable-p window t)
+             (with-selected-window window
+               (split-window-right))))))))
 
-(use-package lsp-julia
-  ;; Manually clone the lsp-julia package from https://github.com/gdkrmr/lsp-julia
-  :load-path "~/.emacs.d/lsp-julia"
-  :ensure t
-  
-  :config
-  (setq lsp-julia-default-environment "~/.julia/environments/v1.8")
-  (add-hook 'julia-mode-hook #'lsp))
+(defun split-window-really-sensibly (&optional window)
+  (let ((window (or window (selected-window))))
+    (if (> (window-total-width window) (* 2 (window-total-height window)))
+        (with-selected-window window (split-window-sensibly-prefer-horizontal window))
+      (with-selected-window window (split-window-sensibly window)))))
 
-(setenv "JULIA_NUM_THREADS" "auto")
-(setq lsp-julia-package-dir nil)
-;; (setq lsp-julia-flags `(("-J" . "~/.julia/languageserver/languageserver.so")))
+(setq
+ split-height-threshold 4
+ split-width-threshold 40
+ split-window-preferred-function 'split-window-really-sensibly)
 
-;;;; END JULIA LSP MODE
+
 
-;;;; BEGIN RUST LSP MODE
-;;;; Rust IDE-like development environment
+;;;; Custom Functions:
 ;;
-;; Resources:
+;; This section contains functions written by moi!
+;;
+;; Typically if I have to write them myself, they may be
+;; a little niche, and not so useful for others.  Nonetheless,
+;; they are convenient for me.
+
+;;; Function to untabify whole file
+;;   https://www.emacswiki.org/emacs/UntabifyUponSave
+(defun untabify-file ()
+  "Convert all tabs to spaces in the current buffer."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (when (search-forward "\t" nil t)
+      (untabify (1- (point)) (point-max)))))
+
+;; In some modes, untabify file before saving the file
+;;   https://www.gnu.org/software/emacs/manual/html_node/elisp/Standard-Hooks.html
+;;   https://www.emacswiki.org/emacs/UntabifyUponSave
+;;
+;; To use this:
+;;   (add-hook 'something-mode-hook 'untabify-file-hook)
+(defun untabify-file-hook ()
+  "Custom hook for untabifying the whole file."
+  (add-hook 'before-save-hook 'untabify-file nil 'local))
+
+;;; Enable accented character input system
+;;   https://emacs.stackexchange.com/a/30697
+;;
+;; For latin-postfix as default, see:
+;;   https://emacs.stackexchange.com/a/419
+;;   https://github.com/jakewilliami/configs/commit/f11cd4e
+(setq default-input-method "latin-postfix")
+
+;; Also note that C-x 8 " e will insert ë;
+;; As I use ë and ā most commonly, I have bound them for convenience
+;;   - C-x 8 e   => ë
+;;   - C-x 8 M-a => ā
+;;
+;; Ref:
+;;   https://emacs.stackexchange.com/a/7294
+(define-key 'iso-transl-ctl-x-8-map "e" [?ë])
+(define-key 'iso-transl-ctl-x-8-map (kbd "M-a") [?ā])
+
+;;; Shorten hash functions
+;; Shorten a string (e.g. hash) to eight characters---useful for commit URLs
+;; Provides the following key bindings:
+;;   C-x M-f: shorten hash forward
+;;   C-x M-b: shorten hash backward
+;;   C-x M-x: shorten hash at word
+;;
+;; Ref:
+;;   https://www.gnu.org/software/emacs/manual/html_node/elisp/Point.html
+;;   https://www.emacswiki.org/emacs/ThingAtPoint
+;;   https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Region.html
+;;   https://www.gnu.org/software/emacs/manual/html_node/elisp/Near-Point.html
+;;   https://www.gnu.org/software/emacs/manual/html_node/eintr/Point-and-mark.html
+;;   https://emacs.stackexchange.com/a/79119
+;;
+;; NOTE: my implementation here:
+;;   https://emacs.stackexchange.com/a/79121
+;; is slightly wrong, as it does not start looking at the start of the next work;
+;; rather, it starts at the current point, which may cut out characters that are
+;; not in the word (e.g. spaces).
+(defun shorten-hash (word-motion)
+  "Shorten string (forward or backwards) to eight characters.
+Particularly useful for shortening hashes.
+
+Takes a word motion argument: either `forward' or `backward'."
+
+  ;; Ensure the word motion argument is valid
+  (unless (member word-motion '(forward backward))
+    (error "Unknown word motion: %s" word-motion))
+
+  ;; Get the word motion function from the motion argument
+  (defun get-word-motion-func (word-motion)
+    (cond
+     ((eq word-motion 'forward)
+      'forward-word)
+     ((eq word-motion 'backward)
+      'backward-word)
+     (t
+      (error "Unknown word motion: %s" word-motion))))
+
+  ;; Get the word motion in the opposite direction
+  (defun toggle-word-motion (word-motion-func)
+    (cond
+     ((eq word-motion-func 'forward-word)
+      'backward-word)
+     ((eq word-motion-func 'backward-word)
+      'forward-word)
+     (t
+      (error "Unknown word motion function: %s" word-motion-func))))
+
+  ;; Main function logic
+  (let* ((word-motion-func (get-word-motion-func word-motion))
+         (point-stop (progn (funcall word-motion-func) (point)))
+         ;; Considered using forward-to-word:
+         ;;    https://emacs.stackexchange.com/a/4274
+         ;; But can just get the end of the word first and then
+         ;; go backwards (or vice versa)
+         (word-motion-rev-func (toggle-word-motion word-motion-func))
+         (point-start (progn (funcall word-motion-rev-func) (point)))
+         (word (buffer-substring  point-start point-stop)))
+    (if (> (length word) 8)
+        (progn (delete-region point-start point-stop)
+               (insert (substring word 0 8)))
+      (message "Cannot shorten word to eight characters"))))
+
+(defun shorten-hash-forward ()
+  (interactive)
+  (shorten-hash 'forward))
+
+(defun shorten-hash-backward ()
+  (interactive)
+  (shorten-hash 'backward))
+
+(defun shorten-hash-at-word ()
+  "Shorten word to eight characters"
+  (interactive)
+  (let* ((bounds (bounds-of-thing-at-point 'word))
+         (point-start (car bounds))
+         (point-stop (cdr bounds))
+         (word (buffer-substring point-start point-stop)))
+    (if (> (length word) 8)
+        (progn (delete-region point-start point-stop)
+               (insert (substring word 0 8)))
+      (message "Cannot shorten word to eight characters"))))
+
+(global-set-key (kbd "C-x M-f") 'shorten-hash-forward)
+(global-set-key (kbd "C-x M-b") 'shorten-hash-backward)
+
+(global-set-key (kbd "C-x M-x") 'shorten-hash-at-word)
+
+
+
+;;;; Writing/Research:
+;;
+;; I use Emacs for nearly everything, not just programming.  I have
+;; discovered a few neat writing modes and research tools that are
+;; useful.
+
+;;; Writing modes
+(use-package olivetti)
+(use-package writeroom-mode)
+
+;;; Research tools
+(use-package ebib)
+
+
+
+;;;; Programming:
+;;
+;; Major modes for various languages, compilation configuration,
+;; and git things.
+
+
+;;; Magit
+(use-package magit)
+
+;;; Git Commit Mode
+;;   https://www.emacswiki.org/emacs/GitCommitMode
+;;
+;; NOTE: git-commit-mode isn’t used when committing from the command-line:
+;;   https://magit.vc/manual/magit/git_002dcommit_002dmode-isn_0027t-used-when-committing-from-the-command_002dline.html
+(use-package git-commit)
+(use-package server
+  :config (or (server-running-p) (server-mode)))
+
+;;; Julia
+;;   https://github.com/JuliaEditorSupport/julia-emacs
+(use-package julia-mode
+  :ensure t
+  :interpreter ("julia" . julia-mode))
+
+;; Set number of threads for Julia
+(setenv "JULIA_NUM_THREADS" "auto")
+
+;; Change default compilation for Julia
+(add-hook 'julia-mode-hook
+          (lambda ()
+            (set (make-local-variable 'compile-command)
+                 (format "julia --project %s" 
+					     (file-name-nondirectory buffer-file-name)))))
+
+;;; Rust
+;;   https://github.com/rust-lang/rust-mode
+(use-package rust-mode)
+;; Change default compilation for Rust
+(require 'compile)
+(add-hook 'rust-mode-hook
+          (lambda ()
+            (set (make-local-variable 'compile-command)
+                 (format "rustc %s && ./%s" 
+					     (file-name-nondirectory buffer-file-name)
+					     (file-name-base buffer-file-name)))))
+
+;;; R
+(use-package ess)
+
+;;; Python
+(add-hook 'python-mode-hook
+          (lambda ()
+            (set (make-local-variable 'compile-command)
+                 (format "python3 %s" (file-name-nondirectory buffer-file-name)))))
+
+;;; Indent in Python mode
+;;   https://stackoverflow.com/a/3685541
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setq-default indent-tabs-mode t)
+            (setq tab-width 4)
+            (setq python-indent-offset 4)))
+
+;;; Forth
+(use-package forth-mode)
+(add-hook 'forth-mode-hook
+          (lambda ()
+            (set (make-local-variable 'compile-command)
+                 (format "gforth %s -e bye"
+					     (file-name-nondirectory buffer-file-name)))))
+
+;;; Paredit hooks
+(add-hook 'emacs-lisp-mode-hook  'rc/turn-on-paredit)
+(add-hook 'lisp-mode-hook        'rc/turn-on-paredit)
+(add-hook 'common-lisp-mode-hook 'rc/turn-on-paredit)
+
+;;; Untabify file on save in certain major modes
+(add-hook 'rust-mode-hook 'untabify-file-hook)
+(add-hook 'python-mode-hook 'untabify-file-hook)
+
+;;; Whitespace mode hooks
+(add-hook 'julia-mode-hook 'rc/set-up-whitespace-handling)
+(add-hook 'rust-mode-hook 'rc/set-up-whitespace-handling)
+(add-hook 'c-mode-hook 'rc/set-up-whitespace-handling)
+(add-hook 'emacs-lisp-mode 'rc/set-up-whitespace-handling)
+(add-hook 'markdown-mode-hook 'rc/set-up-whitespace-handling)
+(add-hook 'haskell-mode-hook 'rc/set-up-whitespace-handling)
+(add-hook 'python-mode-hook 'rc/set-up-whitespace-handling)
+(add-hook 'yaml-mode-hook 'rc/set-up-whitespace-handling)
+
+
+
+;;;; Rust LSP Mode:
+;;
+;; Rust IDE-like development environment
+;;
+;; Ref:
 ;;   - https://robert.kra.hn/posts/rust-emacs-setup/
 ;;   - https://emacs-lsp.github.io/lsp-mode/page/lsp-rust-analyzer/
 ;;   - https://github.com/brotzeit/rustic
 ;;
 ;; Set Up:
-;; $ rustup component add rust-src
-;; $ rustup component add rust-analyzer
+;;   $ rustup component add rust-src
+;;   $ rustup component add rust-analyzer
 ;; 
 ;; The remaining packages should be installed via use-package
 ;; For some reason I also had to install zsh for this to work
 
-;;; Rustic requires `rustic` and `use-package`
+;;; Rustic requires `rustic' and `use-package'
 (use-package rustic
   :ensure
   :bind (:map rustic-mode-map
@@ -460,38 +564,42 @@ Particularly useful for shortening hashes"
               ("C-c C-c Q" . lsp-workspace-shutdown)
               ("C-c C-c s" . lsp-rust-analyzer-status))
   :config
-  ;; uncomment for less flashiness
+
+  ;; Uncomment for less flashiness:
   ;; (setq lsp-eldoc-hook nil)
   ;; (setq lsp-enable-symbol-highlighting nil)
   ;; (setq lsp-signature-auto-activate nil)
 
-  ;; comment to disable rustfmt on save
+  ;; Comment to disable rustfmt on save
   (setq rustic-format-on-save t)
   (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook))
 
 (defun rk/rustic-mode-hook ()
-  ;; so that run C-c C-c C-r works without having to confirm, but don't try to
-  ;; save rust buffers that are not file visiting. Once
-  ;; https://github.com/brotzeit/rustic/issues/253 has been resolved this should
-  ;; no longer be necessary.
+  ;; So that runnng C-c C-c C-r works without having to confirm,
+  ;; but doesn't try to save Rust buffers that are not file visiting.
+  ;; Once https://github.com/brotzeit/rustic/issues/253 has been resolved
+  ;; this should no longer be necessary
   (when buffer-file-name
     (setq-local buffer-save-without-query t)))
 
-;;; lsp-mode and lsp-ui-mode
+;;; Configure LSP mode
 (use-package lsp-mode
   :ensure
 
   :init
   ;; Use flycheck instead of flymake (better lsp-ui integration)
   (setq lsp-prefer-flymake nil)
-  
+
   :commands lsp
   :custom
-  ;; what to use when checking on-save. "check" is default, I prefer clippy
+
+  ;; What to use when checking on-save.
+  ;; `check' is default, but I prefer `clippy'
   (lsp-rust-analyzer-cargo-watch-command "clippy")
   (lsp-eldoc-render-all t)
   (lsp-idle-delay 0.6)
-  ;; enable / disable the hints as you prefer:
+
+  ;; Enable/disable the hints as you prefer:
   (lsp-rust-analyzer-server-display-inlay-hints t)
   (lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial")
   (lsp-rust-analyzer-display-chaining-hints t)
@@ -501,14 +609,15 @@ Particularly useful for shortening hashes"
   (lsp-rust-analyzer-display-reborrow-hints nil)
   :config
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+
   ;; Prevent long documentation showing up in the echo area from messing up the
   ;; window configuration -> only show the first line
   (defun ff/lsp-eldoc-advice (orig-fun &rest args)
     (let ((msg (car args)))
       (if msg
           (funcall orig-fun (->> msg (s-trim-left)
-                                     (s-split "\n")
-                                     (first))))))
+                                 (s-split "\n")
+                                 (first))))))
   (advice-add 'lsp--eldoc-message :around #'ff/lsp-eldoc-advice)
 
   ;; Avoid questions about restarting the LSP server when quitting emacs
@@ -516,6 +625,7 @@ Particularly useful for shortening hashes"
     (setq lsp-restart nil))
   (add-hook 'kill-emacs-hook #'ff/lsp-disable-server-autorestart))
 
+;;; Configure LSP
 (use-package lsp-ui
   :ensure t
   
@@ -537,15 +647,23 @@ Particularly useful for shortening hashes"
 (use-package company
   :ensure
   :custom
-  (company-idle-delay 0.5) ;; how long to wait until popup
-  ;; (company-begin-commands nil) ;; uncomment to disable popup
+
+  ;; How long to wait until popup
+  (company-idle-delay 0.5)
+
+  ;; Uncomment to disable popup
+  ;; (company-begin-commands nil)
+
   :bind
   (:map company-active-map
-	      ("C-n". company-select-next)
-	      ("C-p". company-select-previous)
-	      ("M-<". company-select-first)
-	      ("M->". company-select-last)))
+	    ("C-n". company-select-next)
+	    ("C-p". company-select-previous)
+	    ("M-<". company-select-first)
+	    ("M->". company-select-last)))
 
+;;; Templating system for more cleverness
+;; See demo:
+;;   https://www.youtube.com/watch?v=ZCGmZK4V7Sg
 (use-package yasnippet
   :ensure
   :config
@@ -559,150 +677,30 @@ Particularly useful for shortening hashes"
 ;;; Inline type hints
 (setq lsp-rust-analyzer-server-display-inlay-hints t)
 
-;;;; END RUST LSP MODE
-
-;;;; BEGIN DOCKER LSP MODE
-(use-package lsp-docker)
-
-(defvar lsp-docker-client-packages 
-  '(lsp-rust lsp-julia))
-
-
-;;;; END DOCKER LSP MODE
-
 ;;; Properly indent CSV mode
 (add-hook 'csv-mode-hook
           (lambda ()
             (define-key csv-mode-map (kbd "C-c C-M-a")
-              (defun csv-align-visible (&optional arg)
-                "Align visible fields"
-                (interactive "P")
-                (csv-align-fields nil (window-start) (window-end))
-                )
-              )
+                        (defun csv-align-visible (&optional arg)
+                          "Align visible fields"
+                          (interactive "P")
+                          (csv-align-fields nil (window-start) (window-end))
+                          )
+                        )
             )
           )
 
-;;; Indent in Python mode
-;;;; https://stackoverflow.com/a/3685541
-(add-hook 'python-mode-hook
-      (lambda ()
-        (setq-default indent-tabs-mode t)
-        (setq tab-width 4)
-        (setq python-indent-offset 4)))
+
 
-;;; In some modes, untabify file before saving the file
-;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Standard-Hooks.html
-;; https://www.emacswiki.org/emacs/UntabifyUponSave
-(defun untabify-file-hook ()
-  "Custom hook for untabifying the whole file."
-  (add-hook 'before-save-hook 'untabify-file nil 'local))
-
-(add-hook 'rust-mode-hook 'untabify-file-hook)
-(add-hook 'python-mode-hook 'untabify-file-hook)
-
-;;; Git Commit Mode
-;;;; Emacs Wiki: Git Commit Mode: https://www.emacswiki.org/emacs/GitCommitMode
-;;;; git-commit-mode isn’t used when committing from the command-line: https://magit.vc/manual/magit/git_002dcommit_002dmode-isn_0027t-used-when-committing-from-the-command_002dline.html
-(use-package git-commit)
-;; (server-mode)
-(use-package server
-  :config (or (server-running-p) (server-mode)))
-
-;;; Whitespace mode
-;; https://www.emacswiki.org/emacs/WhiteSpace
-;; (rc/require-theme 'gruber-darker)
-(use-package whitespace)
-(defun rc/set-up-whitespace-handling ()
-  (interactive)
-  (whitespace-mode 1)
-  (add-to-list 'write-file-functions 'delete-trailing-whitespace))
-;; (set-face-attribute 'whitespace-space nil :background nil :foreground "gray30")
-
-;;; Prefer horizontal split
-;; References:
-;;   - https://emacs.stackexchange.com/a/40517
-;;   - https://www.gnu.org/software/emacs/manual/html_node/elisp/Choosing-Window-Options.html
-;;   - https://emacs.stackexchange.com/a/17877
-(defun split-window-sensibly-prefer-horizontal (&optional window)
-  "Based on split-window-sensibly, but designed to prefer a horizontal split,
-   i.e. windows tiled side-by-side."
-  (let ((window (or window (selected-window))))
-    (or (and (window-splittable-p window t)
-         ;; Split window horizontally
-         (with-selected-window window
-           (split-window-right)))
-    (and (window-splittable-p window)
-         ;; Split window vertically
-         (with-selected-window window
-           (split-window-below)))
-    (and
-         ;; If window is the only usable window on its frame (it is
-         ;; the only one or, not being the only one, all the other
-         ;; ones are dedicated) and is not the minibuffer window, try
-         ;; to split it horizontally disregarding the value of
-         ;; `split-height-threshold'.
-         (let ((frame (window-frame window)))
-           (or
-            (eq window (frame-root-window frame))
-            (catch 'done
-              (walk-window-tree (lambda (w)
-                                  (unless (or (eq w window)
-                                              (window-dedicated-p w))
-                                    (throw 'done nil)))
-                                frame)
-              t)))
-     (not (window-minibuffer-p window))
-     (let ((split-width-threshold 0))
-       (when (window-splittable-p window t)
-         (with-selected-window window
-               (split-window-right))))))))
-
-(defun split-window-really-sensibly (&optional window)
-  (let ((window (or window (selected-window))))
-    (if (> (window-total-width window) (* 2 (window-total-height window)))
-        (with-selected-window window (split-window-sensibly-prefer-horizontal window))
-      (with-selected-window window (split-window-sensibly window)))))
-
-(setq
-   split-height-threshold 4
-   split-width-threshold 40 
-   split-window-preferred-function 'split-window-really-sensibly)
-
-;; Enable Markdown conversion
-;;; https://stackoverflow.com/a/36189456
-(use-package impatient-mode)
-(defun markdown-html (buffer)
-  (princ (with-current-buffer buffer
-    (format "<!DOCTYPE html><html><title>Impatient Markdown</title><xmp theme=\"united\" style=\"display:none;\"> %s  </xmp><script src=\"http://ndossougbe.github.io/strapdown/dist/strapdown.js\"></script></html>" (buffer-substring-no-properties (point-min) (point-max))))
-    (current-buffer)))
-
-;; Writing!
-;;; Writing modes
-(use-package olivetti)
-(use-package writeroom-mode)
-
-;;; Research tools
-(use-package ebib)
-
-;;; Hooks
-(add-hook 'julia-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'rust-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'c-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'emacs-lisp-mode 'rc/set-up-whitespace-handling)
-(add-hook 'markdown-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'haskell-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'python-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'yaml-mode-hook 'rc/set-up-whitespace-handling)
+;;;; Generated Code:
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ignored-local-variable-values '((buffer-file-coding-system . utf-8-unix)))
  '(package-selected-packages
-   '(osx-location xr forth-mode gdscript-mode spell-fu ebib writeroom-mode writeroom olivetti eglot-jl julia-repl impatient-mode lsp-julia yasnippet yaml-mode use-package typescript-mode smart-mode-line-atom-one-dark-theme rustic paredit no-littering nlinum nim-mode multiple-cursors move-text magit lua-mode lsp-ui julia-mode hl-todo haskell-mode go-mode git-commit-insert-issue ess dracula-theme csv-mode company atom-one-dark-theme)))
+   '(flycheck yasnippet company lsp-ui lsp-mode rustic forth-mode ess rust-mode julia-mode magit ebib writeroom-mode olivetti multiple-cursors move-text hl-todo no-littering paredit page-break-lines smart-mode-line-atom-one-dark-theme atom-one-dark-theme)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

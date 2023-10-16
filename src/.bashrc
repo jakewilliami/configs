@@ -203,4 +203,7 @@ function compile.rs() {
 export PATH="$PATH:$HOME/.julia/bin"
 . "$HOME/.cargo/env"
 
+# Custom path
+export PATH="$HOME/opt/:$PATH"
+
 source /Users/jakeireland/.config/broot/launcher/bash/br

@@ -17,6 +17,7 @@
 #   https://brew.sh
 #   https://unix.stackexchange.com/a/750210
 #   https://support.apple.com/kb/HT208050
+#   https://discussions.apple.com/thread/250722978
 #   https://stackoverflow.com/a/77052639
 if [[ -e "/usr/local/bin/brew" ]]; then
     eval "$(/usr/local/bin/brew shellenv)"

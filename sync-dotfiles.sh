@@ -57,6 +57,9 @@ for fsrc in "${DOTFILES[@]}"; do
 		if [ "$mode" = "remote" ]; then
 			cp -vi "$fsrc" "$(dirname "$fdst")"
 		elif [ "$mode" = "local" ]; then
+            if [ ! -d "$(dirname "$fsrc")" ]; then
+                mkdir -p "$(dirname "$fsrc")"
+            fi
 			cp -vi "$fdst" "$fsrc"
         else
 			echo "Unknown '$MODE'" && exit 1

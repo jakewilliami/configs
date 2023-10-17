@@ -51,9 +51,13 @@ declare -a DOTFILES=(
     "$HOME/.config/fish/config.fish"
 )
 
+OUT_OF_SYNC=FALSE
 for fsrc in "${DOTFILES[@]}"; do
     fdst="$SCRIPT_DIR/src/$(basename "$fsrc")"
     if [ ! -f "$fdst" ] || ! cmp -s "$fsrc" "$fdst"; then
+        if ! $OUT_OF_SYNC; then
+	        OUT_OF_SYNC=TRUE
+        fi
 		if [ "$mode" = "remote" ]; then
 			cp -vi "$fsrc" "$(dirname "$fdst")"
 		elif [ "$mode" = "local" ]; then
@@ -67,3 +71,6 @@ for fsrc in "${DOTFILES[@]}"; do
     fi
 done
 
+if ! $OUT_OF_SYNC; then
+   echo "Already up to date."
+fi

@@ -329,12 +329,12 @@
 ;; Also note that C-x 8 " e will insert ë;
 ;; As I use ë and ā most commonly, I have bound them for convenience
 ;;   - C-x 8 e   => ë
-;;   - C-x 8 M-a => ā
+;;   - C-x 8 a => ā
 ;;
 ;; Ref:
 ;;   https://emacs.stackexchange.com/a/7294
 (define-key 'iso-transl-ctl-x-8-map "e" [?ë])
-(define-key 'iso-transl-ctl-x-8-map (kbd "M-a") [?ā])
+(define-key 'iso-transl-ctl-x-8-map "a" [?ā])
 
 ;;; Shorten hash functions
 ;; Shorten a string (e.g. hash) to eight characters---useful for commit URLs

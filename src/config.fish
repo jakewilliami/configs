@@ -37,7 +37,7 @@ end
 # Use dutree over du if available (https://github.com/nachoparker/dutree)
 if command -v dutree > /dev/null
 	abbr -a du 'dutree'
-	abbr -a du1 'dutree -d1'
+	abbr -a du1 'dutree --depth=1 --aggr=1M'
 end
 
 # Fish git prompt

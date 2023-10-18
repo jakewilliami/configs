@@ -97,7 +97,7 @@ function e() {
 # Refine du
 if command -v dutree > /dev/null 2>&1; then
 	alias du="dutree"
-	alias du1="dutree -d1"
+	alias du1="dutree --depth=1 --aggr=1M"
 fi
 
 # Fun aliases

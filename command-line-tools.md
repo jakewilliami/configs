@@ -70,3 +70,6 @@ A tiling window manager written in Rust.  A non-Rust alternative I've heard good
 
 ### [`polybar`](https://github.com/jaagr/polybar)
 A customisable menu bar.
+
+### [`bin`](https://github.com/marcosnils/bin)
+A binary manager.

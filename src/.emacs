@@ -441,6 +441,9 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;; Research tools
 (use-package ebib)
 
+;; Set dialect to biblatex
+(ebib-set-dialect 'biblatex)
+
 
 
 ;;;; Programming:

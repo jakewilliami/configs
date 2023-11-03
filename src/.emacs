@@ -492,6 +492,14 @@ Takes a word motion argument: either `forward' or `backward'."
 					     (file-name-nondirectory buffer-file-name)
 					     (file-name-base buffer-file-name)))))
 
+;;; Go
+(use-package go-mode)
+(add-hook 'go-mode-hook
+          (lambda ()
+            (set (make-local-variable 'compile-command)
+                 (format "go run %s"
+					     (file-name-nondirectory buffer-file-name)))))
+
 ;;; R
 (use-package ess)
 
@@ -703,7 +711,7 @@ Takes a word motion argument: either `forward' or `backward'."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(flycheck yasnippet company lsp-ui lsp-mode rustic forth-mode ess rust-mode julia-mode magit ebib writeroom-mode olivetti multiple-cursors move-text hl-todo no-littering paredit page-break-lines smart-mode-line-atom-one-dark-theme atom-one-dark-theme)))
+   '(go-mode flycheck yasnippet company lsp-ui lsp-mode rustic forth-mode ess rust-mode julia-mode magit ebib writeroom-mode olivetti multiple-cursors move-text hl-todo no-littering paredit page-break-lines smart-mode-line-atom-one-dark-theme atom-one-dark-theme)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

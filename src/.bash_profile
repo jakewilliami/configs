@@ -27,6 +27,10 @@ else
     echo "WARNING: no Homebrew configuration found"
 fi
 
+# LLVM
+# https://stackoverflow.com/a/42730721
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+
 # Upside-down face ˙ᵕ˙
 echo "( .-.)"
 

@@ -26,7 +26,7 @@
 ;;; Configure MEPLA
 ;;    https://melpa.org/#/getting-started
 ;;    https://emacs.stackexchange.com/a/10501
-(package-initialize)
+(package-initialize t)
 (when (>= emacs-major-version 24)
   (require 'package)
   (add-to-list 'package-archives
@@ -44,6 +44,9 @@
 
 ;;; Use Package
 ;;   https://emacs.stackexchange.com/a/50603
+;; See also:
+;;   Quelpa: https://github.com/quelpa/quelpa
+;;   Quelpa Use Package: https://github.com/quelpa/quelpa-use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -451,6 +454,9 @@ Takes a word motion argument: either `forward' or `backward'."
 ;; Major modes for various languages, compilation configuration,
 ;; and git things.
 
+;;; Custom configurations
+;; For when I implement something myself, or can't be bothered with Quelpa
+(add-to-list 'load-path "~/.emacs.local/")
 
 ;;; Magit
 (use-package magit)
@@ -503,6 +509,9 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;; R
 (use-package ess)
 
+;;; LLVM
+(require 'llvm-mode)
+
 ;;; Python
 (add-hook 'python-mode-hook
           (lambda ()
@@ -533,6 +542,7 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;; Untabify file on save in certain major modes
 (add-hook 'rust-mode-hook 'untabify-file-hook)
 (add-hook 'python-mode-hook 'untabify-file-hook)
+(add-hook 'julia-mode-hook 'untabify-file-hook)
 
 ;;; Whitespace mode hooks
 (add-hook 'julia-mode-hook 'rc/set-up-whitespace-handling)
@@ -711,7 +721,7 @@ Takes a word motion argument: either `forward' or `backward'."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(go-mode flycheck yasnippet company lsp-ui lsp-mode rustic forth-mode ess rust-mode julia-mode magit ebib writeroom-mode olivetti multiple-cursors move-text hl-todo no-littering paredit page-break-lines smart-mode-line-atom-one-dark-theme atom-one-dark-theme)))
+   '(gdscript-mode just-mode go-mode flycheck yasnippet company lsp-ui lsp-mode rustic forth-mode ess rust-mode julia-mode magit ebib writeroom-mode olivetti multiple-cursors move-text hl-todo no-littering paredit page-break-lines smart-mode-line-atom-one-dark-theme atom-one-dark-theme)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

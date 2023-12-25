@@ -18,6 +18,7 @@
 # This helper script was written by Jake Ireland
 # (jakewilliami@icloud.com) in Winter, 2022.
 
+# Define usage
 USAGE="\
 USAGE:
     ./sync-dotfiles.sh [remote|local]
@@ -27,6 +28,7 @@ ARGS:
     local:  pull dotfiles from the repo and sync them locally
 "
 
+# Match command-line arguments to appropriate usage
 case "$1" in
     (remote) mode="remote";;
     (local)  mode="local";;
@@ -40,7 +42,8 @@ if [ -z "$mode" ]; then
     exit 1
 fi
 
-SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )"
+# Define the dotfiles we want to sync
+# NOTE: by default this will pull from the src/ directory, however you can put an optional subdirectory from which to pull after a `:' delimiter.
 declare -a DOTFILES=(
     "$HOME/.bash_profile"
     "$HOME/.bashrc"
@@ -51,9 +54,24 @@ declare -a DOTFILES=(
     "$HOME/.config/fish/config.fish"
 )
 
+# Main script
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )"
 OUT_OF_SYNC=FALSE
 for fsrc in "${DOTFILES[@]}"; do
-    fdst="$SCRIPT_DIR/src/$(basename "$fsrc")"
+    # Split the input by delimiter
+    IFS=':' read -ra parts <<< "$fsrc"
+
+    # Extract optional subdir from input with src as default
+    fsrc="${parts[0]}"
+    subd="src"
+    if [ "${#parts[@]}" -eq 2 ]; then
+        subd="$subd/${parts[1]}"
+    fi
+
+    # Construct the input or destination file path
+    fdst="$SCRIPT_DIR/$subd/$(basename "$fsrc")"
+
+    # Check that we need to update resource before doing so
     if [ ! -f "$fdst" ] || ! cmp -s "$fsrc" "$fdst"; then
         if ! $OUT_OF_SYNC; then
 	        OUT_OF_SYNC=TRUE

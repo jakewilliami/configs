@@ -439,7 +439,7 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;   C-c b: insert square brackets
 (defun insert-brackets-and-move-between (open close)
   "Insert brackets and move cursor between them."
-  (interactive "sEnter open bracket: \nsEnter close bracket: ")
+  (interactive)
   (insert (concat open close))
   (backward-char (length close)))
 
@@ -459,6 +459,21 @@ Takes a word motion argument: either `forward' or `backward'."
 (global-set-key (kbd "C-c c") 'insert-curly-and-move-between)
 (global-set-key (kbd "C-c b") 'insert-square-and-move-between)
 
+;;; Duplicate current line
+;;   C-,: duplicates current line
+(defun duplicate-current-line ()
+  "Duplicate current line.  Retains column information."
+  (interactive)
+  (let ((column (- (point) (point-at-bol)))
+        (line (let ((s (thing-at-point 'line t)))
+                (if s (string-remove-suffix "\n" s) ""))))
+    (move-end-of-line 1)
+    (newline)
+    (insert line)
+    (move-beginning-of-line 1)
+    (forward-char column)))
+
+(global-set-key (kbd "C-,") 'duplicate-current-line)
 
 
 

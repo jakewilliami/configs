@@ -50,6 +50,7 @@ declare -a DOTFILES=(
     "$HOME/.emacs"
     "$HOME/.emacs.local/llvm-mode.el:.emacs.local/"
     "$HOME/.emacs.snippets/fundamental-mode/mit.snippet:.emacs.snippets/fundamental-mode/"
+    "$HOME/.emacs.snippets/rust-mode/main.snippet:.emacs.snippets/rust-mode/"
     "$HOME/.vimrc"
     "$HOME/.tmux.conf"
     "$HOME/.alacritty.yml"

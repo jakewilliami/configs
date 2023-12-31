@@ -427,10 +427,38 @@ Takes a word motion argument: either `forward' or `backward'."
                (insert (substring word 0 8)))
       (message "Cannot shorten word to eight characters"))))
 
-(global-set-key (kbd "C-x M-f") 'shorten-hash-forward)
-(global-set-key (kbd "C-x M-b") 'shorten-hash-backward)
+(global-set-key (kbd "C-c p") 'shorten-hash-forward)
+(global-set-key (kbd "C-c c") 'shorten-hash-backward)
+(global-set-key (kbd "C-c b") 'shorten-hash-at-word)
 
-(global-set-key (kbd "C-x M-x") 'shorten-hash-at-word)
+;;; Quick brackets!
+;;
+;; Provides the following key bindings:
+;;   C-c p: insert parentheses
+;;   C-c c: insert curly brackets
+;;   C-c b: insert square brackets
+(defun insert-brackets-and-move-between (open close)
+  "Insert brackets and move cursor between them."
+  (interactive "sEnter open bracket: \nsEnter close bracket: ")
+  (insert (concat open close))
+  (backward-char (length close)))
+
+(defun insert-parens-and-move-between ()
+  (interactive)
+  (insert-brackets-and-move-between "(" ")"))
+
+(defun insert-curly-and-move-between ()
+  (interactive)
+  (insert-brackets-and-move-between "{" "}"))
+
+(defun insert-square-and-move-between ()
+  (interactive)
+  (insert-brackets-and-move-between "[" "]"))
+
+(global-set-key (kbd "C-c p") 'insert-parens-and-move-between)
+(global-set-key (kbd "C-c c") 'insert-curly-and-move-between)
+(global-set-key (kbd "C-c b") 'insert-square-and-move-between)
+
 
 
 

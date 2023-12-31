@@ -461,6 +461,9 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;;; Duplicate current line
 ;;   C-,: duplicates current line
+;;
+;; Ref:
+;;   - https://github.com/rexim/dotfiles/blob/f90578bc/.emacs.rc/misc-rc.el#L120-L132
 (defun duplicate-current-line ()
   "Duplicate current line.  Retains column information."
   (interactive)

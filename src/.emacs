@@ -461,6 +461,20 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;; Magit
 (use-package magit)
 
+;;;; Licenses
+(use-package yasnippet
+  :ensure
+  :config
+  ;; Useful for snippets
+  (setq yas/triggers-in-field nil)
+  (setq yas-snippet-dirs '("~/.emacs.snippets/"))
+  (yas-global-mode 1)
+
+  ;; Required for Rust LSP
+  (yas-reload-all)
+  (add-hook 'prog-mode-hook 'yas-minor-mode)
+  (add-hook 'text-mode-hook 'yas-minor-mode))
+
 ;;; Git Commit Mode
 ;;   https://www.emacswiki.org/emacs/GitCommitMode
 ;;
@@ -685,12 +699,7 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;; Templating system for more cleverness
 ;; See demo:
 ;;   https://www.youtube.com/watch?v=ZCGmZK4V7Sg
-(use-package yasnippet
-  :ensure
-  :config
-  (yas-reload-all)
-  (add-hook 'prog-mode-hook 'yas-minor-mode)
-  (add-hook 'text-mode-hook 'yas-minor-mode))
+;; (use yassnippet)
 
 ;;; Inline errors
 (use-package flycheck :ensure)

@@ -96,8 +96,9 @@
 ;;   https://github.com/purcell/page-break-lines
 ;;   https://www.emacswiki.org/emacs/PageBreaks
 ;;   https://www.gnu.org/software/emacs/manual/html_node/emacs/Pages.html
-(use-package page-break-lines)
-(global-page-break-lines-mode)
+(use-package page-break-lines
+  :config
+  (global-page-break-lines-mode))
 
 ;;;; Represent whitespace as dots
 (setq whitespace-style '(space-mark))
@@ -226,20 +227,22 @@
 
 ;;; Moves lines of text
 ;; By default uses M-up and M-down
-(use-package move-text)
-(move-text-default-bindings)
+(use-package move-text
+  :config
+  (move-text-default-bindings))
 
 ;;; Multiple cursors
-(use-package multiple-cursors)
-(global-set-key (kbd "C->")         'mc/mark-next-like-this)
-(global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<")     'mc/mark-all-like-this)
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->")         'mc/mark-next-like-this)
-(global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<")     'mc/mark-all-like-this)
-(global-set-key (kbd "C-\"")        'mc/skip-to-next-like-this)
-(global-set-key (kbd "C-:")         'mc/skip-to-previous-like-this)
+(use-package multiple-cursors
+  :config
+  (global-set-key (kbd "C->")         'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<")     'mc/mark-all-like-this)
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+  (global-set-key (kbd "C->")         'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<")     'mc/mark-all-like-this)
+  (global-set-key (kbd "C-\"")        'mc/skip-to-next-like-this)
+  (global-set-key (kbd "C-:")         'mc/skip-to-previous-like-this))
 
 ;;; Prefer horizontal split
 ;; Ref:
@@ -442,10 +445,9 @@ Takes a word motion argument: either `forward' or `backward'."
 (use-package writeroom-mode)
 
 ;;; Research tools
-(use-package ebib)
-
-;; Set dialect to biblatex
-(ebib-set-dialect 'biblatex)
+(use-package ebib
+  :config
+  (ebib-set-dialect 'biblatex))
 
 
 
@@ -484,41 +486,41 @@ Takes a word motion argument: either `forward' or `backward'."
 (use-package server
   :config (or (server-running-p) (server-mode)))
 
+;; Useful for modifying compilation commands
+(require 'compile)
+
 ;;; Julia
 ;;   https://github.com/JuliaEditorSupport/julia-emacs
 (use-package julia-mode
   :ensure t
-  :interpreter ("julia" . julia-mode))
-
-;; Set number of threads for Julia
-(setenv "JULIA_NUM_THREADS" "auto")
-
-;; Change default compilation for Julia
-(add-hook 'julia-mode-hook
-          (lambda ()
-            (set (make-local-variable 'compile-command)
-                 (format "julia --project %s" 
-					     (file-name-nondirectory buffer-file-name)))))
+  :interpreter ("julia" . julia-mode)
+  :config
+  (setenv "JULIA_NUM_THREADS" "auto")
+  (add-hook 'julia-mode-hook
+            (lambda ()
+              (set (make-local-variable 'compile-command)
+                   (format "julia --project %s"
+					       (file-name-nondirectory buffer-file-name))))))
 
 ;;; Rust
 ;;   https://github.com/rust-lang/rust-mode
-(use-package rust-mode)
-;; Change default compilation for Rust
-(require 'compile)
-(add-hook 'rust-mode-hook
+(use-package rust-mode
+  :config
+  (add-hook 'rust-mode-hook
           (lambda ()
             (set (make-local-variable 'compile-command)
                  (format "rustc %s && ./%s" 
 					     (file-name-nondirectory buffer-file-name)
-					     (file-name-base buffer-file-name)))))
+					     (file-name-base buffer-file-name))))))
 
 ;;; Go
-(use-package go-mode)
-(add-hook 'go-mode-hook
+(use-package go-mode
+  :config
+  (add-hook 'go-mode-hook
           (lambda ()
             (set (make-local-variable 'compile-command)
                  (format "go run %s"
-					     (file-name-nondirectory buffer-file-name)))))
+					     (file-name-nondirectory buffer-file-name))))))
 
 ;;; R
 (use-package ess)
@@ -541,12 +543,13 @@ Takes a word motion argument: either `forward' or `backward'."
             (setq python-indent-offset 4)))
 
 ;;; Forth
-(use-package forth-mode)
-(add-hook 'forth-mode-hook
+(use-package forth-mode
+  :config
+  (add-hook 'forth-mode-hook
           (lambda ()
             (set (make-local-variable 'compile-command)
                  (format "gforth %s -e bye"
-					     (file-name-nondirectory buffer-file-name)))))
+					     (file-name-nondirectory buffer-file-name))))))
 
 ;;; Paredit hooks
 (add-hook 'emacs-lisp-mode-hook  'rc/turn-on-paredit)

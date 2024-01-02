@@ -427,9 +427,9 @@ Takes a word motion argument: either `forward' or `backward'."
                (insert (substring word 0 8)))
       (message "Cannot shorten word to eight characters"))))
 
-(global-set-key (kbd "C-c p") 'shorten-hash-forward)
-(global-set-key (kbd "C-c c") 'shorten-hash-backward)
-(global-set-key (kbd "C-c b") 'shorten-hash-at-word)
+(global-set-key (kbd "C-x M-f") 'shorten-hash-forward)
+(global-set-key (kbd "C-x M-b") 'shorten-hash-backward)
+(global-set-key (kbd "C-x M-x") 'shorten-hash-at-word)
 
 ;;; Quick brackets!
 ;;

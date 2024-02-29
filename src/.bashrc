@@ -65,17 +65,22 @@ export PS1
 
 ### Aliases ###
 
-# Redefine `ls`
-if ! command -v exa > /dev/null 2>&1; then
+# Redefine `ls` (https://github.com/eza-community/eza)
+if ! command -v eza > /dev/null 2>&1; then
 	alias l1="ls -1"
 	alias ll="ls -l"
 	alias lll="ls -la"
 else
-    alias ls="exa"
-    alias l1="exa -1"
-    alias ll="exa -l"
-    alias lll="exa -la"
-    alias lsg="exa -l --git"
+    alias ls="eza"
+    alias l1="eza -1"
+    alias ll="eza -l"
+    alias lll="eza -la"
+    alias lsg="eza -l --git"
+fi
+
+# Use eza over exa as the latter is deprecated (https://github.com/ogham/exa/issues/1243)
+if command -v eza > /dev/null 2>&1; then
+	alias exa="eza"
 fi
 
 # Add alias for `open` command

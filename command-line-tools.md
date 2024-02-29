@@ -29,7 +29,7 @@ Instead of using git aliases, when I first began programming, I wanted to pretty
 ### [`fd`/`fdfind`](https://github.com/sharkdp/fd)
 A fast and modern alternative to `find`, written in Rust.
 
-### [`exa`](https://github.com/ogham/exa)
+### ~~[`exa`](https://github.com/ogham/exa)~~ [`eza`](https://github.com/eza-community/eza)
 A fast and modern alternative to `ls`, written in Rust.
 
 ### [`rg`](https://github.com/BurntSushi/ripgrep)
@@ -48,7 +48,7 @@ A fast and modern alternative to `du`, written in Rust.
 A fast and modern alternative to `df`, written in Rust.
 
 ### [`as-tree`](https://github.com/jez/as-tree)
-Convert a list of paths (e.g., the output of `ls`) to a tree-like structure (written in Rust).  Nice for visiualising things.  (See also `exa --tree`.)
+Convert a list of paths (e.g., the output of `ls`) to a tree-like structure (written in Rust).  Nice for visiualising things.  (See also `eza --tree`.)
 
 ### [`ebib`](https://joostkremers.github.io/ebib/ebib-manual.html)
 An Emacs plugin for working with BibTeX.

@@ -22,16 +22,22 @@ else
 	abbr -a o xdg-open
 end
 
-# Use exa over ls if available (https://github.com/ogham/exa)
-if command -v exa > /dev/null
-	abbr -a l 'exa'
-	abbr -a ls 'exa'
-	abbr -a ll 'exa -l'
-	abbr -a lll 'exa -la'
+# Use eza over ls if available (https://github.com/eza-community/eza)
+if command -v eza > /dev/null
+	abbr -a l 'eza'
+	abbr -a ls 'eza'
+	abbr -a ll 'eza -l'
+	abbr -a lll 'eza -la'
+    abbr -a lsg 'eza -l --git'
 else
 	abbr -a l 'ls'
 	abbr -a ll 'ls -l'
 	abbr -a lll 'ls -la'
+end
+
+# Use eza over exa as the latter is deprecated (https://github.com/ogham/exa/issues/1243)
+if command -v eza > /dev/null
+	abbr -a exa 'eza'
 end
 
 # Use dutree over du if available (https://github.com/nachoparker/dutree)

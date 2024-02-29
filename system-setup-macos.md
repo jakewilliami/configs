@@ -64,6 +64,8 @@ brew install r; brew install --cask emacs
 ```
 
 
+brew install yt-dlp
+
 git config --global --edit
 
 # This is Git's per-user configuration file.

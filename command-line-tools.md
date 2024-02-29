@@ -53,6 +53,19 @@ Convert a list of paths (e.g., the output of `ls`) to a tree-like structure (wri
 ### [`ebib`](https://joostkremers.github.io/ebib/ebib-manual.html)
 An Emacs plugin for working with BibTeX.
 
+### ~~[`youtube-dl`](https://github.com/ytdl-org/youtube-dl)~~ [`yt-dlp`](https://github.com/yt-dlp/yt-dlp)
+
+Extremely useful tool for downloading videos (not just from YouTube, but that is its primary use-case).  `yt-dlp` is preferred as of February 2024 due to the following caveat:
+```
+==> Installing youtube-dl
+==> Pouring youtube-dl--2021.12.17.arm64_sonoma.bottle.4.tar.gz
+==> Caveats
+The current youtube-dl version has many unresolved issues.
+Upstream have not tagged a new release since 2021.
+
+Please use yt-dlp instead.
+```
+
 ## Promising
 
 The following are some tools or applications which I have not yet adopted but look promising

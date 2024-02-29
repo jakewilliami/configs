@@ -40,6 +40,11 @@ if command -v eza > /dev/null
 	abbr -a exa 'eza'
 end
 
+# Convenient alias for youtube-dl to preferred tool
+if command -v yt-dlp > /dev/null
+	abbr -a youtube-dl 'yt-dlp'
+end
+
 # Use dutree over du if available (https://github.com/nachoparker/dutree)
 if command -v dutree > /dev/null
 	abbr -a du 'dutree'

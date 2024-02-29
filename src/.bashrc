@@ -83,6 +83,11 @@ if command -v eza > /dev/null 2>&1; then
 	alias exa="eza"
 fi
 
+# Convenient alias for youtube-dl to preferred tool
+if command -v yt-dlp > /dev/null 2>&1; then
+    alias youtube-dl="yt-dlp"
+fi
+
 # Add alias for `open` command
 if command -v open > /dev/null 2>&1; then
 	alias o="open"

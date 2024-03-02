@@ -55,6 +55,7 @@ declare -a DOTFILES=(
     "$HOME/.tmux.conf"
     "$HOME/.alacritty.yml"
     "$HOME/.config/fish/config.fish"
+    "$HOME/.config/btop/btop.conf"
 )
 
 # Main script

@@ -89,8 +89,8 @@ git config --global --edit
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
-# TODO: get a link to resources I used for diffing word, but I remember I found that at Work
 [diff "pandoc"]
+    # TODO: get a link to resources I used for diffing word, but I remember I found that at Work
     textconv = pandoc --to=markdown
     prompt = false
 [alias]
@@ -99,11 +99,12 @@ git config --global --edit
     textconv = unzip -c -a
 [diff "xlsx"]
     textconv = in2csv
-# https://gist.github.com/thbar/4943276
-# https://stackoverflow.com/a/19639451
-# TODO: make this work in text/Emacs, similar to pandoc
 [diff "pdf"]
+    # https://gist.github.com/thbar/4943276
+    # https://stackoverflow.com/a/19639451
     command = f() { diff-pdf --view "$2 $1;" } ";" f
+    # https://stackoverflow.com/a/58041884/
+    textconv = sh -c 'pdftotext -layout -enc UTF-8 "$0" -'
 ```
 
 can add /opt/homebrew/bin/bash to /etc/shells

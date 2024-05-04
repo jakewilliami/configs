@@ -6,6 +6,8 @@ https://github.com/jakewilliami/computer-info
 
 iMac (2008), iMac (2002), MacBook (2007), Mac Mini (2009), Mbp (2015), Mbp (2016), Mbp (2022)
 
+Do this: https://discussions.apple.com/thread/254541592?sortBy=best (now under spelling and prediciton)
+
 ipod
 iphone 3
 iphone 5
@@ -87,6 +89,7 @@ git config --global --edit
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+# TODO: get a link to resources I used for diffing word, but I remember I found that at Work
 [diff "pandoc"]
     textconv = pandoc --to=markdown
     prompt = false
@@ -96,15 +99,18 @@ git config --global --edit
     textconv = unzip -c -a
 [diff "xlsx"]
     textconv = in2csv
+# https://gist.github.com/thbar/4943276
+# https://stackoverflow.com/a/19639451
+# TODO: make this work in text/Emacs, similar to pandoc
+[diff "pdf"]
+    command = f() { diff-pdf --view "$2 $1;" } ";" f
 ```
 
 can add /opt/homebrew/bin/bash to /etc/shells
 stackoverflow.com/a/77052639
 stackoverflow.com/a/58653886
 need to restart and add to user profile defauilt login
-chsh -s /opt/homebrew/bin/bash
-
-
+chsh -s /opt/homebrew/bin/
 .gitattributes
 ```
 *.docx diff=pandoc

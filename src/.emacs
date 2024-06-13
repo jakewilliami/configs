@@ -495,6 +495,49 @@ Takes a word motion argument: either `forward' or `backward'."
   :config
   (ebib-set-dialect 'biblatex))
 
+;;; LaTeX
+;; Use C-c C-c or C-c C-a to compile LaTeX document
+(use-package auctex
+  :config
+  ;; https://www.gnu.org/software/auctex/manual/auctex/Quick-Start.html#Quick-Start
+  ;; https://emacs.stackexchange.com/a/13870
+  ;; Enable parse on load
+  (setq TeX-parse-self t)
+  ;; Enable parse on save
+  (setq TeX-auto-save t))
+
+;; Preview pane
+(use-package latex-preview-pane
+  :config
+  ;; https://tex.stackexchange.com/a/190901
+  ;; https://www.emacswiki.org/emacs/LaTeXPreviewPane
+  (latex-preview-pane-enable))
+
+;; https://github.com/tom-tan/auctex-latexmk
+(use-package auctex-latexmk
+  :config
+  (auctex-latexmk-setup)
+  ;; (setq TeX-interactive-mode t) ; -interaction=nonstopmode
+  ;; (setq TeX-source-correlate-mode t) ; -synctex
+  (setq auctex-latexmk-inherit-TeX-PDF-mode t)
+  ;; Use LaTeXMk by default
+  ;; https://github.com/tom-tan/auctex-latexmk/issues/33#issuecomment-939427447
+  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "LatexMk"))))
+
+;; Set up biblatex
+(use-package bibtex
+  :config
+  ;; https://tex.stackexchange.com/a/519366
+  (setq bibtex-dialect 'biblatex))
+
+(use-package reftex
+  :config
+  ;; Turn on RefTeX in AUCTeX
+  ;; https://tex.stackexchange.com/a/295337
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  ;; Activate nice interface between RefTeX and AUCTeX
+  (setq reftex-plug-into-AUCTeX t))
+
 
 
 ;;;; Programming:
@@ -559,12 +602,6 @@ Takes a word motion argument: either `forward' or `backward'."
 					     (file-name-nondirectory buffer-file-name)
 					     (file-name-base buffer-file-name))))))
 
-;;; LaTeX
-(use-package auctex)
-
-;;; Splunk
-(use-package splunk-mode)
-
 ;;; Go
 (use-package go-mode
   :config
@@ -576,6 +613,9 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;;; R
 (use-package ess)
+
+;;; Splunk
+(use-package splunk-mode)
 
 ;;; LLVM
 (require 'llvm-mode)

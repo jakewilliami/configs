@@ -60,7 +60,7 @@ declare -a DOTFILES=(
 
 # Main script
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )"
-OUT_OF_SYNC=FALSE
+OUT_OF_SYNC=false
 for fsrc in "${DOTFILES[@]}"; do
     # Split the input by delimiter
     IFS=':' read -ra parts <<< "$fsrc"
@@ -68,7 +68,7 @@ for fsrc in "${DOTFILES[@]}"; do
     # Extract optional subdir from input with src as default
     fsrc="${parts[0]}"
     subd="src"
-    if [ "${#parts[@]}" -eq 2 ]; then
+    if (("${#parts[@]}" == 2)); then
         subd="$subd/${parts[1]}"
     fi
 
@@ -78,7 +78,7 @@ for fsrc in "${DOTFILES[@]}"; do
     # Check that we need to update resource before doing so
     if [ ! -f "$fdst" ] || ! cmp -s "$fsrc" "$fdst"; then
         if ! $OUT_OF_SYNC; then
-	        OUT_OF_SYNC=TRUE
+	        OUT_OF_SYNC=true
         fi
 		if [ "$mode" = "remote" ]; then
 			cp -vi "$fsrc" "$(dirname "$fdst")"

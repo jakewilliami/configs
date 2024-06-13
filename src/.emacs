@@ -559,6 +559,12 @@ Takes a word motion argument: either `forward' or `backward'."
 					     (file-name-nondirectory buffer-file-name)
 					     (file-name-base buffer-file-name))))))
 
+;;; LaTeX
+(use-package auctex)
+
+;;; Splunk
+(use-package splunk-mode)
+
 ;;; Go
 (use-package go-mode
   :config

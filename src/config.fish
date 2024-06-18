@@ -10,8 +10,16 @@ end
 # Open tmux session
 if status --is-interactive
 	if ! set -q TMUX
-		# https://unix.stackexchange.com/a/176885/372726
-		exec tmux new-session -A -s main
+		# If the terminal is embedded within JetBrains, don't start tmux
+		# Ideally we inhibit this behaviour for all embedded terminals but I'm not sure how we'd do that
+		set parent_pid (ps -o ppid= -p $fish_pid | tr -d ' ')
+		set parent_cmd (ps -p $parent_pid -o comm=)
+		set grandparent_pid (ps -o ppid= -p $parent_pid | tr -d ' ')
+		set grandparent_cmd (ps -p $grandparent_pid -o comm=)
+		if [ $parent_cmd != "java" ] && not string match -q -- "jetbrains" $grandparent_cmd
+			# https://unix.stackexchange.com/a/176885/372726
+			exec tmux new-session -A -s main
+		end
 	end
 end
 

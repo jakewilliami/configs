@@ -66,6 +66,9 @@ Upstream have not tagged a new release since 2021.
 Please use yt-dlp instead.
 ```
 
+### [`inlyne`](https://github.com/Inlyne-Project/inlyne)
+Locally render markdown.
+
 ## Promising
 
 The following are some tools or applications which I have not yet adopted but look promising

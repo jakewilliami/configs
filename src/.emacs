@@ -552,6 +552,9 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;; Magit
 (use-package magit)
 
+;;; Reset default compilation command
+(setq compile-command "just")
+
 ;;;; Licenses
 (use-package yasnippet
   :ensure

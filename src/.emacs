@@ -584,6 +584,14 @@ Takes a word motion argument: either `forward' or `backward'."
 ;; Useful for modifying compilation commands
 (require 'compile)
 
+;; Use colours in compilation buffer
+;;   https://stackoverflow.com/a/63710493
+(use-package xterm-color)
+(setq compilation-environment '("TERM=xterm-256color"))
+(defun advice-compilation-filter (f proc string)
+  (funcall f proc (xterm-color-filter string)))
+(advice-add 'compilation-filter :around #'advice-compilation-filter)
+
 ;;; Julia
 ;;   https://github.com/JuliaEditorSupport/julia-emacs
 (use-package julia-mode

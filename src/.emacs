@@ -497,6 +497,9 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;;; LaTeX
 ;; Use C-c C-c or C-c C-a to compile LaTeX document
+;; Note: do not reset to first page when recompiling document, you may have to change preview settings:
+;;   - https://tex.stackexchange.com/q/106887/
+;;   - https://superuser.com/q/847467/
 (use-package auctex
   :config
   ;; https://www.gnu.org/software/auctex/manual/auctex/Quick-Start.html#Quick-Start
@@ -517,8 +520,8 @@ Takes a word motion argument: either `forward' or `backward'."
 (use-package auctex-latexmk
   :config
   (auctex-latexmk-setup)
-  ;; (setq TeX-interactive-mode t) ; -interaction=nonstopmode
-  ;; (setq TeX-source-correlate-mode t) ; -synctex
+  (setq TeX-interactive-mode t) ; -interaction=nonstopmode
+  (setq TeX-source-correlate-mode t) ; -synctex
   (setq auctex-latexmk-inherit-TeX-PDF-mode t)
   ;; Use LaTeXMk by default
   ;; https://github.com/tom-tan/auctex-latexmk/issues/33#issuecomment-939427447

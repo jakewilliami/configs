@@ -295,6 +295,15 @@
          ("C-\""        . mc/skip-to-next-like-this)
          ("C-:"         . mc/skip-to-previous-like-this)))
 
+;;; Show number of matches in search
+;;   https://emacs.stackexchange.com/a/978/
+(use-package anzu
+  :ensure (:wait t)
+  :defer t
+  :init
+  (global-anzu-mode +1)
+  (anzu-mode +1))
+
 ;;; Prefer horizontal split
 ;; Ref:
 ;;  https://emacs.stackexchange.com/a/40517

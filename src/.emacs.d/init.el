@@ -618,6 +618,7 @@ Takes a word motion argument: either `forward' or `backward'."
   :defer t)
 
 ;;; Reset default compilation command
+(use-package just-mode :ensure (:wait t) :defer t)
 (setq compile-command "just")
 
 ;;;; Licenses

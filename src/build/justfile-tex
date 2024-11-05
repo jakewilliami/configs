@@ -1,0 +1,7 @@
+# -*- mode: just -*-
+
+flags := "--file-line-error --synctex=1 --enable-write18"
+
+build file:
+    pdflatex {{flags} "{{file}}"
+

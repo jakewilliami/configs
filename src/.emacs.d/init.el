@@ -1,8 +1,9 @@
-;;;; .Emacs[.el] -- My Emacs configuration
-;-*-Emacs-Lisp-*-
+;;;; init.el --- Init -*- no-byte-compile: t; lexical-binding: t; -*-
+
+;; Author: Jake W. Ireland
+;; Package-Requires: ((emacs "28.1"))
 
 ;;;; Commentary:
-
 ;; This is my Emacs confiration file.
 ;; Any non-code config. pieces will be explained in this commentary.
 ;;
@@ -23,37 +24,67 @@
 ;; instantiated before all else; e.g. specification of package repositories,
 ;; encoding, shell, etc.
 
-;;; Configure MEPLA
-;;    https://melpa.org/#/getting-started
-;;    https://emacs.stackexchange.com/a/10501
-(package-initialize t)
-(when (>= emacs-major-version 24)
-  (require 'package)
-  (add-to-list 'package-archives
-               '("melpa-stable" . "http://stable.melpa.org/packages/") t)
-  (add-to-list 'package-archives
-               '("melpa" . "https://melpa.org/packages/") t)
-  (add-to-list 'package-archives 
-               '("gnu" . "http://elpa.gnu.org/packages/") t))
+;;; Configure Elpaca package manager
+;;   https://github.com/jakewilliami/configs/issues/7
+;;
+;; This will also install Use Package
+;;   https://emacs.stackexchange.com/a/50603
+;;
+;; See also:
+;;   Quelpa: https://github.com/quelpa/quelpa
+;;   Quelpa Use Package: https://github.com/quelpa/quelpa-use-package
+;;   Straight.el: https://www.github.com/radian-software/straight.el
+;;   MELPA: https://melpa.org/#/getting-started, https://emacs.stackexchange.com/a/10510
+;;   Previous: https://github.com/jakewilliami/configs/blob/c106b08b/src/.emacs#L26-L56
+(defvar elpaca-installer-version 0.8)
+(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                              :ref nil :depth 1
+                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                              :build (:not elpaca--activate-package)))
+(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+       (build (expand-file-name "elpaca/" elpaca-builds-directory))
+       (order (cdr elpaca-order))
+       (default-directory repo))
+  (add-to-list 'load-path (if (file-exists-p build) build repo))
+  (unless (file-exists-p repo)
+    (make-directory repo t)
+    (when (< emacs-major-version 28) (require 'subr-x))
+    (condition-case-unless-debug err
+        (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                  ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+                                                  ,@(when-let* ((depth (plist-get order :depth)))
+                                                      (list (format "--depth=%d" depth) "--no-single-branch"))
+                                                  ,(plist-get order :repo) ,repo))))
+                  ((zerop (call-process "git" nil buffer t "checkout"
+                                        (or (plist-get order :ref) "--"))))
+                  (emacs (concat invocation-directory invocation-name))
+                  ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                  ((require 'elpaca))
+                  ((elpaca-generate-autoloads "elpaca" repo)))
+            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+          (error "%s" (with-current-buffer buffer (buffer-string))))
+      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+  (unless (require 'elpaca-autoloads nil t)
+    (require 'elpaca)
+    (elpaca-generate-autoloads "elpaca" repo)
+    (load "./elpaca-autoloads")))
+(add-hook 'after-init-hook #'elpaca-process-queues)
+(elpaca `(,@elpaca-order))
+
+;; Install use-package support
+(elpaca elpaca-use-package
+  ;; Enable use-package :ensure support for Elpaca.
+  (elpaca-use-package-mode))
 
 ;;; Encoding
 (setq-default buffer-file-coding-system 'utf-8-unix)
 (set-default-coding-systems 'utf-8-unix)
 (setq locale-coding-system 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
-
-;;; Use Package
-;;   https://emacs.stackexchange.com/a/50603
-;; See also:
-;;   Quelpa: https://github.com/quelpa/quelpa
-;;   Quelpa Use Package: https://github.com/quelpa/quelpa-use-package
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(eval-when-compile
-  (require 'use-package))
-(require 'bind-key)
-(setq use-package-always-ensure t)
 
 ;;; Set shell to Bash
 (setenv "SHELL" "/usr/local/bin/bash")
@@ -73,15 +104,14 @@
 ;;   :init
 ;;   (load-theme 'dracula t))
 (use-package atom-one-dark-theme
-  :ensure t
+  :ensure (:wait t)
   :defer t
   :init
   (load-theme 'atom-one-dark t))
 
 ;; Power line
-(use-package smart-mode-line-atom-one-dark-theme)
 (use-package smart-mode-line
-  :ensure t
+  :ensure (:wait t)
   :defer t
 
   :init
@@ -91,12 +121,17 @@
   :config
   (sml/setup)
   (sml/apply-theme 'atom-one-dark))
+(use-package smart-mode-line-atom-one-dark-theme
+  :ensure (:wait t)
+  :after smart-mode-line
+  :defer t)
 
 ;;; Pages
 ;;   https://github.com/purcell/page-break-lines
 ;;   https://www.emacswiki.org/emacs/PageBreaks
 ;;   https://www.gnu.org/software/emacs/manual/html_node/emacs/Pages.html
 (use-package page-break-lines
+  :ensure (:wait t)
   :config
   (global-page-break-lines-mode))
 
@@ -107,7 +142,7 @@
 ;;; Whitespace mode
 ;;   https://www.emacswiki.org/emacs/WhiteSpace
 ;; (rc/require-theme 'gruber-darker)
-(use-package whitespace)
+(require 'whitespace)
 (defun rc/set-up-whitespace-handling ()
   (interactive)
   (whitespace-mode 1)
@@ -190,7 +225,7 @@
 
 ;;; Paredit
 ;;   https://www.emacswiki.org/emacs/ParEdit
-(use-package paredit)
+(use-package paredit :ensure (:wait t) :defer t)
 (defun rc/turn-on-paredit ()
   (interactive)
   (paredit-mode 1))
@@ -208,12 +243,14 @@
 (setq backup-directory-alist `(("." . "~/.saves")))
 
 ;; Also, do something with #file-being-edited#
-(use-package no-littering)
+(use-package no-littering :ensure (:wait t) :defer t)
 
 ;;; Note highlighting
 ;;   https://github.com/tarsius/hl-todo
 ;;   https://www.reddit.com/r/emacs/comments/f8tox6/
 (use-package hl-todo
+  :ensure (:wait t)
+  :defer t
   :hook (prog-mode . hl-todo-mode)
   :config
   (setq hl-todo-highlight-punctuation ":"
@@ -228,11 +265,15 @@
 ;;; Moves lines of text
 ;; By default uses M-up and M-down
 (use-package move-text
+  :ensure (:wait t)
+  :defer t
   :config
   (move-text-default-bindings))
 
 ;;; Multiple cursors
 (use-package multiple-cursors
+  :ensure (:wait t)
+  :defer t
   :config
   (global-set-key (kbd "C->")         'mc/mark-next-like-this)
   (global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
@@ -487,11 +528,13 @@ Takes a word motion argument: either `forward' or `backward'."
 ;; useful.
 
 ;;; Writing modes
-(use-package olivetti)
-(use-package writeroom-mode)
+(use-package olivetti :ensure (:wait t) :defer t)
+(use-package writeroom-mode :ensure (:wait t) :defer t)
 
 ;;; Research tools
 (use-package ebib
+  :ensure (:wait t)
+  :defer t
   :config
   (ebib-set-dialect 'biblatex))
 
@@ -501,6 +544,8 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;   - https://tex.stackexchange.com/q/106887/
 ;;   - https://superuser.com/q/847467/
 (use-package auctex
+  :ensure (:wait t)
+  :defer t
   :config
   ;; https://www.gnu.org/software/auctex/manual/auctex/Quick-Start.html#Quick-Start
   ;; https://emacs.stackexchange.com/a/13870
@@ -511,6 +556,8 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;; Preview pane
 (use-package latex-preview-pane
+  :ensure (:wait t)
+  :defer t
   :config
   ;; https://tex.stackexchange.com/a/190901
   ;; https://www.emacswiki.org/emacs/LaTeXPreviewPane
@@ -518,6 +565,8 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;; https://github.com/tom-tan/auctex-latexmk
 (use-package auctex-latexmk
+  :ensure (:wait t)
+  :defer t
   :config
   (auctex-latexmk-setup)
   (setq TeX-interactive-mode t) ; -interaction=nonstopmode
@@ -553,14 +602,20 @@ Takes a word motion argument: either `forward' or `backward'."
 (add-to-list 'load-path "~/.emacs.local/")
 
 ;;; Magit
-(use-package magit)
+;;   https://reddit.com/r/emacs/comments/1954ay9/comment/khnm1en
+(use-package transient :ensure (:wait t) :defer t)
+(use-package magit
+  :ensure (:wait t)
+  :after transient
+  :defer t)
 
 ;;; Reset default compilation command
 (setq compile-command "just")
 
 ;;;; Licenses
 (use-package yasnippet
-  :ensure
+  :ensure (:wait t)
+  :defer t
   :config
   ;; Useful for snippets
   (setq yas/triggers-in-field nil)
@@ -577,16 +632,14 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;
 ;; NOTE: git-commit-mode isn’t used when committing from the command-line:
 ;;   https://magit.vc/manual/magit/git_002dcommit_002dmode-isn_0027t-used-when-committing-from-the-command_002dline.html
-(use-package git-commit)
-(use-package server
-  :config (or (server-running-p) (server-mode)))
+(use-package git-commit :ensure (:wait t) :defer t)
 
 ;; Useful for modifying compilation commands
 (require 'compile)
 
 ;; Use colours in compilation buffer
 ;;   https://stackoverflow.com/a/63710493
-(use-package xterm-color)
+(use-package xterm-color :ensure (:wait t) :defer t)
 (setq compilation-environment '("TERM=xterm-256color"))
 (defun advice-compilation-filter (f proc string)
   (funcall f proc (xterm-color-filter string)))
@@ -595,7 +648,8 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;; Julia
 ;;   https://github.com/JuliaEditorSupport/julia-emacs
 (use-package julia-mode
-  :ensure t
+  :ensure (:wait t)
+  :defer t
   :interpreter ("julia" . julia-mode)
   :config
   (setenv "JULIA_NUM_THREADS" "auto")
@@ -608,6 +662,8 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;; Rust
 ;;   https://github.com/rust-lang/rust-mode
 (use-package rust-mode
+  :ensure (:wait t)
+  :defer t
   :config
   (add-hook 'rust-mode-hook
           (lambda ()
@@ -618,6 +674,8 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;;; Go
 (use-package go-mode
+  :ensure (:wait t)
+  :defer t
   :config
   (add-hook 'go-mode-hook
           (lambda ()
@@ -626,13 +684,23 @@ Takes a word motion argument: either `forward' or `backward'."
 					     (file-name-nondirectory buffer-file-name))))))
 
 ;;; R
-(use-package ess)
+(use-package ess :ensure (:wait t) :defer t)
 
 ;;; Splunk
-(use-package splunk-mode)
+(use-package splunk-mode :ensure (:wait t) :defer t)
 
 ;;; LLVM
-(require 'llvm-mode)
+;;
+;; Previously using:
+;;   https://github.com/llvm-mirror/llvm/blob/2c4ca683/utils/emacs/llvm-mode.el
+(use-package llvm-mode
+  :ensure
+  (llvm-mode
+   :wait t
+   :host github
+   :repo "llvm/llvm-project"
+   :files ("llvm/utils/emacs/*"))
+  :defer t)
 
 ;;; Python
 (add-hook 'python-mode-hook
@@ -650,6 +718,8 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;;; Forth
 (use-package forth-mode
+  :ensure (:wait t)
+  :defer t
   :config
   (add-hook 'forth-mode-hook
           (lambda ()
@@ -695,9 +765,14 @@ Takes a word motion argument: either `forward' or `backward'."
 ;; The remaining packages should be installed via use-package
 ;; For some reason I also had to install zsh for this to work
 
+;;; Inline errors for rustic
+(use-package flycheck :ensure (:wait t) :defer t)
+
 ;;; Rustic requires `rustic' and `use-package'
 (use-package rustic
-  :ensure
+  :ensure (:wait t)
+  :after flycheck
+  :defer t
   :bind (:map rustic-mode-map
               ("M-j" . lsp-ui-imenu)
               ("M-?" . lsp-find-references)
@@ -728,7 +803,8 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;;; Configure LSP mode
 (use-package lsp-mode
-  :ensure
+  :ensure (:wait t)
+  :defer t
 
   :init
   ;; Use flycheck instead of flymake (better lsp-ui integration)
@@ -771,7 +847,8 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;;; Configure LSP
 (use-package lsp-ui
-  :ensure t
+  :ensure (:wait t)
+  :defer t
   
   :init
   (setq lsp-ui-doc-enable nil)
@@ -789,7 +866,8 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;;; Code completion (autocomplete)
 (use-package company
-  :ensure
+  :ensure (:wait t)
+  :defer t
   :custom
 
   ;; How long to wait until popup
@@ -809,9 +887,6 @@ Takes a word motion argument: either `forward' or `backward'."
 ;; See demo:
 ;;   https://www.youtube.com/watch?v=ZCGmZK4V7Sg
 ;; (use yassnippet)
-
-;;; Inline errors
-(use-package flycheck :ensure)
 
 ;;; Inline type hints
 (setq lsp-rust-analyzer-server-display-inlay-hints t)
@@ -838,8 +913,9 @@ Takes a word motion argument: either `forward' or `backward'."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ignored-local-variable-values '((checkdoc-major-mode . t)))
  '(package-selected-packages
-   '(gdscript-mode just-mode go-mode flycheck yasnippet company lsp-ui lsp-mode rustic forth-mode ess rust-mode julia-mode magit ebib writeroom-mode olivetti multiple-cursors move-text hl-todo no-littering paredit page-break-lines smart-mode-line-atom-one-dark-theme atom-one-dark-theme)))
+   '(lua-mode gdscript-mode just-mode go-mode flycheck yasnippet company lsp-ui lsp-mode rustic forth-mode ess rust-mode julia-mode magit ebib writeroom-mode olivetti multiple-cursors move-text hl-todo no-littering paredit page-break-lines smart-mode-line-atom-one-dark-theme atom-one-dark-theme)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -699,15 +699,20 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;;; LLVM
 ;;
-;; Previously using:
-;;   https://github.com/llvm-mirror/llvm/blob/2c4ca683/utils/emacs/llvm-mode.el
+;; Recipe adapted from:
+;;   https://github.com/melpa/melpa/blob/90d680/recipes/llvm-mode
+;;
+;; Previously using: repo github.com/llvm-mirror/llvm.  We should find
+;; a better solution for this as it just takes so long to clone.  I'm
+;; not the only one who wants this:
+;;   https://lists.llvm.org/pipermail/llvm-dev/2018-May/123171.html
 (use-package llvm-mode
   :ensure
   (llvm-mode
    :wait t
    :host github
    :repo "llvm/llvm-project"
-   :files ("llvm/utils/emacs/*"))
+   :files ("llvm/utils/emacs/llvm-mode.el"))
   :defer t)
 
 ;;; Python

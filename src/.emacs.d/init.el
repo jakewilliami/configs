@@ -623,7 +623,9 @@ Takes a word motion argument: either `forward' or `backward'."
   :ensure (:wait t)
   :defer t
   :after git-commit
-  :after transient)
+  :after transient
+  :config
+  (add-to-list 'magit-section-initial-visibility-alist '(untracked . show)))
 
 ;; Load magit immediately so that we have access to commands like
 ;; `magit-git-string' and we don't have to wait for the git server

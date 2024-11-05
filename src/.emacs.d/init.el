@@ -607,13 +607,28 @@ Takes a word motion argument: either `forward' or `backward'."
 ;; For when I implement something myself, or can't be bothered with Quelpa
 (add-to-list 'load-path "~/.emacs.local/")
 
+;;; Git Commit Mode
+;;   https://www.emacswiki.org/emacs/GitCommitMode
+;;
+;; NOTE: git-commit-mode isn’t used when committing from the command-line:
+;;   https://magit.vc/manual/magit/git_002dcommit_002dmode-isn_0027t-used-when-committing-from-the-command_002dline.html
+(require 'server)
+(or (server-running-p) (server-mode))
+(use-package git-commit :ensure (:wait t) :defer t)
+
 ;;; Magit
 ;;   https://reddit.com/r/emacs/comments/1954ay9/comment/khnm1en
 (use-package transient :ensure (:wait t) :defer t)
 (use-package magit
   :ensure (:wait t)
   :defer t
+  :after git-commit
   :after transient)
+
+;; Load magit immediately so that we have access to commands like
+;; `magit-git-string' and we don't have to wait for the git server
+;; to load when we type "C-x g"
+(require 'magit)
 
 ;;; Reset default compilation command
 (use-package just-mode :ensure (:wait t) :defer t)
@@ -633,15 +648,6 @@ Takes a word motion argument: either `forward' or `backward'."
   (yas-reload-all)
   (add-hook 'prog-mode-hook 'yas-minor-mode)
   (add-hook 'text-mode-hook 'yas-minor-mode))
-
-;;; Git Commit Mode
-;;   https://www.emacswiki.org/emacs/GitCommitMode
-;;
-;; NOTE: git-commit-mode isn’t used when committing from the command-line:
-;;   https://magit.vc/manual/magit/git_002dcommit_002dmode-isn_0027t-used-when-committing-from-the-command_002dline.html
-(require 'server)
-(or (server-running-p) (server-mode))
-(use-package git-commit :ensure (:wait t) :defer t)
 
 ;; Useful for modifying compilation commands
 (require 'compile)

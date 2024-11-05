@@ -1,7 +1,7 @@
 ;;;; init.el --- Init -*- no-byte-compile: t; lexical-binding: t; -*-
 
 ;; Author: Jake W. Ireland
-;; Package-Requires: ((emacs "28.1"))
+;; Package-Requires: ((emacs "29.1"))  ; Required by use-package
 
 ;;;; Commentary:
 ;; This is my Emacs confiration file.
@@ -91,7 +91,9 @@
 (setq explicit-shell-file-name "/usr/local/bin/bash")
 
 ;;; Set custom file so that the init.el file does not contain generated code
-(setq custom-file "~/.emacs.d/custom.el")
+;; (setq custom-file "~/.emacs.d/custom.el")
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+
 
 ;;; Do not use --dired option with ls on macOS
 ;;   https://stackoverflow.com/a/42038174
@@ -150,9 +152,9 @@
 
 ;;; Whitespace mode
 ;;   https://www.emacswiki.org/emacs/WhiteSpace
-;; (rc/require-theme 'gruber-darker)
+;; (require-theme 'gruber-darker)
 (require 'whitespace)
-(defun rc/set-up-whitespace-handling ()
+(defun set-up-whitespace-handling ()
   (interactive)
   (whitespace-mode 1)
   (add-to-list 'write-file-functions 'delete-trailing-whitespace))
@@ -235,7 +237,7 @@
 ;;; Paredit
 ;;   https://www.emacswiki.org/emacs/ParEdit
 (use-package paredit :ensure (:wait t) :defer t)
-(defun rc/turn-on-paredit ()
+(defun turn-on-paredit ()
   (interactive)
   (paredit-mode 1))
 
@@ -750,9 +752,9 @@ Takes a word motion argument: either `forward' or `backward'."
 					     (file-name-nondirectory buffer-file-name))))))
 
 ;;; Paredit hooks
-(add-hook 'emacs-lisp-mode-hook  'rc/turn-on-paredit)
-(add-hook 'lisp-mode-hook        'rc/turn-on-paredit)
-(add-hook 'common-lisp-mode-hook 'rc/turn-on-paredit)
+(add-hook 'emacs-lisp-mode-hook  'turn-on-paredit)
+(add-hook 'lisp-mode-hook        'turn-on-paredit)
+(add-hook 'common-lisp-mode-hook 'turn-on-paredit)
 
 ;;; Untabify file on save in certain major modes
 (add-hook 'rust-mode-hook 'untabify-file-hook)
@@ -760,14 +762,14 @@ Takes a word motion argument: either `forward' or `backward'."
 (add-hook 'julia-mode-hook 'untabify-file-hook)
 
 ;;; Whitespace mode hooks
-(add-hook 'julia-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'rust-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'c-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'emacs-lisp-mode 'rc/set-up-whitespace-handling)
-(add-hook 'markdown-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'haskell-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'python-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'yaml-mode-hook 'rc/set-up-whitespace-handling)
+(add-hook 'julia-mode-hook 'set-up-whitespace-handling)
+(add-hook 'rust-mode-hook 'set-up-whitespace-handling)
+(add-hook 'c-mode-hook 'set-up-whitespace-handling)
+(add-hook 'emacs-lisp-mode 'set-up-whitespace-handling)
+(add-hook 'markdown-mode-hook 'set-up-whitespace-handling)
+(add-hook 'haskell-mode-hook 'set-up-whitespace-handling)
+(add-hook 'python-mode-hook 'set-up-whitespace-handling)
+(add-hook 'yaml-mode-hook 'set-up-whitespace-handling)
 
 
 
@@ -813,9 +815,9 @@ Takes a word motion argument: either `forward' or `backward'."
 
   ;; Comment to disable rustfmt on save
   (setq rustic-format-on-save t)
-  (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook))
+  (add-hook 'rustic-mode-hook 'rustic-mode-hook))
 
-(defun rk/rustic-mode-hook ()
+(defun rustic-mode-hook ()
   ;; So that runnng C-c C-c C-r works without having to confirm,
   ;; but doesn't try to save Rust buffers that are not file visiting.
   ;; Once https://github.com/brotzeit/rustic/issues/253 has been resolved
@@ -854,18 +856,18 @@ Takes a word motion argument: either `forward' or `backward'."
 
   ;; Prevent long documentation showing up in the echo area from messing up the
   ;; window configuration -> only show the first line
-  (defun ff/lsp-eldoc-advice (orig-fun &rest args)
+  (defun lsp-eldoc-advice (orig-fun &rest args)
     (let ((msg (car args)))
       (if msg
           (funcall orig-fun (->> msg (s-trim-left)
                                  (s-split "\n")
                                  (first))))))
-  (advice-add 'lsp--eldoc-message :around #'ff/lsp-eldoc-advice)
+  (advice-add 'lsp--eldoc-message :around #'lsp-eldoc-advice)
 
   ;; Avoid questions about restarting the LSP server when quitting emacs
-  (defun ff/lsp-disable-server-autorestart ()
+  (defun lsp-disable-server-autorestart ()
     (setq lsp-restart nil))
-  (add-hook 'kill-emacs-hook #'ff/lsp-disable-server-autorestart))
+  (add-hook 'kill-emacs-hook #'lsp-disable-server-autorestart))
 
 ;;; Configure LSP
 (use-package lsp-ui

@@ -93,6 +93,11 @@
 ;;; Set custom file so that the init.el file does not contain generated code
 (setq custom-file "~/.emacs.d/custom.el")
 
+;;; Do not use --dired option with ls on macOS
+;;   https://stackoverflow.com/a/42038174
+(when (string= system-type "darwin")
+  (setq dired-use-ls-dired nil))
+
 
 
 ;;;; Aesthetics:

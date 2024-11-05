@@ -90,6 +90,9 @@
 (setenv "SHELL" "/usr/local/bin/bash")
 (setq explicit-shell-file-name "/usr/local/bin/bash")
 
+;;; Set custom file so that the init.el file does not contain generated code
+(setq custom-file "~/.emacs.d/custom.el")
+
 
 
 ;;;; Aesthetics:
@@ -898,27 +901,5 @@ Takes a word motion argument: either `forward' or `backward'."
                         (defun csv-align-visible (&optional arg)
                           "Align visible fields"
                           (interactive "P")
-                          (csv-align-fields nil (window-start) (window-end))
-                          )
-                        )
-            )
-          )
+                          (csv-align-fields nil (window-start) (window-end))))))
 
-
-
-;;;; Generated Code:
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ignored-local-variable-values '((checkdoc-major-mode . t)))
- '(package-selected-packages
-   '(lua-mode gdscript-mode just-mode go-mode flycheck yasnippet company lsp-ui lsp-mode rustic forth-mode ess rust-mode julia-mode magit ebib writeroom-mode olivetti multiple-cursors move-text hl-todo no-littering paredit page-break-lines smart-mode-line-atom-one-dark-theme atom-one-dark-theme)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

@@ -223,7 +223,8 @@
 
 ;;; Tabs
 ;; Allow tab key
-(global-set-key (kbd "TAB") 'self-insert-command)
+;; NOTE: this breaks julia-mode's tab completion for LaTeX substitution
+;; (global-set-key (kbd "TAB") 'self-insert-command)
 
 ;; Set tab key to four spaces
 ;;   https://stackoverflow.com/a/9383214

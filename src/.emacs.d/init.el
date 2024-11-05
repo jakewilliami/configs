@@ -516,7 +516,7 @@ Takes a word motion argument: either `forward' or `backward'."
 (defun duplicate-current-line ()
   "Duplicate current line.  Retains column information."
   (interactive)
-  (let ((column (- (point) (point-at-bol)))
+  (let ((column (- (point) (line-beginning-position)))
         (line (let ((s (thing-at-point 'line t)))
                 (if s (string-remove-suffix "\n" s) ""))))
     (move-end-of-line 1)

@@ -131,8 +131,8 @@
   (sml/apply-theme 'atom-one-dark))
 (use-package smart-mode-line-atom-one-dark-theme
   :ensure (:wait t)
-  :after smart-mode-line
-  :defer t)
+  :defer t
+  :after smart-mode-line)
 
 ;;; Pages
 ;;   https://github.com/purcell/page-break-lines
@@ -140,6 +140,7 @@
 ;;   https://www.gnu.org/software/emacs/manual/html_node/emacs/Pages.html
 (use-package page-break-lines
   :ensure (:wait t)
+  :defer t
   :config
   (global-page-break-lines-mode))
 
@@ -282,16 +283,15 @@
 (use-package multiple-cursors
   :ensure (:wait t)
   :defer t
-  :config
-  (global-set-key (kbd "C->")         'mc/mark-next-like-this)
-  (global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
-  (global-set-key (kbd "C-c C-<")     'mc/mark-all-like-this)
-  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-  (global-set-key (kbd "C->")         'mc/mark-next-like-this)
-  (global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
-  (global-set-key (kbd "C-c C-<")     'mc/mark-all-like-this)
-  (global-set-key (kbd "C-\"")        'mc/skip-to-next-like-this)
-  (global-set-key (kbd "C-:")         'mc/skip-to-previous-like-this))
+  :bind (("C->"         . mc/mark-next-like-this)
+         ("C-<"         . mc/mark-previous-like-this)
+         ("C-c C-<"     . mc/mark-all-like-this)
+         ("C-S-c C-S-c" . mc/edit-lines)
+         ("C->"         . mc/mark-next-like-this)
+         ("C-<"         . mc/mark-previous-like-this)
+         ("C-c C-<"         . mc/mark-all-like-this)
+         ("C-\""        . mc/skip-to-next-like-this)
+         ("C-:"         . mc/skip-to-previous-like-this)))
 
 ;;; Prefer horizontal split
 ;; Ref:
@@ -585,18 +585,16 @@ Takes a word motion argument: either `forward' or `backward'."
   (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "LatexMk"))))
 
 ;; Set up biblatex
-(use-package bibtex
-  :config
-  ;; https://tex.stackexchange.com/a/519366
-  (setq bibtex-dialect 'biblatex))
+(require 'bibtex)
+;; https://tex.stackexchange.com/a/519366
+(setq bibtex-dialect 'biblatex)
 
-(use-package reftex
-  :config
-  ;; Turn on RefTeX in AUCTeX
-  ;; https://tex.stackexchange.com/a/295337
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-  ;; Activate nice interface between RefTeX and AUCTeX
-  (setq reftex-plug-into-AUCTeX t))
+(require 'reftex)
+;; Turn on RefTeX in AUCTeX
+;; https://tex.stackexchange.com/a/295337
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+;; Activate nice interface between RefTeX and AUCTeX
+(setq reftex-plug-into-AUCTeX t)
 
 
 
@@ -614,8 +612,8 @@ Takes a word motion argument: either `forward' or `backward'."
 (use-package transient :ensure (:wait t) :defer t)
 (use-package magit
   :ensure (:wait t)
-  :after transient
-  :defer t)
+  :defer t
+  :after transient)
 
 ;;; Reset default compilation command
 (use-package just-mode :ensure (:wait t) :defer t)
@@ -641,6 +639,8 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;
 ;; NOTE: git-commit-mode isn’t used when committing from the command-line:
 ;;   https://magit.vc/manual/magit/git_002dcommit_002dmode-isn_0027t-used-when-committing-from-the-command_002dline.html
+(require 'server)
+(or (server-running-p) (server-mode))
 (use-package git-commit :ensure (:wait t) :defer t)
 
 ;; Useful for modifying compilation commands

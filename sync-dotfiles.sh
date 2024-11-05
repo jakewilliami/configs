@@ -47,7 +47,8 @@ fi
 declare -a DOTFILES=(
     "$HOME/.bash_profile"
     "$HOME/.bashrc"
-    "$HOME/.emacs"
+    "$HOME/.emacs.d/init.el:.emacs.d/"
+    "$HOME/.emacs.d/early-init.el:.emacs.d/"
     "$HOME/.emacs.local/llvm-mode.el:.emacs.local/"
     "$HOME/.emacs.snippets/fundamental-mode/mit.snippet:.emacs.snippets/fundamental-mode/"
     "$HOME/.emacs.snippets/rust-mode/main.snippet:.emacs.snippets/rust-mode/"

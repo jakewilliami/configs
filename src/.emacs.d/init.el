@@ -623,7 +623,7 @@ Takes a word motion argument: either `forward' or `backward'."
 (use-package yasnippet
   :ensure (:wait t)
   :defer t
-  :config
+  :init
   ;; Useful for snippets
   (setq yas/triggers-in-field nil)
   (setq yas-snippet-dirs '("~/.emacs.snippets/"))

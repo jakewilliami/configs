@@ -54,7 +54,6 @@ Convert a list of paths (e.g., the output of `ls`) to a tree-like structure (wri
 An Emacs plugin for working with BibTeX.
 
 ### ~~[`youtube-dl`](https://github.com/ytdl-org/youtube-dl)~~ [`yt-dlp`](https://github.com/yt-dlp/yt-dlp)
-
 Extremely useful tool for downloading videos (not just from YouTube, but that is its primary use-case).  `yt-dlp` is preferred as of February 2024 due to the following caveat:
 ```
 ==> Installing youtube-dl
@@ -65,6 +64,9 @@ Upstream have not tagged a new release since 2021.
 
 Please use yt-dlp instead.
 ```
+
+### ~~[`bpytop`](https://github.com/aristocratos/bpytop)~~ [`btop`](https://github.com/aristocratos/btop)
+A fast and modern replacement for something like [`htop`](https://en.wikipedia.org/wiki/Htop).
 
 ### [`inlyne`](https://github.com/Inlyne-Project/inlyne)
 Locally render markdown.

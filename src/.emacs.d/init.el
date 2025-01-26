@@ -97,8 +97,13 @@
 
 ;;; Do not use --dired option with ls on macOS
 ;;   https://stackoverflow.com/a/42038174
+;;   https://stackoverflow.com/a/56096775
+;;
+;; Requires GNU core utilities
 (when (string= system-type "darwin")
-  (setq dired-use-ls-dired nil))
+  (setq dired-use-ls-dired t
+        insert-directory-program "gls"
+        dired-listing-switches "-aBhl --group-directories-first"))
 
 
 
@@ -135,6 +140,14 @@
   :ensure (:wait t)
   :defer t
   :after smart-mode-line)
+
+;;; Better dired mode:
+;;   https://emacs.stackexchange.com/a/33553
+;;   https://emacs.stackexchange.com/a/64160
+;;
+;; Don't need to do for macOS, as this is handled separately above
+(unless (string= system-type "darwin")
+  (setq dired-listing-switches "-alFh"))
 
 ;;; Pages
 ;;   https://github.com/purcell/page-break-lines
@@ -279,7 +292,7 @@
 (use-package move-text
   :ensure (:wait t)
   :defer t
-  :config
+  :init
   (move-text-default-bindings))
 
 ;;; Multiple cursors
@@ -624,6 +637,8 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;
 ;; NOTE: git-commit-mode isn’t used when committing from the command-line:
 ;;   https://magit.vc/manual/magit/git_002dcommit_002dmode-isn_0027t-used-when-committing-from-the-command_002dline.html
+;;
+;; This allows us to do things like C-c C-c when `git` from the command line opens a commit dialogue.
 (require 'server)
 (or (server-running-p) (server-mode))
 (use-package git-commit :ensure (:wait t) :defer t)

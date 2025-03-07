@@ -91,3 +91,6 @@ A customisable menu bar.
 
 ### [`bin`](https://github.com/marcosnils/bin)
 A binary manager.
+
+### [`cyme`](https://github.com/tuna-f1sh/cyme)
+A modern alternative to [`lsusb`](https://github.com/jlhonora/lsusb).

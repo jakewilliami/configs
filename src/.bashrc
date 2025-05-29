@@ -83,6 +83,11 @@ if command -v eza > /dev/null 2>&1; then
 	alias exa="eza"
 fi
 
+# Alias for `cat` command
+if command -v bat > /dev/null 2>&1; then
+	alias cat="bat"
+fi
+
 # Convenient alias for youtube-dl to preferred tool
 if command -v yt-dlp > /dev/null 2>&1; then
     alias youtube-dl="yt-dlp"
@@ -111,7 +116,6 @@ if command -v dutree > /dev/null 2>&1; then
 fi
 
 # Fun aliases
-
 alias please="sudo"
 alias shuffle="sort -R"
 alias pythong="python"

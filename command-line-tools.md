@@ -45,10 +45,10 @@ An alternate version of `cat` with nice syntax highlighting, &c.  It is especial
 A fast and modern alternative to `du`, written in Rust.
 
 ### [`duf`](https://github.com/muesli/duf)
-A fast and modern alternative to `df`, written in Rust.
+A fast and modern alternative to `df`, written in Rust.  (See also [Canop](https://github.com/Canop)'s [`dysk`](https://github.com/Canop/dysk) [formerly [`lsf`](https://github.com/Canop/lfs)].)
 
 ### [`as-tree`](https://github.com/jez/as-tree)
-Convert a list of paths (e.g., the output of `ls`) to a tree-like structure (written in Rust).  Nice for visiualising things.  (See also `eza --tree`.)
+Convert a list of paths (e.g., the output of `ls`) to a tree-like structure (written in Rust).  Nice for visiualising things.  (See also [`eza`]()'s `--tree` option.  Also see [Canop](https://github.com/Canop)'s [`br`](https://github.com/Canop/broot).)
 
 ### [`ebib`](https://joostkremers.github.io/ebib/ebib-manual.html)
 An Emacs plugin for working with BibTeX.

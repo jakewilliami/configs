@@ -3,7 +3,7 @@
 # Define build target
 #
 # NOTE: this can be changed with an environment variable
-target := env_var_or_default("TARGET", "release")
+target := env("TARGET", "release")
 build_option := if target != "debug" { "--" + target } else { "--" }
 
 #  Define binary/target

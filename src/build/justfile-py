@@ -1,0 +1,30 @@
+# -*- mode: just -*-
+
+export_flags := "--no-hashes --no-emit-project --format=requirements-txt"
+audit_flags := "--desc --strict --progress-spinner=off"
+
+# Test project
+test:
+    uv run pytest
+
+# Check formatting with blue style
+fmt:
+    # See also configuration for pre-commit:
+    #   github.com/jakewilliami/ispunct-py/blob/05934d5c/.pre-commit-config.yaml
+    #
+    # And for Ruff:
+    #   github.com/jakewilliami/ispunct-py/blob/05934d5c/pyproject.toml#L23-L44
+    uv run pre-commit run --all
+
+# Audit project dependencies
+audit:
+    uv export {{export_flags}} > requirements.txt
+    uvx pip-audit {{audit_flags}} -r requirements.txt
+    # Alternatively:
+    #   uv tree
+    #   uv pip compile pyproject.toml -o requirements.txt
+    #   uvx pip-audit -r requirements.txt --fix
+
+# Benchmark performance
+# bench:
+#     TODO

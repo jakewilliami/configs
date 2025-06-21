@@ -8,8 +8,6 @@
 #
 # [1]: https://just.systems/man/en/functions.html#justfile-and-justfile-directory
 project_dir := justfile_dir() / "/"
-test_dir := project_dir / "test/"
-test_file := test_dir / "runtests.jl"
 docs_dir := project_dir / "docs/"
 docs_mk_file := docs_dir / "make.jl"
 bench_dir := project_dir / "perf/"
@@ -26,7 +24,7 @@ Pkg.instantiate()
 
 # Test project
 test:
-    julia --project={{project_dir}} {{test_file}}
+    julia --project={{project_dir}} -e 'import Pkg; Pkg.test()'
 
 # Run specified file
 run run_file:

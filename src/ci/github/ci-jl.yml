@@ -1,0 +1,89 @@
+# Primarily use whatever PkgTemplates.jl generates!
+
+name: CI
+# Run on master, tags, or any pull request
+on:
+  push:
+    branches:
+      - master
+    tags: ['*']
+  pull_request:
+  workflow_dispatch:
+concurrency:
+  # Skip intermediate builds: always.
+  # Cancel intermediate builds: only if it is a pull request build.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+jobs:
+  test:
+    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    permissions: # needed to allow julia-actions/cache to proactively delete old caches that it has created
+      actions: write
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          # - "1.0"     # Old LTS
+          - "1.6"       # Recent LTS
+          - "1.11"      # Recent stable
+          - "lts"       # Current LTS
+          - "pre"       # Latest pre-release
+          - "nightly"   # Latest release
+        os:
+          - ubuntu-latest
+          - macOS-latest
+          - windows-latest
+        arch:
+          - x64
+          - x86 # 32-bit; i686
+        exclude:
+          # 32-bit Julia binaries are not available on macOS
+          - os: macOS-latest
+            arch: x86
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: ${{ matrix.version }}
+          arch: ${{ matrix.arch }}
+      - uses: julia-actions/cache@v2
+      - uses: julia-actions/julia-buildpkg@v1
+      - uses: julia-actions/julia-runtest@v1
+
+  # docs:
+  #   name: Documentation
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: julia-actions/setup-julia@latest
+  #     - uses: extractions/setup-just@v3  # or taiki-e/install-action@just
+  #     - run: |
+  #         just docs
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@latest
+      - uses: extractions/setup-just@v3  # or taiki-e/install-action@just
+      - uses: astral-sh/setup-uv@v6
+
+      # Adapted from:
+      #   github.com/FluxML/Flux.jl/blob/7be1ca7a/.github/workflows/JuliaFormatter.yml
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            file_change:
+              - added|modified: '**/*'
+      - run: just fmt
+      - name: Check formatting diff
+        if: steps.filter.outputs.file_change == 'true'
+        run: |
+          git diff --color=always --exit-code

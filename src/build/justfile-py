@@ -11,7 +11,7 @@ fmt:
     #
     # And for Ruff:
     #   github.com/jakewilliami/ispunct-py/blob/05934d5c/pyproject.toml#L23-L44
-    uv run pre-commit run --all
+    uv run pre-commit run --all-files
     # Alternatively:
     #   uv run ruff check --fix  # linter
     #   uv run ruff format       # formatter

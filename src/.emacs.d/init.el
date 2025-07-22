@@ -755,7 +755,11 @@ Takes a word motion argument: either `forward' or `backward'."
 (add-hook 'python-mode-hook
           (lambda ()
             (set (make-local-variable 'compile-command)
-                 (format "python3 %s" (file-name-nondirectory buffer-file-name)))))
+                 (format "python3 %s" (file-name-nondirectory buffer-file-name)))
+
+            ;; Set line at 80 characters as per PEP8
+            (setq fill-column 80)
+            (display-fill-column-indicator-mode 1)))
 
 ;;; Indent in Python mode
 ;;   https://stackoverflow.com/a/3685541

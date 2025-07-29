@@ -1,0 +1,32 @@
+name: Audit
+
+on:
+  push:
+    paths:
+      # Run if workflow changes
+      - '.github/workflows/audit.yml'
+
+      # Run on changed dependencies
+      - '**/Cargo.toml'
+      - '**/Cargo.lock'
+
+      # Run if the configuration file changes
+      - '**/audit.toml'
+
+  # Rerun periodically to pick up new advisories
+  schedule:
+    - cron: '0 0 * * *'
+
+  # Run manually
+  workflow_dispatch:
+
+jobs:
+  audit:
+    name: Supply Chain Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Audit dependencies
+        uses: actions-rust-lang/audit@v1

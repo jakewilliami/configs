@@ -56,6 +56,16 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1  # or dtolnay/rust-toolchain@stable
       - run: just build
 
+  audit:
+    name: Supply Chain Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Audit dependencies
+        uses: actions-rust-lang/audit@v1
+
   sniff:
     name: Truffle Hog (Secret Sniffer)
     runs-on: ubuntu-latest

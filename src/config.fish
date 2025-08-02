@@ -132,7 +132,8 @@ setenv FZF_DEFAULT_OPTS '--height 20%'
 set FISH_CLIPBOARD_CMD "cat"
 
 # Upside-down face ˙ᵕ˙
-echo "( .-.)"
+# https://stackoverflow.com/a/13995944
+set fish_greeting "( .-.)"
 
 #  ╱|、
 # (˚ˎ 。7

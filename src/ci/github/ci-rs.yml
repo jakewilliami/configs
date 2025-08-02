@@ -1,4 +1,5 @@
 name: CI
+
 # Run on master, tags, or any pull request
 on:
   push:
@@ -14,6 +15,7 @@ jobs:
     name: Project Metadata
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
       - run: |
           echo "name=$(uvx --from=toml-cli toml get --toml-path=Cargo.toml package.name)" | tee -a $GITHUB_OUTPUT

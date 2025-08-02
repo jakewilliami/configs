@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: llvmex
+# key: llvmex
+# --
+/// ```llvm
+/// $0
+/// ```

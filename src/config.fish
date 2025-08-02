@@ -1,3 +1,7 @@
+# Add local opt to path
+# This is where I store my custom binaries
+fish_add_path --global --move --path "$HOME/opt/"
+
 # Set up Homebrew shell environment
 #
 # Also switches to using brew-installed bash as

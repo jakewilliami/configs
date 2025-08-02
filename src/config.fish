@@ -60,9 +60,18 @@ end
 
 # Check if command exists
 function has_command
+    if test (count $argv) -eq 0
+        echo "ERROR: has_command: No arguments given"
+        return
+    end
+
+    if test (count $argv) -gt 1
+        echo "ERROR: has_command: only accepts one argument"
+		return
+	end
+
     command -v $argv[1] > /dev/null
 end
-
 
 # Alias for opening things
 if has_command open

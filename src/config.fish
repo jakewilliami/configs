@@ -51,7 +51,7 @@ end
 # Alias for `cat` command
 if command -v bat > /dev/null
 	abbr -a cat 'bat'
-fi
+end
 
 # Convenient alias for youtube-dl to preferred tool
 if command -v yt-dlp > /dev/null

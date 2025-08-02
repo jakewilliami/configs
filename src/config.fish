@@ -1,3 +1,38 @@
+# Set up Homebrew shell environment
+#
+# Also switches to using brew-installed bash as
+# default shell.
+#
+# As bash is no longer the default shell on macOS
+# (replaced by zsh), we use brew-installed bash as
+# it will be up to date (Apple no longer ships an
+# updated version of bash).
+#
+# Refs:
+#   https://brew.sh
+#   https://unix.stackexchange.com/a/750210
+#   https://support.apple.com/kb/HT208050
+#   https://discussions.apple.com/thread/250722978
+#   https://stackoverflow.com/a/77052639
+if test -e /usr/local/bin/brew
+    eval (/usr/local/bin/brew shellenv)
+else if test -e /opt/homebrew/bin/brew
+    eval (/opt/homebrew/bin/brew shellenv)
+else
+    echo "WARNING: no Homebrew configuration found"
+end
+
+#  Cargo
+if test -e "$HOME/.cargo/bin/"
+    # Sourcing the env file does not work for fish
+    # . "$HOME/.cargo/env"
+    fish_add_path --global --move --path "$HOME/.cargo/bin"
+end
+
+# LLVM
+# https://stackoverflow.com/a/42730721
+fish_add_path --global --move --path "/opt/homebrew/opt/llvm/bin"
+
 # Alias for editor
 function e
 	if test (count $argv) -eq 0
@@ -90,3 +125,10 @@ setenv FZF_DEFAULT_OPTS '--height 20%'
 # See https://github.com/fish-shell/fish-shell/issues/772
 set FISH_CLIPBOARD_CMD "cat"
 
+# Upside-down face ˙ᵕ˙
+echo "( .-.)"
+
+#  ╱|、
+# (˚ˎ 。7
+#  |、˜〵
+# じしˍ,)ノ

@@ -143,7 +143,7 @@ function get-version() {
 }
 
 function view-md() {
-	pandoc "${1}" | lynx -stdin
+    inlyne "${1}"
 }
 
 function get-status() {

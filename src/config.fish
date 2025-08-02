@@ -140,10 +140,85 @@ setenv FZF_DEFAULT_OPTS '--height 20%'
 # See https://github.com/fish-shell/fish-shell/issues/772
 set FISH_CLIPBOARD_CMD "cat"
 
+function rgb_to_hex
+    if test (count $argv) -ne 3
+        echo "ERROR: rgb_to_hex: expects exactly three arguments between 0 and 1"
+        return
+    end
+
+    for f in $argv
+        set -l val (math "round($f * 255)")
+        printf "%02X" $val
+    end
+end
+
+
+function _hostname
+    if test (count $argv) -ne 0
+        echo "ERROR: _hostname: no arguments expected"
+        return
+    end
+
+    # Can use $hostname directly
+    # reddit.com/r/fishshell/comments/gqb0qm/comment/frsh1pd
+    set hn $hostname
+
+    # remove trailing .local if present
+    if test (string match -r '\.local$' $hn)
+        set hn (string replace -r '\.local$' '' $hn)
+    end
+
+    echo $hn
+end
+
+# Prompt adapted from:
+#   github.com/jonhoo/configs/blob/cec5bd70/shell/.config/fish/config.fish#L207-L223
+#
+# Colours adapted from:
+#   github.com/jakewilliami/tex-macros/blob/6ca86a43/macros/colours.sty
+#
+# Colours work well with Dracula theme:
+#   git clone https://github.com/dracula/iterm.git $HOME/.config/iterm2/dracula
+function fish_prompt
+    # This grey is adapted from `charcoal`
+    set grey (rgb_to_hex 0.447 0.489 0.517)
+    # This blue was adapted from `darkelectricblue`
+    set blue (rgb_to_hex 0.46 0.53 0.78)
+    # This green was adapted from `darkolivegreen`
+    set green (rgb_to_hex 0.50 0.68 0.40)
+
+    # Date
+    set_color --bold $grey
+	echo -n "["(date "+%H:%M")"] "
+
+    # Host
+    set_color --bold $blue
+    echo -n (_hostname)
+
+    # Path
+	if [ $PWD != $HOME ]
+        set_color --bold $blue
+		echo -n ':'
+		set_color --bold yellow
+		echo -n (basename $PWD)
+	end
+
+    # Git
+	set_color --bold $green
+	printf '%s ' (__fish_git_prompt)
+
+    # Prompt
+	set_color red
+	echo -n '| '
+	set_color normal
+end
+
 # Upside-down face ˙ᵕ˙
-# https://stackoverflow.com/a/13995944
-# See also: github.com/jonhoo/configs/blob/cec5bd70/shell/.config/fish/config.fish#L225-L311
-set fish_greeting "( .-.)"
+#   stackoverflow.com/a/13995944
+#
+# See also:
+#   github.com/jonhoo/configs/blob/cec5bd70/shell/.config/fish/config.fish#L225-L311
+set fish_greeting # "( .-.)"
 
 #  ╱|、
 # (˚ˎ 。7

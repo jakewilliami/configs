@@ -23,8 +23,6 @@ if [[ -e "/usr/local/bin/brew" ]]; then
     eval "$(/usr/local/bin/brew shellenv)"
 elif [[ -e "/opt/homebrew/bin/brew" ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
-else
-    echo "WARNING: no Homebrew configuration found"
 fi
 
 # LLVM

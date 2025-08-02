@@ -142,6 +142,7 @@ set FISH_CLIPBOARD_CMD "cat"
 
 # Upside-down face ˙ᵕ˙
 # https://stackoverflow.com/a/13995944
+# See also: github.com/jonhoo/configs/blob/cec5bd70/shell/.config/fish/config.fish#L225-L311
 set fish_greeting "( .-.)"
 
 #  ╱|、

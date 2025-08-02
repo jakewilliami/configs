@@ -95,6 +95,11 @@ if has_command bat
 	abbr -a cat 'bat'
 end
 
+# Abbreviation for chezmoi
+if has_command chezmoi
+    abbr -a cz chezmoi
+end
+
 # Convenient alias for youtube-dl to preferred tool
 if has_command yt-dlp
 	abbr -a youtube-dl 'yt-dlp'

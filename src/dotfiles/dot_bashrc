@@ -88,6 +88,11 @@ if command -v bat > /dev/null 2>&1; then
 	alias cat="bat"
 fi
 
+# Alias for chezmoi
+if command -v chezmoi > /dev/null 2>&1; then
+    alias cz="chezmoi"
+fi
+
 # Convenient alias for youtube-dl to preferred tool
 if command -v yt-dlp > /dev/null 2>&1; then
     alias youtube-dl="yt-dlp"

@@ -27,7 +27,7 @@ if test -e /usr/local/bin/brew
 else if test -e /opt/homebrew/bin/brew
     eval (/opt/homebrew/bin/brew shellenv)
 else
-    echo "WARNING: no Homebrew configuration found"
+    echo 'WARNING: no Homebrew configuration found'
 end
 
 #  Cargo
@@ -39,7 +39,7 @@ end
 
 # LLVM
 # https://stackoverflow.com/a/42730721
-fish_add_path --global --move --path "/opt/homebrew/opt/llvm/bin"
+fish_add_path --global --move --path '/opt/homebrew/opt/llvm/bin'
 
 # Alias for editor
 function e
@@ -53,12 +53,12 @@ end
 # Check if command exists
 function has_command
     if test (count $argv) -eq 0
-        echo "ERROR: has_command: No arguments given"
+        echo 'ERROR: has_command: No arguments given'
         return
     end
 
     if test (count $argv) -gt 1
-        echo "ERROR: has_command: only accepts one argument"
+        echo 'ERROR: has_command: only accepts one argument'
 		return
 	end
 
@@ -134,20 +134,20 @@ set FISH_CLIPBOARD_CMD "cat"
 
 function rgb_to_hex
     if test (count $argv) -ne 3
-        echo "ERROR: rgb_to_hex: expects exactly three arguments between 0 and 1"
+        echo 'ERROR: rgb_to_hex: expects exactly three arguments between 0 and 1'
         return
     end
 
     for f in $argv
         set -l val (math "round($f * 255)")
-        printf "%02X" $val
+        printf '%02X' $val
     end
 end
 
 
 function _hostname
     if test (count $argv) -ne 0
-        echo "ERROR: _hostname: no arguments expected"
+        echo 'ERROR: _hostname: no arguments expected'
         return
     end
 
@@ -210,7 +210,7 @@ end
 #
 # See also:
 #   github.com/jonhoo/configs/blob/cec5bd70/shell/.config/fish/config.fish#L225-L311
-set fish_greeting # "( .-.)"
+set fish_greeting # '( .-.)'
 
 #  ╱|、
 # (˚ˎ 。7

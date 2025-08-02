@@ -58,15 +58,21 @@ if status --is-interactive
 	end
 end
 
+# Check if command exists
+function has_command
+    command -v $argv[1] > /dev/null
+end
+
+
 # Alias for opening things
-if command -v open > /dev/null
+if has_command open
 	abbr -a o open
-else
+else if has_command xdg-open
 	abbr -a o xdg-open
 end
 
 # Use eza over ls if available (https://github.com/eza-community/eza)
-if command -v eza > /dev/null
+if has_command eza
 	abbr -a l 'eza'
 	abbr -a ls 'eza'
 	abbr -a ll 'eza -l'
@@ -79,22 +85,22 @@ else
 end
 
 # Use eza over exa as the latter is deprecated (https://github.com/ogham/exa/issues/1243)
-if command -v eza > /dev/null
+if has_command eza
 	abbr -a exa 'eza'
 end
 
 # Alias for `cat` command
-if command -v bat > /dev/null
+if has_command bat
 	abbr -a cat 'bat'
 end
 
 # Convenient alias for youtube-dl to preferred tool
-if command -v yt-dlp > /dev/null
+if has_command yt-dlp
 	abbr -a youtube-dl 'yt-dlp'
 end
 
 # Use dutree over du if available (https://github.com/nachoparker/dutree)
-if command -v dutree > /dev/null
+if has_command dutree
 	abbr -a du 'dutree'
 	abbr -a du1 'dutree --depth=1 --aggr=1M'
 end

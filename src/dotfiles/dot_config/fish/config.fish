@@ -40,73 +40,85 @@ end
 fish_add_path --global --move --path '/opt/homebrew/opt/llvm/bin'
 
 # Alias for editor
-function e
-	if test (count $argv) -eq 0
-		emacs . &
-	else
-		emacs $argv
-	end
+function e --wraps=emacs
+    if test (count $argv) -eq 0
+        emacs . &
+    else
+        emacs $argv
+    end
 end
 
 # Check if command exists
 function has_command
     if test (count $argv) -eq 0
-        echo 'ERROR: has_command: No arguments given'
+        echo 'ERROR: has_command: no arguments given'
         return
     end
 
     if test (count $argv) -gt 1
         echo 'ERROR: has_command: only accepts one argument'
-		return
-	end
+        return
+    end
 
     command -v $argv[1] > /dev/null
 end
 
 # Alias for opening things
 if has_command open
-	abbr -a o open
+    abbr -a o open
 else if has_command xdg-open
-	abbr -a o xdg-open
+    abbr -a o xdg-open
 end
+
+# Convenient ls aliases (see also `la` and `ll`)
+abbr -a l ls
+abbr -a lll la
 
 # Use eza over ls if available (https://github.com/eza-community/eza)
 if has_command eza
-	abbr -a l 'eza'
-	abbr -a ls 'eza'
-	abbr -a ll 'eza -l'
-	abbr -a lll 'eza -la'
-    abbr -a lsg 'eza -l --git'
-else
-	abbr -a l 'ls'
-	abbr -a ll 'ls -l'
-	abbr -a lll 'ls -la'
+    function ls --wraps=eza
+        eza $argv
+    end
+
+    abbr -a l1 'ls -1'
+    abbr -a lsg 'ls -l --git'
 end
 
 # Use eza over exa as the latter is deprecated (https://github.com/ogham/exa/issues/1243)
 if has_command eza
-	abbr -a exa 'eza'
+    function exa --wraps=eza
+        eza $argv
+    end
 end
 
 # Alias for `cat` command
 if has_command bat
-	abbr -a cat 'bat'
+    function cat --wraps=bat
+        bat $argv
+    end
 end
 
 # Abbreviation for chezmoi
 if has_command chezmoi
-    abbr -a cz chezmoi
+    function cz --wraps=chezmoi
+        chezmoi $argv
+    end
 end
 
 # Convenient alias for youtube-dl to preferred tool
 if has_command yt-dlp
-	abbr -a youtube-dl 'yt-dlp'
+    function youtube-dlp --wraps=yt-dlp
+        yt-dlp $argv
+    end
 end
 
 # Use dutree over du if available (https://github.com/nachoparker/dutree)
 if has_command dutree
-	abbr -a du 'dutree'
-	abbr -a du1 'dutree --depth=1 --aggr=1M'
+    function du --wraps=dutree
+        dutree $argv
+    end
+
+    abbr -a du1 'dutree --depth=1 --aggr=1M'
 end
 
 # Fish git prompt
@@ -184,28 +196,28 @@ function fish_prompt
 
     # Date
     set_color --bold $grey
-	echo -n "["(date "+%H:%M")"] "
+    echo -n "["(date "+%H:%M")"] "
 
     # Host
     set_color --bold $blue
     echo -n (_hostname)
 
     # Path
-	if [ $PWD != $HOME ]
+    if [ $PWD != $HOME ]
         set_color --bold $blue
-		echo -n ':'
-		set_color --bold yellow
-		echo -n (basename $PWD)
-	end
+        echo -n ':'
+        set_color --bold yellow
+        echo -n (basename $PWD)
+    end
 
     # Git
-	set_color --bold $green
-	printf '%s ' (__fish_git_prompt)
+    set_color --bold $green
+    printf '%s ' (__fish_git_prompt)
 
     # Prompt
-	set_color red
-	echo -n '| '
-	set_color normal
+    set_color red
+    echo -n '| '
+    set_color normal
 end
 
 # Upside-down face ˙ᵕ˙

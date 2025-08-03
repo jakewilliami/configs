@@ -15,14 +15,24 @@ chezmoi init https://github.com/jakewilliami/configs.git
 To see what changes can be applied to your home directory, run
 
 ```shell
-chezmoi apply --dry-run --verbose  # -n -v
+chezmoi apply -nv
 ```
+
+These options' long forms are `--dry-run` and `--verbose` respectively.
 
 For convenience, I have added a symbolic link to the Chezmoi where I normally keep my config files:
 
 ```shell
 ln -s ~/.local/share/chezmoi/ ~/projects/configs
 ```
+
+When you first log onto a machine, it's good to pull any remote changes first, before applying
+
+```shell
+chezmoi git pull
+```
+
+I have an alias for `chezmoi` set as `cz` for convenience.
 
 See [Chezmoi quick start](https://www.chezmoi.io/quick-start/).
 

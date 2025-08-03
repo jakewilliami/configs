@@ -2,7 +2,7 @@
 
 # Test project
 test:
-    uv run pytest
+    uv run pytest -v
 
 # Check formatting with blue style
 fmt:

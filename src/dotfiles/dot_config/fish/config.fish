@@ -64,10 +64,18 @@ function has_command
 end
 
 # Alias for opening things
-if has_command open
-    abbr -a o open
-else if has_command xdg-open
-    abbr -a o xdg-open
+if has_command open  # macOS and some Linux
+    function o --wraps=open
+        open $argv
+    end
+else if has_command xdg-open  # Linux
+    function o --wraps=xdg-open
+        xdg-open $argv
+    end
+else if string match -q "*Windows*" (uname)  # Windows
+    function o --wraps=start
+        cmd.exe /c start "" $argv
+    end
 end
 
 # Convenient ls aliases (see also `la` and `ll`)

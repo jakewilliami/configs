@@ -7,13 +7,11 @@ These dotfiles were initially just [`.bashrc`](./src/dotfiles/dot_bashrc) and [`
 This repository also contains my configuration files I use throughout my projects, such as how formatters/linters should work ([`format/`](./src/format/)), and reasonable defaults for CI/CD jobs ([`ci/`](./src/ci/)) and build scripts ([`build/`](./src/build/)).
 
 Importantly, since [#14](https://github.com/jakewilliami/configs/pull/14), the [`dotfiles/`](./src/dotfiles/) directory is managed by [Chezmoi](https://www.chezmoi.io/).  To instantiate these dotfiles on a new machine, you can run
-
 ```shell
 chezmoi init https://github.com/jakewilliami/configs.git
 ```
 
 To see what changes can be applied to your home directory, run
-
 ```shell
 chezmoi apply -nv
 ```
@@ -21,16 +19,21 @@ chezmoi apply -nv
 These options' long forms are `--dry-run` and `--verbose` respectively.
 
 For convenience, I have added a symbolic link to the Chezmoi where I normally keep my config files:
-
 ```shell
 ln -s ~/.local/share/chezmoi/ ~/projects/configs
 ```
 
 When you first log onto a machine, it's good to pull any remote changes first, before applying
-
 ```shell
 chezmoi git pull
 ```
+
+If you have local changes that aren't up to date with the dotfiles/configs repo, you can run
+```shell
+chezmoi re-add -nv
+```
+
+To see what you can change locally.  Otherwise, when you run `chezmoi apply` you will be asked how you want to handle the local changes, and there [is currently](https://github.com/twpayne/chezmoi/issues/2162) no option to accept changes.
 
 I have an alias for `chezmoi` set as `cz` for convenience.
 

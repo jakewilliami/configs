@@ -80,6 +80,12 @@
   ;; Enable use-package :ensure support for Elpaca.
   (elpaca-use-package-mode))
 
+;; Load package versions from lock file
+;;   reddit.com/r/emacs/comments/1ilcodh/
+;;   github.com/progfolio/elpaca/issues/151
+;;   github.com/progfolio/elpaca/blob/f0bbcec4/doc/manual.md#lock-files
+(setq elpaca-lock-file "elpaca.lock.eld")
+
 ;;; Encoding
 (setq-default buffer-file-coding-system 'utf-8-unix)
 (set-default-coding-systems 'utf-8-unix)

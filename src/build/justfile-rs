@@ -104,7 +104,7 @@ cargo-fmt:
 
 [private]
 clippy:
-  cargo clippy --all --all-targets --all-features -- --deny warnings --allow clippy::uninlined-format-args
+    cargo clippy --all --all-targets --all-features -- --deny warnings --allow clippy::uninlined-format-args
 
 # Update project dependencies in Cargo.lock
 update:
@@ -112,7 +112,7 @@ update:
 
 # Run tests
 test:
-  cargo test --all
+    cargo test --all
 
 # Generate doc
 doc:

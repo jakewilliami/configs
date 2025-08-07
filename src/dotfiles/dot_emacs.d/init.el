@@ -160,7 +160,7 @@
   (global-page-break-lines-mode))
 
 ;;;; Represent whitespace as dots
-(setq whitespace-style '(space-mark))
+(setq whitespace-style '(space-mark face tabs trailing))
 (setq whitespace-display-mappings '((space-mark 32 [183] [46])))
 
 ;;; Whitespace mode
@@ -803,21 +803,20 @@ Takes a word motion argument: either `forward' or `backward'."
 (add-hook 'lisp-mode-hook        'turn-on-paredit)
 (add-hook 'common-lisp-mode-hook 'turn-on-paredit)
 
-;;; Untabify file on save in certain major modes
-(add-hook 'rust-mode-hook 'untabify-file-hook)
-(add-hook 'python-mode-hook 'untabify-file-hook)
-(add-hook 'julia-mode-hook 'untabify-file-hook)
+;;; Untabify file on save in programming modes
+;;
+;; For more basic major modes, see:
+;;   https://www.gnu.org/software/emacs/manual/html_node/elisp/Basic-Major-Modes.html
+;;
+;; Previously, we were only doing this for certain modes:
+;;   https://github.com/jakewilliami/configs/blob/bce7228a/src/dotfiles/dot_emacs.d/init.el#L788-L791
+(add-hook 'prog-mode-hook 'untabify-file-hook)
 
-;;; Whitespace mode hooks
-(add-hook 'julia-mode-hook 'set-up-whitespace-handling)
-(add-hook 'rust-mode-hook 'set-up-whitespace-handling)
-(add-hook 'c-mode-hook 'set-up-whitespace-handling)
-(add-hook 'emacs-lisp-mode 'set-up-whitespace-handling)
-(add-hook 'markdown-mode-hook 'set-up-whitespace-handling)
-(add-hook 'haskell-mode-hook 'set-up-whitespace-handling)
-(add-hook 'python-mode-hook 'set-up-whitespace-handling)
-(add-hook 'yaml-mode-hook 'set-up-whitespace-handling)
-(add-hook 'just-mode-hook 'set-up-whitespace-handling)
+;; Add hook to set up whitespace handling for all programming modes
+;;
+;; Previously, we did this for individual programming mode hooks:
+;;   https://github.com/jakewilliami/configs/blob/bce7228a/src/dotfiles/dot_emacs.d/init.el#L793-L801
+(add-hook 'prog-mode-hook 'set-up-whitespace-handling)
 
 
 

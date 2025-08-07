@@ -165,17 +165,35 @@
 
 ;;; Whitespace mode
 ;;   https://www.emacswiki.org/emacs/WhiteSpace
-;; (require-theme 'gruber-darker)
+
 (require 'whitespace)
 (defun set-up-whitespace-handling ()
   (interactive)
   (whitespace-mode 1)
-  (add-to-list 'write-file-functions 'delete-trailing-whitespace))
+  ;; Remove trailing whitespace where possible
+  (add-to-list 'write-file-functions 'delete-trailing-whitespace)
+  ;; Highlight tab characters
+  ;;   https://stackoverflow.com/a/22011036/
+  ;;   https://stackoverflow.com/a/79727953/
+  ;;   https://github.com/jakewilliami/configs/issues/15
+  ;; And modified colour to match nice red:
+  ;;   https://github.com/jakewilliami/tex-macros/blob/60446649/macros/colours.sty#L7
+  (modify-face whitespace-tab nil "#ae4744")
+  ;; Do the same for trailing whitespace
+  (modify-face whitespace-trailing nil "#ae4744"))
+
+(defun set-up-whitespace-handling-globally ()
+  (interactive)
+  (global-whitespace-mode 1)
+  (set-up-whitespace-handling))
+
+;; Uncomment the below to apply my preferred whitespace mode to all buffers
+;; (set-up-whitespace-handling-globally)
 
 ;;; Suppress startup buffers
 (setq inhibit-startup-screen t
-	  inhibit-splash-screen t
-	  inhibit-startup-echo-area-message t)
+      inhibit-splash-screen t
+      inhibit-startup-echo-area-message t)
 
 ;;; Hide tool-bar
 (menu-bar-mode -1)
@@ -701,7 +719,7 @@ Takes a word motion argument: either `forward' or `backward'."
             (lambda ()
               (set (make-local-variable 'compile-command)
                    (format "julia --project %s"
-					       (file-name-nondirectory buffer-file-name))))))
+                           (file-name-nondirectory buffer-file-name))))))
 
 ;;; Rust
 ;;   https://github.com/rust-lang/rust-mode
@@ -712,9 +730,9 @@ Takes a word motion argument: either `forward' or `backward'."
   (add-hook 'rust-mode-hook
           (lambda ()
             (set (make-local-variable 'compile-command)
-                 (format "rustc %s && ./%s" 
-					     (file-name-nondirectory buffer-file-name)
-					     (file-name-base buffer-file-name))))))
+                 (format "rustc %s && ./%s"
+                         (file-name-nondirectory buffer-file-name)
+                         (file-name-base buffer-file-name))))))
 
 ;;; Go
 (use-package go-mode
@@ -725,7 +743,7 @@ Takes a word motion argument: either `forward' or `backward'."
           (lambda ()
             (set (make-local-variable 'compile-command)
                  (format "go run %s"
-					     (file-name-nondirectory buffer-file-name))))))
+                         (file-name-nondirectory buffer-file-name))))))
 
 ;;; R
 (use-package ess :ensure (:wait t) :defer t)
@@ -778,7 +796,7 @@ Takes a word motion argument: either `forward' or `backward'."
           (lambda ()
             (set (make-local-variable 'compile-command)
                  (format "gforth %s -e bye"
-					     (file-name-nondirectory buffer-file-name))))))
+                         (file-name-nondirectory buffer-file-name))))))
 
 ;;; Paredit hooks
 (add-hook 'emacs-lisp-mode-hook  'turn-on-paredit)
@@ -799,6 +817,7 @@ Takes a word motion argument: either `forward' or `backward'."
 (add-hook 'haskell-mode-hook 'set-up-whitespace-handling)
 (add-hook 'python-mode-hook 'set-up-whitespace-handling)
 (add-hook 'yaml-mode-hook 'set-up-whitespace-handling)
+(add-hook 'just-mode-hook 'set-up-whitespace-handling)
 
 
 
@@ -814,7 +833,7 @@ Takes a word motion argument: either `forward' or `backward'."
 ;; Set Up:
 ;;   $ rustup component add rust-src
 ;;   $ rustup component add rust-analyzer
-;; 
+;;
 ;; The remaining packages should be installed via use-package
 ;; For some reason I also had to install zsh for this to work
 
@@ -902,16 +921,16 @@ Takes a word motion argument: either `forward' or `backward'."
 (use-package lsp-ui
   :ensure (:wait t)
   :defer t
-  
+
   :init
   (setq lsp-ui-doc-enable nil)
-  
+
   :commands lsp-ui-mode
 
   :config
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key lsp-ui-mode-map [remap xref-find-references]  #'lsp-ui-peek-find-references)
-  
+
   :custom
   (lsp-ui-peek-always-show t)
   (lsp-ui-sideline-show-hover t)
@@ -931,10 +950,10 @@ Takes a word motion argument: either `forward' or `backward'."
 
   :bind
   (:map company-active-map
-	    ("C-n". company-select-next)
-	    ("C-p". company-select-previous)
-	    ("M-<". company-select-first)
-	    ("M->". company-select-last)))
+        ("C-n". company-select-next)
+        ("C-p". company-select-previous)
+        ("M-<". company-select-first)
+        ("M->". company-select-last)))
 
 ;;; Templating system for more cleverness
 ;; See demo:
@@ -952,4 +971,3 @@ Takes a word motion argument: either `forward' or `backward'."
                           "Align visible fields"
                           (interactive "P")
                           (csv-align-fields nil (window-start) (window-end))))))
-

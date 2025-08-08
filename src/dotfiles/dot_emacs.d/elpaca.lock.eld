@@ -301,7 +301,7 @@
                            "b00a95e6b34c94987fda5a57c20cfe2f064b1c7a"))
  (git-commit :source "lockfile" :date (26773 9902 399498 0) :recipe
              (:package "git-commit" :fetcher github :repo
-                       "magit/magit" :branch "legacy-stub" :old-names
+                       "magit/magit" :branch "main" :old-names
                        (git-commit-mode) :files
                        ("*.el" "*.el.in" "dir" "*.info" "*.texi"
                         "*.texinfo" "doc/dir" "doc/*.info"

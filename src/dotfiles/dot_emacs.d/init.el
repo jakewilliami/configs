@@ -36,10 +36,17 @@
 ;;   Straight.el: https://www.github.com/radian-software/straight.el
 ;;   MELPA: https://melpa.org/#/getting-started, https://emacs.stackexchange.com/a/10510
 ;;   Previous: https://github.com/jakewilliami/configs/blob/c106b08b/src/.emacs#L26-L56
+;;
+;; We also load package versions from lock file:
+;;   reddit.com/r/emacs/comments/1ilcodh/
+;;   github.com/progfolio/elpaca/issues/151#issuecomment-2629560507
+;;   github.com/progfolio/elpaca/issues/447
+;;   github.com/progfolio/elpaca/blob/f0bbcec4/doc/manual.md#lock-files
 (defvar elpaca-installer-version 0.8)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+(setq elpaca-lock-file "elpaca.lock.eld")
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
                               :ref nil :depth 1
                               :files (:defaults "elpaca-test.el" (:exclude "extensions"))
@@ -79,12 +86,6 @@
 (elpaca elpaca-use-package
   ;; Enable use-package :ensure support for Elpaca.
   (elpaca-use-package-mode))
-
-;; Load package versions from lock file
-;;   reddit.com/r/emacs/comments/1ilcodh/
-;;   github.com/progfolio/elpaca/issues/151
-;;   github.com/progfolio/elpaca/blob/f0bbcec4/doc/manual.md#lock-files
-(setq elpaca-lock-file "elpaca.lock.eld")
 
 ;;; Encoding
 (setq-default buffer-file-coding-system 'utf-8-unix)

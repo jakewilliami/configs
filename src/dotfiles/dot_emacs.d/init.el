@@ -671,23 +671,18 @@ Takes a word motion argument: either `forward' or `backward'."
 ;; This allows us to do things like C-c C-c when `git` from the command line opens a commit dialogue.
 (require 'server)
 (or (server-running-p) (server-mode))
-(use-package git-commit :ensure (:wait t) :defer t)
+(use-package git-commit :ensure (:wait t) :demand t)
 
 ;;; Magit
 ;;   https://reddit.com/r/emacs/comments/1954ay9/comment/khnm1en
 (use-package transient :ensure (:wait t) :defer t)
 (use-package magit
   :ensure (:wait t)
-  :defer t
+  :demand t
   :after git-commit
   :after transient
   :config
   (add-to-list 'magit-section-initial-visibility-alist '(untracked . show)))
-
-;; Load magit immediately so that we have access to commands like
-;; `magit-git-string' and we don't have to wait for the git server
-;; to load when we type "C-x g"
-(require 'magit)
 
 ;;; Reset default compilation command
 (use-package just-mode :ensure (:wait t) :defer t)

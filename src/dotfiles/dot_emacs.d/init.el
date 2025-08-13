@@ -86,6 +86,12 @@
   ;; Enable use-package :ensure support for Elpaca.
   (elpaca-use-package-mode))
 
+;; This will essentially ignore the :wait keyword for any recipes which
+;; follow.  Once you've worked out what's causing errors, you can remove
+;; this and alter the actual recipes to remove the :wait keyword where it
+;; is not needed.
+(add-hook 'elpaca-recipe-functions (lambda (recipe) '(:wait nil)))
+
 ;;; Encoding
 (setq-default buffer-file-coding-system 'utf-8-unix)
 (set-default-coding-systems 'utf-8-unix)

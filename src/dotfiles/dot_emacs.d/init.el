@@ -48,7 +48,6 @@
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
 (setq elpaca-lock-file "elpaca.lock.eld")
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                              :ref nil :depth 1
                               :files (:defaults "elpaca-test.el" (:exclude "extensions"))
                               :build (:not elpaca--activate-package)))
 (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))

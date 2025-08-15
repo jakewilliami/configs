@@ -194,13 +194,10 @@
   ;; Do the same for trailing whitespace
   (modify-face whitespace-trailing nil "#ae4744"))
 
-(defun set-up-whitespace-handling-globally ()
+;; Reset face for tabs (used for Go [ref KSMPV])
+(defun set-up-whitespace-handling-allow-tabs ()
   (interactive)
-  (global-whitespace-mode 1)
-  (set-up-whitespace-handling))
-
-;; Uncomment the below to apply my preferred whitespace mode to all buffers
-;; (set-up-whitespace-handling-globally)
+  (face-spec-reset-face 'whitespace-tab))
 
 ;;; Suppress startup buffers
 (setq inhibit-startup-screen t
@@ -424,11 +421,18 @@
 ;;
 ;; To use this:
 ;;   (add-hook 'something-mode-hook 'untabify-file-hook)
+;;
+;; We explicitly avoid doing this for Go files [ref KSMPV]
+;;   https://stackoverflow.com/a/41450385
+;;
+;; For previous version, see:
+;;   https://github.com/jakewilliami/configs/blob/4ecf4e9c/src/dotfiles/dot_emacs.d/init.el#L421-L429
 (defun untabify-file-hook ()
   "Custom hook for untabifying the whole file."
-  (add-hook 'before-save-hook 'untabify-file nil 'local))
+  (unless (derived-mode-p 'go-mode)
+    (add-hook 'before-save-hook 'untabify-file nil 'local)))
 
-;;; Enable accented character input system
+;;; Enable accented character input system (i.e., macons and umlauts)
 ;;   https://emacs.stackexchange.com/a/30697
 ;;
 ;; For latin-postfix as default, see:
@@ -810,20 +814,28 @@ Takes a word motion argument: either `forward' or `backward'."
 (add-hook 'lisp-mode-hook        'turn-on-paredit)
 (add-hook 'common-lisp-mode-hook 'turn-on-paredit)
 
-;;; Untabify file on save in programming modes
+;;; Handle tabs
+;;
+;; I mostly dispise tabs, but some programs prefer them.  We have to define some to skip
+;; in the coming code blocks.
+;;
+;; Firstly, we untabify file on save in programming modes
 ;;
 ;; For more basic major modes, see:
 ;;   https://www.gnu.org/software/emacs/manual/html_node/elisp/Basic-Major-Modes.html
 ;;
 ;; Previously, we were only doing this for certain modes:
 ;;   https://github.com/jakewilliami/configs/blob/bce7228a/src/dotfiles/dot_emacs.d/init.el#L788-L791
+;;
+;; Now we do it for all except Go [ref KSMPV]
 (add-hook 'prog-mode-hook 'untabify-file-hook)
 
-;; Add hook to set up whitespace handling for all programming modes
+;; We also add hook to set up whitespace handling for all programming modes
 ;;
 ;; Previously, we did this for individual programming mode hooks:
 ;;   https://github.com/jakewilliami/configs/blob/bce7228a/src/dotfiles/dot_emacs.d/init.el#L793-L801
 (add-hook 'prog-mode-hook 'set-up-whitespace-handling)
+(add-hook 'go-mode-hook 'set-up-whitespace-handling-allow-tabs)
 
 
 

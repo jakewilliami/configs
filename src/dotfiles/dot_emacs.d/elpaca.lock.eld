@@ -70,7 +70,7 @@
                    :files ("*" (:exclude ".git")) :source
                    "elpaca-menu-lock-file" :protocol https :inherit t
                    :depth treeless :ref
-                   "a4c0408eafc3958af869727874b715ab6ca23b68" :wait
+                   "7179960b7c82a7cca6bac60d79dd7fe09ae390a0" :wait
                    nil))
  (dash :source "elpaca-menu-lock-file" :recipe
        (:package "dash" :fetcher github :repo "magnars/dash.el" :files

@@ -86,12 +86,6 @@
   ;; Enable use-package :ensure support for Elpaca.
   (elpaca-use-package-mode))
 
-;; This will essentially ignore the :wait keyword for any recipes which
-;; follow.  Once you've worked out what's causing errors, you can remove
-;; this and alter the actual recipes to remove the :wait keyword where it
-;; is not needed.
-(add-hook 'elpaca-recipe-functions (lambda (recipe) '(:wait nil)))
-
 ;;; Encoding
 (setq-default buffer-file-coding-system 'utf-8-unix)
 (set-default-coding-systems 'utf-8-unix)
@@ -131,14 +125,14 @@
 ;;   :init
 ;;   (load-theme 'dracula t))
 (use-package atom-one-dark-theme
-  :ensure (:wait t)
+  :ensure
   :defer t
   :init
   (load-theme 'atom-one-dark t))
 
 ;; Power line
 (use-package smart-mode-line
-  :ensure (:wait t)
+  :ensure
   :defer t
 
   :init
@@ -149,7 +143,7 @@
   (sml/setup)
   (sml/apply-theme 'atom-one-dark))
 (use-package smart-mode-line-atom-one-dark-theme
-  :ensure (:wait t)
+  :ensure
   :defer t
   :after smart-mode-line)
 
@@ -166,7 +160,7 @@
 ;;   https://www.emacswiki.org/emacs/PageBreaks
 ;;   https://www.gnu.org/software/emacs/manual/html_node/emacs/Pages.html
 (use-package page-break-lines
-  :ensure (:wait t)
+  :ensure
   :defer t
   :config
   (global-page-break-lines-mode))
@@ -277,7 +271,7 @@
 
 ;;; Paredit
 ;;   https://www.emacswiki.org/emacs/ParEdit
-(use-package paredit :ensure (:wait t) :defer t)
+(use-package paredit :ensure :defer t)
 (defun turn-on-paredit ()
   (interactive)
   (paredit-mode 1))
@@ -295,13 +289,13 @@
 (setq backup-directory-alist `(("." . "~/.saves")))
 
 ;; Also, do something with #file-being-edited#
-(use-package no-littering :ensure (:wait t) :defer t)
+(use-package no-littering :ensure :defer t)
 
 ;;; Note highlighting
 ;;   https://github.com/tarsius/hl-todo
 ;;   https://www.reddit.com/r/emacs/comments/f8tox6/
 (use-package hl-todo
-  :ensure (:wait t)
+  :ensure
   :defer t
   :hook (prog-mode . hl-todo-mode)
   :config
@@ -317,14 +311,14 @@
 ;;; Moves lines of text
 ;; By default uses M-up and M-down
 (use-package move-text
-  :ensure (:wait t)
+  :ensure
   :defer t
   :init
   (move-text-default-bindings))
 
 ;;; Multiple cursors
 (use-package multiple-cursors
-  :ensure (:wait t)
+  :ensure
   :defer t
   :bind (("C->"         . mc/mark-next-like-this)
          ("C-<"         . mc/mark-previous-like-this)
@@ -339,7 +333,7 @@
 ;;; Show number of matches in search
 ;;   https://emacs.stackexchange.com/a/978/
 (use-package anzu
-  :ensure (:wait t)
+  :ensure
   :defer t
   :init
   (global-anzu-mode +1)
@@ -595,12 +589,12 @@ Takes a word motion argument: either `forward' or `backward'."
 ;; useful.
 
 ;;; Writing modes
-(use-package olivetti :ensure (:wait t) :defer t)
-(use-package writeroom-mode :ensure (:wait t) :defer t)
+(use-package olivetti :ensure :defer t)
+(use-package writeroom-mode :ensure :defer t)
 
 ;;; Research tools
 (use-package ebib
-  :ensure (:wait t)
+  :ensure
   :defer t
   :config
   (ebib-set-dialect 'biblatex))
@@ -611,7 +605,7 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;   - https://tex.stackexchange.com/q/106887/
 ;;   - https://superuser.com/q/847467/
 (use-package auctex
-  :ensure (:wait t)
+  :ensure
   :defer t
   :config
   ;; https://www.gnu.org/software/auctex/manual/auctex/Quick-Start.html#Quick-Start
@@ -623,7 +617,7 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;; Preview pane
 (use-package latex-preview-pane
-  :ensure (:wait t)
+  :ensure
   :defer t
   :config
   ;; https://tex.stackexchange.com/a/190901
@@ -632,7 +626,7 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;; https://github.com/tom-tan/auctex-latexmk
 (use-package auctex-latexmk
-  :ensure (:wait t)
+  :ensure
   :defer t
   :config
   (auctex-latexmk-setup)
@@ -681,25 +675,25 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;
 ;; Requires loading of compat before transient or magit on Emacs ≤ 29:
 ;;   https://github.com/progfolio/elpaca/issues/421#issuecomment-2677091304
-(use-package compat :ensure (:wait t) :defer t)
+(use-package compat :ensure :defer t)
 (use-package transient
-  :ensure (:wait t)
+  :ensure
   :defer t
   :after compat)
 (use-package magit
-  :ensure (:wait t)
+  :ensure
   :demand t
   :after transient
   :config
   (add-to-list 'magit-section-initial-visibility-alist '(untracked . show)))
 
 ;;; Reset default compilation command
-(use-package just-mode :ensure (:wait t) :defer t)
+(use-package just-mode :ensure :defer t)
 (setq compile-command "just")
 
 ;;;; Licenses
 (use-package yasnippet
-  :ensure (:wait t)
+  :ensure
   :defer t
   :init
   ;; Useful for snippets
@@ -717,7 +711,7 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;; Use colours in compilation buffer
 ;;   https://stackoverflow.com/a/63710493
-(use-package xterm-color :ensure (:wait t) :defer t)
+(use-package xterm-color :ensure :defer t)
 (setq compilation-environment '("TERM=xterm-256color"))
 (defun advice-compilation-filter (f proc string)
   (funcall f proc (xterm-color-filter string)))
@@ -726,7 +720,7 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;; Julia
 ;;   https://github.com/JuliaEditorSupport/julia-emacs
 (use-package julia-mode
-  :ensure (:wait t)
+  :ensure
   :defer t
   :interpreter ("julia" . julia-mode)
   :config
@@ -740,7 +734,7 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;; Rust
 ;;   https://github.com/rust-lang/rust-mode
 (use-package rust-mode
-  :ensure (:wait t)
+  :ensure
   :defer t
   :config
   (add-hook 'rust-mode-hook
@@ -752,7 +746,7 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;;; Go
 (use-package go-mode
-  :ensure (:wait t)
+  :ensure
   :defer t
   :config
   (add-hook 'go-mode-hook
@@ -762,10 +756,10 @@ Takes a word motion argument: either `forward' or `backward'."
                          (file-name-nondirectory buffer-file-name))))))
 
 ;;; R
-(use-package ess :ensure (:wait t) :defer t)
+(use-package ess :ensure :defer t)
 
 ;;; Splunk
-(use-package splunk-mode :ensure (:wait t) :defer t)
+(use-package splunk-mode :ensure :defer t)
 
 ;;; LLVM
 ;;
@@ -779,7 +773,6 @@ Takes a word motion argument: either `forward' or `backward'."
 (use-package llvm-mode
   :ensure
   (llvm-mode
-   :wait t
    :host github
    :repo "llvm/llvm-project"
    :files ("llvm/utils/emacs/llvm-mode.el"))
@@ -805,7 +798,7 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;;; Forth
 (use-package forth-mode
-  :ensure (:wait t)
+  :ensure
   :defer t
   :config
   (add-hook 'forth-mode-hook
@@ -861,11 +854,11 @@ Takes a word motion argument: either `forward' or `backward'."
 ;; For some reason I also had to install zsh for this to work
 
 ;;; Inline errors for rustic
-(use-package flycheck :ensure (:wait t) :defer t)
+(use-package flycheck :ensure :defer t)
 
 ;;; Rustic requires `rustic' and `use-package'
 (use-package rustic
-  :ensure (:wait t)
+  :ensure
   :after flycheck
   :defer t
   :bind (:map rustic-mode-map
@@ -898,7 +891,7 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;;; Configure LSP mode
 (use-package lsp-mode
-  :ensure (:wait t)
+  :ensure
   :defer t
 
   :init
@@ -942,7 +935,7 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;;; Configure LSP
 (use-package lsp-ui
-  :ensure (:wait t)
+  :ensure
   :defer t
 
   :init
@@ -961,7 +954,7 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;;; Code completion (autocomplete)
 (use-package company
-  :ensure (:wait t)
+  :ensure
   :defer t
   :custom
 

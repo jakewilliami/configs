@@ -105,8 +105,10 @@
 ;;   https://stackoverflow.com/a/42038174
 ;;   https://stackoverflow.com/a/56096775
 ;;
+;; I also need to account for BSD.
+;;
 ;; Requires GNU core utilities
-(when (string= system-type "darwin")
+(when (memq system-type '(darwin berkeley-unix))
   (setq dired-use-ls-dired t
         insert-directory-program "gls"
         dired-listing-switches "-aBhl --group-directories-first"))

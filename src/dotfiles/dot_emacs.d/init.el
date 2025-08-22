@@ -291,7 +291,7 @@
 (setq backup-directory-alist `(("." . "~/.saves")))
 
 ;; Also, do something with #file-being-edited#
-(use-package no-littering :ensure :defer t)
+(use-package no-littering :ensure :defer t :after compat)
 
 ;;; Note highlighting
 ;;   https://github.com/tarsius/hl-todo
@@ -299,6 +299,7 @@
 (use-package hl-todo
   :ensure
   :defer t
+  :after compat
   :hook (prog-mode . hl-todo-mode)
   :config
   (setq hl-todo-highlight-punctuation ":"
@@ -598,6 +599,7 @@ Takes a word motion argument: either `forward' or `backward'."
 (use-package ebib
   :ensure
   :defer t
+  :after compat
   :config
   (ebib-set-dialect 'biblatex))
 
@@ -677,7 +679,7 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;
 ;; Requires loading of compat before transient or magit on Emacs ≤ 29:
 ;;   https://github.com/progfolio/elpaca/issues/421#issuecomment-2677091304
-(use-package compat :ensure :defer t)
+(use-package compat :ensure)
 (use-package transient
   :ensure
   :defer t

@@ -671,7 +671,6 @@ Takes a word motion argument: either `forward' or `backward'."
 ;; This allows us to do things like C-c C-c when `git` from the command line opens a commit dialogue.
 (require 'server)
 (or (server-running-p) (server-mode))
-(use-package git-commit :ensure (:wait t) :demand t)
 
 ;;; Magit
 ;;   https://reddit.com/r/emacs/comments/1954ay9/comment/khnm1en
@@ -679,7 +678,6 @@ Takes a word motion argument: either `forward' or `backward'."
 (use-package magit
   :ensure (:wait t)
   :demand t
-  :after git-commit
   :after transient
   :config
   (add-to-list 'magit-section-initial-visibility-alist '(untracked . show)))

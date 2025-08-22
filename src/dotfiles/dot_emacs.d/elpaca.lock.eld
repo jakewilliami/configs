@@ -252,21 +252,6 @@
                            :source "MELPA" :protocol https :inherit t
                            :depth treeless :wait nil :ref
                            "b00a95e6b34c94987fda5a57c20cfe2f064b1c7a"))
- (git-commit :source "lockfile" :date (26792 7295 343140 0) :recipe
-             (:package "git-commit" :fetcher github :repo
-                       "magit/magit" :branch "legacy-stub" :old-names
-                       (git-commit-mode) :files
-                       ("*.el" "*.el.in" "dir" "*.info" "*.texi"
-                        "*.texinfo" "doc/dir" "doc/*.info"
-                        "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
-                        "docs/dir" "docs/*.info" "docs/*.texi"
-                        "docs/*.texinfo"
-                        (:exclude ".dir-locals.el" "test.el"
-                                  "tests.el" "*-test.el" "*-tests.el"
-                                  "LICENSE" "README*" "*-pkg.el"))
-                       :source "MELPA" :protocol https :inherit t
-                       :depth treeless :wait nil :ref
-                       "cc40a7b1f9d2f343779170591bfbd2c4cecae998"))
  (transient :source "lockfile" :date (26792 7295 337729 0) :recipe
             (:package "transient" :fetcher github :repo
                       "magit/transient" :files

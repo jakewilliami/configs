@@ -552,7 +552,7 @@
                         :source "elpaca-menu-lock-file" :protocol
                         https :inherit t :depth treeless :wait nil
                         :ref
-                        "77cb2403158cfea9d8bfb8adad81b84d1d6d7c6a"))
+                        "f32cd7b09d518b629bfaa3eeb92b539891c6b9bc"))
  (writeroom-mode :source "elpaca-menu-lock-file" :recipe
                  (:package "writeroom-mode" :fetcher github :repo
                            "joostkremers/writeroom-mode" :files

@@ -674,7 +674,14 @@ Takes a word motion argument: either `forward' or `backward'."
 
 ;;; Magit
 ;;   https://reddit.com/r/emacs/comments/1954ay9/comment/khnm1en
-(use-package transient :ensure (:wait t) :defer t)
+;;
+;; Requires loading of compat before transient or magit on Emacs ≤ 29:
+;;   https://github.com/progfolio/elpaca/issues/421#issuecomment-2677091304
+(use-package compat :ensure (:wait t) :defer t)
+(use-package transient
+  :ensure (:wait t)
+  :defer t
+  :after compat)
 (use-package magit
   :ensure (:wait t)
   :demand t

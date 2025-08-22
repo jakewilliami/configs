@@ -1,11 +1,11 @@
 ((elpaca :source
-   "lockfile" :date (26792 6086 745916 0) :recipe
+   "lockfile" :date (26792 7049 687966 0) :recipe
    (:source nil :protocol https :inherit t :depth treeless :repo
             "https://github.com/progfolio/elpaca.git" :files
             (:defaults "elpaca-test.el" (:exclude "extensions"))
             :build (:not elpaca--activate-package) :package "elpaca"
-            :ref "d74d27f025e8129d47d42d5fdcad4416bf03b07a"))
- (elpaca-use-package :source "lockfile" :date (26792 6086 741470 0)
+            :ref "10e65441f34253254272aeacd300574b576894a2"))
+ (elpaca-use-package :source "lockfile" :date (26792 7049 683602 0)
                      :recipe
                      (:package "elpaca-use-package" :wait t :repo
                                "https://github.com/progfolio/elpaca.git"
@@ -16,8 +16,8 @@
                                :build (:not elpaca--compile-info)
                                :source "Elpaca extensions" :protocol
                                https :inherit t :depth treeless :ref
-                               "d74d27f025e8129d47d42d5fdcad4416bf03b07a"))
- (atom-one-dark-theme :source "lockfile" :date (26792 6086 736218 0)
+                               "10e65441f34253254272aeacd300574b576894a2"))
+ (atom-one-dark-theme :source "lockfile" :date (26792 7049 678492 0)
                       :recipe
                       (:package "atom-one-dark-theme" :fetcher github
                                 :repo

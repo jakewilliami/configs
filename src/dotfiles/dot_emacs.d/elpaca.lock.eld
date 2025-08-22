@@ -62,6 +62,13 @@
                     :source "lockfile" :protocol https :inherit t
                     :depth treeless :wait nil :ref
                     "9c273fc7c1a9dd69ccf508589211c4f8bd0e0765"))
+ (compat :source "elpaca-menu-lock-file" :recipe
+     (:package "compat" :repo
+           ("https://github.com/emacs-compat/compat"
+            . "compat")
+           :files ("*" (:exclude ".git")) :source "GNU ELPA"
+           :protocol https :inherit t :depth treeless :ref
+           "cccd41f549fa88031a32deb26253b462021d7e12"))
  (dash :source "elpaca-menu-lock-file" :recipe
        (:package "dash" :fetcher github :repo "magnars/dash.el" :files
                  ("dash.el" "dash.texi") :source "lockfile" :protocol

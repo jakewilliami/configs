@@ -46,7 +46,7 @@
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-(setq elpaca-lock-file "~/.emacs.d/elpaca.lock.eld")
+(setq elpaca-lock-file (expand-file-name "elpaca.lock.eld" user-emacs-directory))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
                               :files (:defaults "elpaca-test.el" (:exclude "extensions"))
                               :build (:not elpaca--activate-package)))
@@ -99,9 +99,7 @@
     (setq explicit-shell-file-name bash-path)))
 
 ;;; Set custom file so that the init.el file does not contain generated code
-;; (setq custom-file "~/.emacs.d/custom.el")
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-
 
 ;;; Do not use --dired option with ls on macOS/*BSD
 ;;   https://stackoverflow.com/a/42038174
@@ -168,6 +166,7 @@
   :config
   (sml/setup)
   (sml/apply-theme 'atom-one-dark))
+
 (use-package smart-mode-line-atom-one-dark-theme
   :ensure
   :defer t
@@ -689,9 +688,11 @@ Takes a word motion argument: either `forward' or `backward'."
 ;; Major modes for various languages, compilation configuration,
 ;; and git things.
 
-;;; Custom configurations
-;; For when I implement something myself, or can't be bothered with Quelpa
-(add-to-list 'load-path "~/.emacs.local/")
+;;; Custom configurations (stored in ~/.emacs.local)
+;; For when I implement something myself, or can't be bothered with *elpa
+(add-to-list 'load-path
+             (expand-file-name ".emacs.local"
+                               (file-name-directory (directory-file-name user-emacs-directory))))
 
 ;;; Git Commit Mode
 ;;   https://www.emacswiki.org/emacs/GitCommitMode
@@ -738,7 +739,10 @@ Takes a word motion argument: either `forward' or `backward'."
   :init
   ;; Useful for snippets
   (setq yas/triggers-in-field nil)
-  (setq yas-snippet-dirs '("~/.emacs.snippets/"))
+  ;; Store snippets in ~/.emacs.snippets
+  (setq yas-snippet-dirs
+        (list (expand-file-name ".emacs.snippets"
+                                (file-name-directory (directory-file-name user-emacs-directory)))))
   (yas-global-mode 1)
 
   ;; Required for Rust LSP

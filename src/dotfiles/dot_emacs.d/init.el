@@ -138,11 +138,16 @@
 ;; i.e., in full-screen, with no startup screen.
 
 ;;; Theme
-;; (use-package dracula-theme
-;;   :ensure (:wait t)
-;;   : defer t
-;;   :init
-;;   (load-theme 'dracula t))
+;;
+;; Formerly used dracula theme:
+;;   (use-package dracula-theme
+;;     :ensure (:wait t)
+;;     : defer t
+;;     :init
+;;     (load-theme 'dracula t))
+;;
+;; Now we use Atom One (Dark), however, see #17:
+;;   https://github.com/jakewilliami/configs/issues/17
 (use-package atom-one-dark-theme
   :ensure (:wait t) ;; :wait used here to ensure theme is loaded first
   :defer t

@@ -303,12 +303,23 @@
   (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
 (global-set-key (kbd "M-/") 'toggle-comment-on-line)
 
-;;; No littering
-;; Instead of Emacs creatiing a *~ file in the current dir,
-;; create backup files elsewhere
-(setq backup-directory-alist `(("." . "~/.saves")))
+;;; Store backups, auto-saves, and other transient or ephemeral files away in a directory
+;; in the home folder, under the Emacs user directory, for cleanliness
+;;   https://www.gnu.org/software/emacs/manual/html_node/emacs/Backup.html
+(let ((saves-dir (expand-file-name "saves" user-emacs-directory)))
+  (make-directory saves-dir t)
+  (setq
+   ;; Instead of Emacs creating a *~ (backup) file in the current dir, create backup files elsewhere.
+   backup-directory-alist `(("." . ,saves-dir))
+   ;; We also do this for #*# files (autosaves)
+   auto-save-list-file-prefix saves-dir
+   auto-save-file-name-transforms `((".*" ,saves-dir t))
+  ;; Do the same for .#* files (lock files) (requires Emacs v28)
+  ;;   http://www.gnu.org/s/emacs/manual/html_node/elisp/File-Locks.html
+  lock-file-name-transforms `((".*" ,saves-dir t))))
 
-;; Also, do something with #file-being-edited#
+;; Also set up `no-littering' for transient files used by packages between sessions.
+;; I think that this stores these files in etc/ and var/ in your Emacs user dir.
 (use-package no-littering :ensure :defer t :after compat)
 
 ;;; Note highlighting

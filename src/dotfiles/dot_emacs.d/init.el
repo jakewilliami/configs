@@ -719,7 +719,6 @@ Takes a word motion argument: either `forward' or `backward'."
 (use-package compat :ensure)
 (use-package transient
   :ensure
-  :defer t
   :after compat)
 (use-package magit
   :ensure

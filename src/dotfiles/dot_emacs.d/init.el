@@ -275,10 +275,12 @@
 
 ;;; Paredit
 ;;   https://www.emacswiki.org/emacs/ParEdit
-(use-package paredit :ensure :defer t)
-(defun turn-on-paredit ()
-  (interactive)
-  (paredit-mode 1))
+(use-package paredit
+  :ensure
+  :defer t
+
+  ;; Paredit hooks
+  :hook ((emacs-lisp-mode lisp-mode common-lisp-mode) . paredit-mode))
 
 ;;; Allow commenting/uncommenting code
 (defun toggle-comment-on-line ()
@@ -812,11 +814,6 @@ Takes a word motion argument: either `forward' or `backward'."
             (set (make-local-variable 'compile-command)
                  (format "gforth %s -e bye"
                          (file-name-nondirectory buffer-file-name))))))
-
-;;; Paredit hooks
-(add-hook 'emacs-lisp-mode-hook  'turn-on-paredit)
-(add-hook 'lisp-mode-hook        'turn-on-paredit)
-(add-hook 'common-lisp-mode-hook 'turn-on-paredit)
 
 ;;; Handle tabs
 ;;

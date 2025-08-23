@@ -689,6 +689,14 @@ Takes a word motion argument: either `forward' or `backward'."
 ;;   https://magit.vc/manual/magit/git_002dcommit_002dmode-isn_0027t-used-when-committing-from-the-command_002dline.html
 ;;
 ;; This allows us to do things like C-c C-c when `git` from the command line opens a commit dialogue.
+;;
+;; See 73f1ae2 and e03d5e5:
+;;   https://github.com/jakewilliami/configs/commit/73f1ae2
+;;   https://github.com/jakewilliami/configs/commit/e03d5e5
+;;
+;; See also:
+;;   https://github.com/progfolio/elpaca/issues/428#issuecomment-2676232383
+;;   https://github.com/magit/magit/issues/5426
 (require 'server)
 (or (server-running-p) (server-mode))
 

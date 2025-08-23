@@ -101,17 +101,32 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
 
-;;; Do not use --dired option with ls on macOS
+;;; Do not use --dired option with ls on macOS/*BSD
 ;;   https://stackoverflow.com/a/42038174
+;;
+;; Previously, we used `gls' (which required GNU core utilities):
 ;;   https://stackoverflow.com/a/56096775
 ;;
-;; I also need to account for BSD.
+;;   (when (memq system-type '(darwin berkeley-unix))
+;;     ;; Prefer GNU if installed
+;;     (let ((gnu-ls (executable-find "gls")))
+;;       (if gnu-ls
+;;           (setq insert-directory-program gnu-ls
+;;                 dired-use-ls-dired t
+;;                 dired-listing-switches "-aBhl --group-directories-first")
+;;         (setq dired-use-ls-dired nil))))
 ;;
-;; Requires GNU core utilities
+;; However, we seem to have better luck using `ls-lisp':
+;;  https://emacs.stackexchange.com/a/29104
+;;
+;; Flags for better dired mode:
+;;   https://emacs.stackexchange.com/a/33553
+;;   https://emacs.stackexchange.com/a/64160
 (when (memq system-type '(darwin berkeley-unix))
-  (setq dired-use-ls-dired t
-        insert-directory-program "gls"
-        dired-listing-switches "-aBhl --group-directories-first"))
+  (require 'ls-lisp)
+  (setq ls-lisp-dirs-first t
+        ls-lisp-use-insert-directory-program nil
+        dired-listing-switches "-alFh"))
 
 
 
@@ -150,14 +165,6 @@
   :ensure
   :defer t
   :after smart-mode-line)
-
-;;; Better dired mode:
-;;   https://emacs.stackexchange.com/a/33553
-;;   https://emacs.stackexchange.com/a/64160
-;;
-;; Don't need to do for macOS, as this is handled separately above
-(unless (string= system-type "darwin")
-  (setq dired-listing-switches "-alFh"))
 
 ;;; Pages
 ;;   https://github.com/purcell/page-break-lines

@@ -124,10 +124,12 @@
 
 ;;; Theme
 ;; (use-package dracula-theme
+;;   :ensure (:wait t)
+;;   : defer t
 ;;   :init
 ;;   (load-theme 'dracula t))
 (use-package atom-one-dark-theme
-  :ensure
+  :ensure (:wait t) ;; :wait used here to ensure theme is loaded first
   :defer t
   :init
   (load-theme 'atom-one-dark t))

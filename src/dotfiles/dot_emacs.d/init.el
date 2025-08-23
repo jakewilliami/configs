@@ -92,9 +92,11 @@
 (setq locale-coding-system 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
 
-;;; Set shell to Bash
-(setenv "SHELL" "/usr/local/bin/bash")
-(setq explicit-shell-file-name "/usr/local/bin/bash")
+;;; Set shell to Bash, if available
+(let ((bash-path (executable-find "bash")))
+  (when bash-path
+    (setenv "SHELL" bash-path)
+    (setq explicit-shell-file-name bash-path)))
 
 ;;; Set custom file so that the init.el file does not contain generated code
 ;; (setq custom-file "~/.emacs.d/custom.el")

@@ -286,6 +286,11 @@
 (defvaralias 'c-basic-offset 'tab-width)
 ;; (setq-default indent-tabs-mode t)
 
+;;; Bind back and forward to more convenient keybindings
+;;   reddit.com/r/emacs/comments/2jzkz7/comment/clgn943/
+(global-set-key (kbd "C-4") (key-binding (kbd "C-x <left>")))
+(global-set-key (kbd "C-5") (key-binding (kbd "C-x <right>")))
+
 ;;; Paredit
 ;;   https://www.emacswiki.org/emacs/ParEdit
 (use-package paredit

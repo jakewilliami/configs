@@ -208,7 +208,8 @@
 ;; Reset face for tabs (used for Go [ref KSMPV])
 (defun set-up-whitespace-handling-allow-tabs ()
   (interactive)
-  (face-spec-reset-face 'whitespace-tab))
+  (face-spec-reset-face 'whitespace-tab)
+  (font-lock-flush))
 
 ;;; Suppress startup buffers
 (setq inhibit-startup-screen t

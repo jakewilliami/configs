@@ -120,6 +120,13 @@ if command -v dutree > /dev/null 2>&1; then
     alias du1="dutree --depth=1 --aggr=1M 2> /dev/null"
 fi
 
+# Set up zoxide
+if command -v zoxide > /dev/null 2>&1; then
+    eval "$(zoxide init --cmd z bash)"
+    alias cd="z"
+    alias cdi="zi"
+fi
+
 # Fun aliases
 alias please="sudo"
 alias shuffle="sort -R"

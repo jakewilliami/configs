@@ -129,6 +129,19 @@ if has_command dutree
     abbr -a du1 'dutree --depth=1 --aggr=1M'
 end
 
+# Set up zoxide
+if has_command zoxide
+    zoxide init --cmd z fish | source
+
+    function cd --wraps=z
+        z $argv
+    end
+
+    function cdi --wraps=zi
+        zi $argv
+    end
+end
+
 # Fish git prompt
 set __fish_git_prompt_showuntrackedfiles 'yes'
 set __fish_git_prompt_showdirtystate 'yes'

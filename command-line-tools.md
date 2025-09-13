@@ -44,6 +44,9 @@ A benchmarking tool for comparing efficiency of binaries.  See references to the
 ### [`bat`](https://github.com/sharkdp/bat)
 An alternate version of `cat` with nice syntax highlighting, &c.  It is especially nice to pipe `diff` into: `diff f1 f2 | bat`.  Alternatively, you can download a custom `batdiff` command by running `brew install eth-p/software/bat-extras` or `pacman -S bat-extras`.  Alternatively still, you can download [`git-delta`](https://github.com/dandavison/delta) to compare files.
 
+### [`zoxide`](https://github.com/ajeetdsouza/zoxide)
+A smarter replacement for `cd`.
+
 ### [`dutree`](https://github.com/nachoparker/dutree)
 A fast and modern alternative to `du`, written in Rust.
 

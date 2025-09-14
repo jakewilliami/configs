@@ -846,16 +846,19 @@ Takes a word motion argument: either `forward' or `backward'."
             (setq tab-width 4)
             (setq python-indent-offset 4)))
 
+;;; PowerShell
+(use-package powershell :ensure :defer t)
+
 ;;; Forth
 (use-package forth-mode
   :ensure
   :defer t
   :config
   (add-hook 'forth-mode-hook
-          (lambda ()
-            (set (make-local-variable 'compile-command)
-                 (format "gforth %s -e bye"
-                         (file-name-nondirectory buffer-file-name))))))
+            (lambda ()
+              (set (make-local-variable 'compile-command)
+                   (format "gforth %s -e bye"
+                           (file-name-nondirectory buffer-file-name))))))
 
 ;;; Handle tabs
 ;;

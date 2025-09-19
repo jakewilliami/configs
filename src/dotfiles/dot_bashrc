@@ -6,8 +6,9 @@
 export EDITOR='emacs -nw'
 export VISUAL='emacs -nw'
 
-# Add local opt to path
-export PATH=$HOME/opt/:$PATH
+# Add local dirs to path
+export PATH="$HOME/opt/:$PATH"
+export PATH="$PATH:$HOME/.local/bin"
 
 ### Git ###
 

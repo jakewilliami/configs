@@ -2,9 +2,9 @@
 setenv EDITOR "emacs -nw"
 setenv VISUAL "emacs -nw"
 
-# Add local opt to path
-# This is where I store my custom binaries
+# Add local binary paths
 fish_add_path --global --move --path "$HOME/opt/"
+fish_add_path --global --move --path "$HOME/.local/bin/"
 
 # Set up Homebrew shell environment
 #

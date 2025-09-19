@@ -81,6 +81,11 @@
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
+;; Do not use symlinks on Windows, as they require local admin
+; https://github.com/progfolio/elpaca/issues/482
+(when (eq system-type 'windows-nt)
+  (elpaca-no-symlink-mode))
+
 ;; Install use-package support
 (elpaca elpaca-use-package
   ;; Enable use-package :ensure support for Elpaca.

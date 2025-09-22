@@ -120,6 +120,13 @@ if has_command yt-dlp
     end
 end
 
+# Alias for `lsusb` command
+if has_command cyme
+    function lsusb --wraps=cyme
+        cyme --lsusb $argv
+    end
+end
+
 # Use dutree over du if available (https://github.com/nachoparker/dutree)
 if has_command dutree
     function du --wraps=dutree

@@ -224,7 +224,7 @@ function fish_prompt
 
     # Date
     set_color --bold $grey
-    echo -n "["(date "+%H:%M")"] "
+    echo -n "["(date "+%d %b %Y %I:%M %p")"] "
 
     # Host
     set_color --bold $blue

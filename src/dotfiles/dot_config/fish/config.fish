@@ -40,11 +40,14 @@ fish_add_path --global --move --path "$HOME/opt/"
 fish_add_path --global --move --path "$HOME/.local/bin/"
 
 # Alias for editor
-function e --wraps=emacs
+function e --wraps=emacsclient
+    # Prefer emacs client with daemon, potentially running
+    #   <https://www.reddit.com/r/emacs/comments/qok4ef/comment/hjni2xl>
+    #   <https://youtu.be/s0ed8Da3mjE?t=269>
     if test (count $argv) -eq 0
-        emacs . &
+        emacsclient -c -a "" . &
     else
-        emacs $argv
+        emacsclient -c -a "" $argv
     end
 end
 

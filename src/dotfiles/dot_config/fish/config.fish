@@ -2,10 +2,6 @@
 setenv EDITOR "emacs -nw"
 setenv VISUAL "emacs -nw"
 
-# Add local binary paths
-fish_add_path --global --move --path "$HOME/opt/"
-fish_add_path --global --move --path "$HOME/.local/bin/"
-
 # Set up Homebrew shell environment
 #
 # Also switches to using brew-installed bash as
@@ -28,7 +24,7 @@ else if test -e /opt/homebrew/bin/brew
     eval (/opt/homebrew/bin/brew shellenv)
 end
 
-#  Cargo
+# Cargo
 if test -e "$HOME/.cargo/bin/"
     # Sourcing the env file does not work for fish
     # . "$HOME/.cargo/env"
@@ -38,6 +34,10 @@ end
 # LLVM
 # https://stackoverflow.com/a/42730721
 fish_add_path --global --move --path '/opt/homebrew/opt/llvm/bin'
+
+# Add local binary paths
+fish_add_path --global --move --path "$HOME/opt/"
+fish_add_path --global --move --path "$HOME/.local/bin/"
 
 # Alias for editor
 function e --wraps=emacs

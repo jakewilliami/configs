@@ -98,10 +98,14 @@
 (prefer-coding-system 'utf-8-unix)
 
 ;;; Set shell to Bash, if available
-(let ((bash-path (executable-find "bash")))
-  (when bash-path
-    (setenv "SHELL" bash-path)
-    (setq explicit-shell-file-name bash-path)))
+;;
+;; NOTE: this may not be a good idea, because Emacs' compilation buffer
+;;   seems to get confused around which shell to use (see 19d6fa6).
+;;   Best to just use the system shell
+;; (let ((bash-path (executable-find "bash")))
+;;   (when bash-path
+;;     (setenv "SHELL" bash-path)
+;;     (setq explicit-shell-file-name bash-path)))
 
 ;;; Set custom file so that the init.el file does not contain generated code
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))

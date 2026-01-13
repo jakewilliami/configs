@@ -20,6 +20,20 @@ trackpad speed high
 
 caps -> control
 
+NOTE: since upgrading recently (end of 2025/start of 2026), after I restarted my computer, I had a bizarre issue where the terminal forgot that I was using fish so defaulted to bash but then it was trying to use fish shell to evaluate `opt/homebrew/bin/brew shellenv`, which it was failing at because `brew shellenv` was giving it bash syntax.  After a reboot it had forgotten my brew path because all shellenv didn't work.  It was like the computer had forgotten how to use fish, but was still half trying.  I had to reset the default shell to fish.
+
+In order to set fish as the default shell, I needed to run this:
+
+https://gist.github.com/gagarine/cf3f65f9be6aa0e105b184376f765262?permalink_comment_id=4628474#gistcomment-4628474
+
+sudo sh -c 'echo /opt/homebrew/bin/fish >> /etc/shells'
+<restart shell>
+chsh -s /opt/homebrew/bin/fish
+<restart shell>
+voilà
+
+i have anne pro 2 (60%).  I am trialling colemak-dh: https://colemakmods.github.io/mod-dh/keyboards.html#ansi-keyboards - see https://github.com/jakewilliami/anne-pro-2-keymap
+
 dock magnify, no recent apps, smaller dock size, sleep to ?
 
 install emacs

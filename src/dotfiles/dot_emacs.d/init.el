@@ -247,7 +247,12 @@
 ;;
 ;; NOTE: `x-display-pixel-*' does not work for me
 ;;   https://stackoverflow.com/questions/2151449/
-(toggle-frame-maximized)
+;; (toggle-frame-maximized)
+;;
+;; NOTE: since we now use an Emacs daemon and client, we
+;;   want to toggle each frame, not just on initialisation.
+;;   https://emacs.stackexchange.com/a/3008
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 
 

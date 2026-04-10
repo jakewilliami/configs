@@ -105,7 +105,7 @@ end
 # Alias for `cat` command
 if has_command bat
     function cat --wraps=bat
-        bat $argv
+        bat --style=plain --paging=never $argv
     end
 end
 

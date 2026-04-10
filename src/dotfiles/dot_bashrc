@@ -86,7 +86,7 @@ fi
 
 # Alias for `cat` command
 if command -v bat > /dev/null 2>&1; then
-    alias cat="bat"
+    alias cat="bat --style=plain --paging=never"
 fi
 
 # Alias for chezmoi

@@ -701,6 +701,17 @@ Takes a word motion argument: either `forward' or `backward'."
 ;; Activate nice interface between RefTeX and AUCTeX
 (setq reftex-plug-into-AUCTeX t)
 
+;;; Typst
+;; https://codeberg.org/meow_king/typst-ts-mode/wiki/Installation.md
+(use-package typst-ts-mode
+  :ensure
+  (:type git
+         :host codeberg
+         :repo "meow_king/typst-ts-mode"
+         :branch "main")
+  :defer t
+  :config (typst-ts-mc-install-grammar))
+
 
 
 ;;;; Programming:

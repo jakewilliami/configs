@@ -1,0 +1,5 @@
+# -*- mode: just -*-
+
+build file:
+    typst compile "{{file}}"
+

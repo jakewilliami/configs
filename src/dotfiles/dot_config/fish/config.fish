@@ -39,6 +39,9 @@ fish_add_path --global --move --path '/opt/homebrew/opt/llvm/bin'
 fish_add_path --global --move --path "$HOME/opt/"
 fish_add_path --global --move --path "$HOME/.local/bin/"
 
+# Ensure Homebrew curl is used over system curl
+fish_add_path --global --move --path '/opt/homebrew/opt/curl/bin'
+
 # Alias for editor
 function e --wraps=emacsclient
     # Prefer emacs client with daemon, potentially running

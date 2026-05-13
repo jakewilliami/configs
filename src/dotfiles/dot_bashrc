@@ -10,6 +10,9 @@ export VISUAL='emacs -nw'
 export PATH="$HOME/opt/:$PATH"
 export PATH="$PATH:$HOME/.local/bin"
 
+# Ensure Homebrew curl is used over system curl
+export PATH="/opt/homebrew/opt/curl/bin:$PATH"
+
 ### Git ###
 
 # Get current branch in git repo

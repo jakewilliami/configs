@@ -54,6 +54,11 @@ function e --wraps=emacsclient
     end
 end
 
+# Convenient function to kill the background process
+function killemacs
+     emacsclient -e '(kill-emacs)'
+end
+
 # Check if command exists
 function has_command
     if test (count $argv) -eq 0

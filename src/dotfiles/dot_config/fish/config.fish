@@ -160,6 +160,13 @@ if has_command zoxide
     end
 end
 
+# Alias for modern cloc
+if has_command tokei
+    function cloc --wraps=tokei
+        tokei $argv
+    end
+end
+
 # Fish git prompt
 set __fish_git_prompt_showuntrackedfiles 'yes'
 set __fish_git_prompt_showdirtystate 'yes'

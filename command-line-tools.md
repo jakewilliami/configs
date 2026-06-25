@@ -53,6 +53,9 @@ A fast and modern alternative to `du`, written in Rust.
 ### [`duf`](https://github.com/muesli/duf)
 A fast and modern alternative to `df`, written in Rust.  (See also [Canop](https://github.com/Canop)'s [`dysk`](https://github.com/Canop/dysk) [formerly [`lsf`](https://github.com/Canop/lfs)].)
 
+### [`tokei`](https://github.com/Aaronepower/tokei) <!-- https://github.com/XAMPPRocky/tokei/ -->
+A fast and modern alternative to [`cloc`](https://github.com/aldanial/cloc), written in Rust.
+
 ### [`as-tree`](https://github.com/jez/as-tree)
 Convert a list of paths (e.g., the output of `ls`) to a tree-like structure (written in Rust).  Nice for visiualising things.  (See also [`eza`]()'s `--tree` option.  Also see [Canop](https://github.com/Canop)'s [`br`](https://github.com/Canop/broot).)
 

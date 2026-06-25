@@ -165,6 +165,11 @@ if has_command tokei
     function cloc --wraps=tokei
         tokei $argv
     end
+
+    # Alias for sorted count LOC
+    function scloc --wraps=tokei
+        tokei --sort code
+    end
 end
 
 # Fish git prompt
